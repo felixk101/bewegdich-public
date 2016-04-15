@@ -1,0 +1,9 @@
+<h1>{{ location }} - {{ location.timestamp }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>
+{% endif %}
+
+
+<form action="{% url 'bewegdichapp:nearby' location.id %}" method="get">
+<input type="submit" value="Find stations" />
+</form>

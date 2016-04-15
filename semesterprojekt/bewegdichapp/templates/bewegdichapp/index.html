@@ -1,0 +1,58 @@
+<html>
+  <head>
+     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    </head>
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <script type="text/javascript">
+
+    </script>
+  <body>
+     <h4>Latest Locations logged</h4>
+    {% if latest_location_list %}
+        <ul>
+        {% for location in latest_location_list %}
+            <li>Coordinates <a href="{% url 'bewegdichapp:detail' location.id %}">{{ location }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No locations are available.</p>
+    {% endif %}
+    <!--<div id="map_canvas" style="width:100%; height:100%"></div> !-->
+
+    <div id="map" style="width:90%; height:80%">></div>
+    <script>
+      var map;
+      var lat = 0.0;
+      var long = 0.0;
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            lat = position.coords.latitude;
+            long = position.coords.longitude;
+            map = L.map('map').setView([0, 0], 15);
+            alert(lat+","+long);
+          });
+        } else {
+          var lat = 28.35807;
+          var long = 50.90652;
+        }
+ //var map = L.map('map').setView([lat, long], 15);
+
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ',
+        id: 'examples.map-i875mjb7'
+    }).addTo(map);
+
+    L.marker([48.35807, 10.90652]).addTo(map)
+        .bindPopup("<b>University of Applied Sciences Augsburg</b><br />Faculty of Computer Sciences").openPopup();
+
+    L.circle([48.36590, 10.90515], 200, {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5
+    }).addTo(map).bindPopup("I am a circle round the City Galerie.");
+
+</script>
+  </body>
+</html>
