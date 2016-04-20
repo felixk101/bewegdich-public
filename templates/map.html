@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Beweg dich v0.0001</h1>
+Starting Location (lat, lon):
+<span id="lat">???</span>°, <span id="lon">???</span>°
+
+<div id="mapdiv" style="width: 600px;height: 400px"></div>
+<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+<script>
+    var startPos;
+    var dis;
+
+    window.onload = function () {
+        navigator.geolocation.getCurrentPosition(function (position) {
+        startPos = position;
+        document.getElementById('lat').innerHTML = position.coords.latitude;
+        document.getElementById('lon').innerHTML = position.coords.longitude;
+        showmap();
+    });
+    };
+
+
+
+    function showmap() {
+        map = new OpenLayers.Map("mapdiv");
+        map.addLayer(new OpenLayers.Layer.OSM());
+
+        var lonLat = new OpenLayers.LonLat(startPos.coords.longitude, startPos.coords.latitude)
+                .transform(
+                        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                        map.getProjectionObject() // to Spherical Mercator Projection
+                );
+
+        var zoom = 16;
+
+        var markers = new OpenLayers.Layer.Markers("Markers");
+        map.addLayer(markers);
+
+        markers.addMarker(new OpenLayers.Marker(lonLat));
+
+        map.setCenter(lonLat, zoom);
+    }
+</script>
+</body>
+</html>
