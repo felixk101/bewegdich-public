@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'n+@ct*w8fu(u!_n35f9oy2gkq6rkt&jagywn58jet9zk_cg0@y'
+SECRET_KEY = '1)3!xjb#k(v1_s-s8yh2_a!28^%d17o3c#73!@ck5u0zit4j48'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -51,7 +51,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'beweg.urls'
+ROOT_URLCONF = 'bewegdich.urls'
 
 TEMPLATES = [
     {
@@ -70,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'beweg.wsgi.application'
+WSGI_APPLICATION = 'bewegdich.wsgi.application'
 
 
 # Database
@@ -79,9 +79,9 @@ WSGI_APPLICATION = 'beweg.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '1_matthiaskrempel',
-        'USER': '1_matthiaskrempe',
-        'PASSWORD': '0lek42WrLHhHGUc,',
+        'NAME': '1_bewegdich',
+        'USER': '1_bewegdich',
+        'PASSWORD': '3TnTvrI,1_UAnOQb',
         'HOST': 'bewegdich.informatik.hs-augsburg.de',
         'PORT': '3306',
     }
