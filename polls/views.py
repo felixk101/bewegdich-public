@@ -4,6 +4,20 @@ from django.shortcuts import render_to_response,redirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+
+from .forms import LocationForm
+
+
+@login_required(login_url='/polls/login/')
+def get_dest(request):
+    # if this is a POST request we need to process the form data
+
+    form = LocationForm()
+
+    return render(request, 'form.html', {'form': form})
+
 
 @login_required(login_url='/polls/login/')
 def index(request):
@@ -12,6 +26,24 @@ def index(request):
 
 @login_required(login_url='/polls/login/')
 def map(request):
+
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = LocationForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+
+            context = {
+                'start': form.cleaned_data['start'],
+                'dest': form.cleaned_data['dest'],
+            }
+            return render_to_response('map.html',context)
+        else:
+            return HttpResponseRedirect('/notvalid/')
+    # if a GET (or any other method) we'll create a blank form
     return render_to_response('map.html')
 
 
@@ -26,7 +58,7 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/polls/map/')
+                return HttpResponseRedirect('/form/')
     return render_to_response('login.html', context_instance=RequestContext(request))
 
 
