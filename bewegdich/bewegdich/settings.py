@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': '1_bewegdich',
         'USER': '1_bewegdich',
         'PASSWORD': '3TnTvrI,1_UAnOQb',
-        'HOST': 'bewegdich.informatik.hs-augsburg.de',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
