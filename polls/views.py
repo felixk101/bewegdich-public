@@ -9,6 +9,9 @@ from django.http import HttpResponseRedirect
 
 from .forms import LocationForm
 
+import json
+import urllib
+
 
 # @login_required(login_url='/polls/login/')
 def get_dest(request):
@@ -34,12 +37,20 @@ def map(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-
+            print(form.cleaned_data['dest'])
+            dest = getCoords(form.cleaned_data['dest'])
+            start =  getCoords(form.cleaned_data['start'])
+            print(dest)
             context = {
+                'form': form,
                 'start': form.cleaned_data['start'],
                 'dest': form.cleaned_data['dest'],
+                'startlat': start[0],
+                'startlng': start[1],
+                'destlat': dest[0],
+                'destlng': dest[1]
             }
-            return render_to_response('map.html',context)
+            return render(request,'map.html',context)
         else:
             return HttpResponseRedirect('/notvalid/')
     # if a GET (or any other method) we'll create a blank form
@@ -65,3 +76,12 @@ def login_user(request):
     return render_to_response('login.html', context_instance=RequestContext(request))
 
 
+def getCoords(place):
+    key = "AIzaSyAV52eNjBjVhoTtaOwdWbd8iQ7Cia6X9c0"
+    optionalSecondKey = "AIzaSyCVP9DkstDfjlTYgj0XlU5YlzU9gI3pqOU"
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + place + "&key=" + key
+    response = urllib.urlopen(url)
+    data = json.loads(response.read())
+    lat = data["results"][0]["geometry"]["location"]["lat"]
+    long = data["results"][0]["geometry"]["location"]["lng"]
+    return [lat,long]

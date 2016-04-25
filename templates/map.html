@@ -5,13 +5,15 @@
     <title>Title</title>
 </head>
 <body>
-<h1>Beweg dich v0.0001</h1>
+<h1>Beweg dich v0.1</h1>
 Location (lat, lon):
-
+Added a search feature to the map.
+The entered place will be shown by a marker on the map
 
 <span id="lat">???</span>°, <span id="lon">???</span>°
 <br><br>
-
+Start: {{ start }} {{ startlat }} {{ startlng }}<br><br>
+Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
 
 <form action="/map/" method="post">
     {% csrf_token %}
@@ -46,14 +48,25 @@ Location (lat, lon):
                         new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
                         map.getProjectionObject() // to Spherical Mercator Projection
                 );
+        var dest = new OpenLayers.LonLat({{ destlng }},{{ destlat }})
+                .transform(
+                        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                        map.getProjectionObject() // to Spherical Mercator Projection
+                );
+        var start = new OpenLayers.LonLat({{ startlng }},{{ startlat }})
+                .transform(
+                        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                        map.getProjectionObject() // to Spherical Mercator Projection
+                );
 
-        var zoom = 16;
+        var zoom = 10;
 
         var markers = new OpenLayers.Layer.Markers("Markers");
         map.addLayer(markers);
 
         markers.addMarker(new OpenLayers.Marker(lonLat));
-
+        markers.addMarker(new OpenLayers.Marker(dest));
+        markers.addMarker(new OpenLayers.Marker(start));
         map.setCenter(lonLat, zoom);
     }
 </script>
