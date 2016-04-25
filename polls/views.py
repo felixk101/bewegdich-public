@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from .forms import LocationForm
 
 
-@login_required(login_url='/polls/login/')
+# @login_required(login_url='/polls/login/')
 def get_dest(request):
     # if this is a POST request we need to process the form data
 
@@ -19,14 +19,13 @@ def get_dest(request):
     return render(request, 'form.html', {'form': form})
 
 
-@login_required(login_url='/polls/login/')
+# @login_required(login_url='/polls/login/')
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 
-@login_required(login_url='/polls/login/')
+# @login_required(login_url='/polls/login/')
 def map(request):
-
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = LocationForm(request.POST)
