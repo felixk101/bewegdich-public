@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "geoposition",
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -76,16 +77,16 @@ WSGI_APPLICATION = 'beweg.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '1_matthiaskrempel',
-        'USER': '1_matthiaskrempe',
-        'PASSWORD': '0lek42WrLHhHGUc,',
-        'HOST': 'bewegdich.informatik.hs-augsburg.de',
-        'PORT': '3306',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': '1_matthiaskrempel',
+#         'USER': '1_matthiaskrempe',
+#         'PASSWORD': '0lek42WrLHhHGUc,',
+#         'HOST': 'bewegdich.informatik.hs-augsburg.de',
+#         'PORT': '3306',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators

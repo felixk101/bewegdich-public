@@ -43,7 +43,11 @@ def map(request):
         else:
             return HttpResponseRedirect('/notvalid/')
     # if a GET (or any other method) we'll create a blank form
-    return render_to_response('map.html')
+
+    form = LocationForm()
+
+
+    return render(request,'map.html',{'form': form})
 
 
 def login_user(request):

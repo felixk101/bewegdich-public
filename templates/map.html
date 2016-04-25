@@ -11,8 +11,14 @@ Location (lat, lon):
 
 <span id="lat">???</span>°, <span id="lon">???</span>°
 <br><br>
-Start: {{ start }}<br>
-Ziel: {{ dest }}
+
+
+<form action="/map/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+
 
 <div id="mapdiv" style="width: 600px;height: 400px"></div>
 <script src="http://www.openlayers.org/api/OpenLayers.js"></script>

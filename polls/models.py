@@ -5,6 +5,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
+from geoposition.fields import GeopositionField
 
 @python_2_unicode_compatible  # only if you need to support Python 2
 class Question(models.Model):
@@ -44,3 +45,8 @@ class Usermeta(models.Model):
 
     def __str__(self):
         return self.userid + " " + self.key;
+
+
+class PointOfInterest(models.Model):
+    name = models.CharField(max_length=100)
+    position = GeopositionField()
