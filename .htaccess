@@ -4,5 +4,5 @@ RewriteBase /
 RewriteRule ^__init__\.py$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /__init__.py [L]
+RewriteRule (.*) __init__.py/$1 [L]
 </IfModule>
