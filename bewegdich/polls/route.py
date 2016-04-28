@@ -58,6 +58,7 @@ class Stop(object):
     lat = 0
     lng = 0
     depaturetime = 0
+    walkingtime = -1
 
     def __init__(self, json):
         self.data = json
@@ -69,6 +70,7 @@ class Stop(object):
             self.depaturetime = formatDateTime(json["dateTime"])
         elif "depDateTime" in json["ref"]:
             self.depaturetime = formatDateTime(json["ref"]["depDateTime"])
+
 
     def __str__(self):
         return self.name.encode('utf-8') + " " + self.depaturetime.time().__str__() + self.lat + " : " + self.lng

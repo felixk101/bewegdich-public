@@ -58,22 +58,30 @@ def find_startstation(start, dest):
     # Get the next 5 stations of this line
     station_list = route.get_next_stops()
 
-    
+    best_station = -1
 
     # Step through stations to find a better one
     for station in station_list:
 
         # Calculate the time to walk to the given station
-        walkTime = get_walking_time(userpos, station.name)
-
-        # If there is enough time to walk, return this station
+        walk_time = get_walking_time(userpos, station.name)
+        station.walkingtime = walk_time
+        
+        # If there is enough time to walk, save this station
         current_date_time = datetime.datetime.utcnow()
-        print((current_date_time+walkTime).__str__() + " < " + station.depaturetime.__str__())
-        if (current_date_time+walkTime) < station.depaturetime:
-            return station
 
-    # No station is in range to walk to
-    return route.origin_stop
+        print("to " + station.name + ": "+(current_date_time+walk_time).time().__str__() +
+              " <? " + station.depaturetime.time().__str__())
+
+        if (current_date_time + walk_time) < station.depaturetime:
+            if best_station == -1 or best_station.walkingtime < station.walkingtime :
+                best_station = station
+
+    if best_station != -1:
+        return best_station
+    else:
+        # No station is in range to walk to
+        return route.origin_stop
 
 
 def get_fastest_route(start, dest):
