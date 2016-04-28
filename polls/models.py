@@ -27,6 +27,8 @@ class Choice(models.Model):
         return self.choice_text
 
 
+
+
 class User(models.Model):
     # id will be generated automatically
     uname = models.CharField(max_length=30)

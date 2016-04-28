@@ -20,20 +20,16 @@ import datetime
 
 # Returns the best Route
 def get_optimized_route(start,dest):
-    startstation = find_StartStation(start,dest)
+    startstation = find_startstation(start, dest)
 
     #Do the routesearch again with the new station
-    route = getFastestRoute(startstation, dest)
+    route = getFastestRoute(startstation.name, dest)
 
     #Add the startposition of the user to the final route
-    completeRoute = insertStartPoint(start,route)
-    return completeRoute
+    #route = insertStartPoint(start,route)
+    return route
 
-
-
-
-
-def find_StartStation(start,dest):
+def find_startstation(start, dest):
     # Get start and destination positions
     userpos = start
     destpos = dest
@@ -75,8 +71,7 @@ def getFastestRoute(start, dest):
         r = Route(route)
         if r.depature_time > datetime.datetime.utcnow():
             return r
-
-    return route
+    return
 
 
 
@@ -108,6 +103,7 @@ def getWalkingTime(origin, destination):
 
 # Insert a new startpoint where the route should begin
 def insertStartPoint(start,route):
+
     pass
 
 def getCoords(place):
@@ -128,9 +124,9 @@ def getJson(url):
 
 
 #Test
-origin = "Hauptbahnhof Augsburg"
+origin = "Hirblingen Augsburg"
 destination = "fachhochschule Augsburg"
-find_StartStation(origin,destination)
+#find_startstation(origin, destination)
 
 #write json to File
 
