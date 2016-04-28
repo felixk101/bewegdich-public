@@ -35,6 +35,7 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
 <div id="map"></div>
 
 <script>
+
     var startPos;
 
 
@@ -43,6 +44,8 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
         startPos = position;
         document.getElementById('lat').innerHTML = position.coords.latitude;
         document.getElementById('lon').innerHTML = position.coords.longitude;
+        //put coords into hidden form field
+        document.getElementById('id_coords').value = position.coords.latitude + ',' + position.coords.longitude;
         initMap();
     });
     };

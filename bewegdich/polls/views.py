@@ -34,7 +34,7 @@ def map(request):
         # check whether it's valid:
 
         if form.is_valid():
-            print('form is valid :)')
+            print('coords: ',form.cleaned_data['coords'])
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
@@ -44,7 +44,7 @@ def map(request):
             city = form.cleaned_data['city'],
             print(city)
             route = get_optimized_route(form.cleaned_data['start'] + ' ' + city[0],form.cleaned_data['dest'] + ' ' + city[0])
-
+            print('latitude:',start[0])
             context = {
                 'form': form,
                 'showpath': 1,
@@ -60,12 +60,12 @@ def map(request):
         else:
             return HttpResponseRedirect('/notvalid/')
     # if a GET (or any other method) we'll create a blank form
-
-    form = LocationForm()
-    context = {
-        'form': form
-    }
-    return render(request,'map.html', context)
+    else:
+        form = LocationForm()
+        context = {
+            'form': form,
+        }
+        return render(request,'map.html', context)
 
 
 def login_user(request):
