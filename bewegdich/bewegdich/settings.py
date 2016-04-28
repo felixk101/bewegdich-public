@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'n+@ct*w8fu(u!_n35f9oy2gkq6rkt&jagywn58jet9zk_cg0@y'
+SECRET_KEY = '1)3!xjb#k(v1_s-s8yh2_a!28^%d17o3c#73!@ck5u0zit4j48'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles'
+    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -51,7 +51,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'beweg.urls'
+ROOT_URLCONF = 'bewegdich.urls'
 
 TEMPLATES = [
     {
@@ -70,22 +70,22 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'beweg.wsgi.application'
+WSGI_APPLICATION = 'bewegdich.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': '1_matthiaskrempel',
-#         'USER': '1_matthiaskrempe',
-#         'PASSWORD': '0lek42WrLHhHGUc,',
-#         'HOST': 'bewegdich.informatik.hs-augsburg.de',
-#         'PORT': '3306',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '1_bewegdich',
+        'USER': '1_bewegdich',
+        'PASSWORD': '3TnTvrI,1_UAnOQb',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
