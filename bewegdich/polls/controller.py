@@ -66,7 +66,7 @@ def find_startstation(start, dest):
         # Calculate the time to walk to the given station
         walk_time = get_walking_time(userpos, station.name)
         station.walkingtime = walk_time
-        
+
         # If there is enough time to walk, save this station
         current_date_time = datetime.datetime.utcnow()
 
@@ -169,7 +169,7 @@ def getJson(url):
 #Test
 origin = "Hirblingen Augsburg"
 destination = "fachhochschule Augsburg"
-#find_startstation(origin, destination)
+find_startstation(origin, destination)
 
 
 
