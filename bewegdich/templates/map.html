@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+      <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 40%;
+          width:40%;
+      }
+    </style>
+
+</head>
+<body>
+<h1>Beweg dich v0.1</h1>
+Location (lat, lon):
+Added a search feature to the map. The entered place will be shown by a marker on the map
+
+<span id="lat">???</span>°, <span id="lon">???</span>°
+<br><br>
+Start: {{ start }} {{ startlat }} {{ startlng }}<br><br>
+Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
+
+<form action="/map/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+
+<div id="map"></div>
+
+<script>
+
+    var startPos;
+
+
+    window.onload = function () {
+        navigator.geolocation.getCurrentPosition(function (position) {
+        startPos = position;
+        document.getElementById('lat').innerHTML = position.coords.latitude;
+        document.getElementById('lon').innerHTML = position.coords.longitude;
+        //put coords into hidden form field
+        document.getElementById('id_coords').value = position.coords.latitude + ',' + position.coords.longitude;
+        initMap();
+    });
+    };
+    var map;
+
+    function initMap() {
+        {% if showpath %}
+             {% comment "Optional note" %}
+             var mypos =  {lat:{{ startlat }}, lng: {{ startlng }}};
+             {% endcomment %}
+             var mypos = {lat: {{route.0.lat}}, lng: {{route.0.lng}}}
+        {% else %}
+             var mypos =  {lat:startPos.coords.latitude, lng: startPos.coords.longitude};
+        {% endif %}
+
+        map = new google.maps.Map(document.getElementById('map'), {
+        center: mypos,
+        zoom: 13
+         });
+
+        var marker = new google.maps.Marker({
+            position: mypos,
+            map: map,
+            title: 'Ihre Position'
+            });
+
+        {% if showpath %}
+            var coords = [
+                {% for stop in route %}
+                    {lat: {{stop.lat}}, lng: {{stop.lng}}},
+                {% endfor %}
+            ];
+
+            var line = new google.maps.Polyline({
+                path: coords,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+            line.setMap(map);
+        {% endif %}
+
+
+
+    };
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0&callback=initMap"
+        async defer></script>
+</body>
+</html>
