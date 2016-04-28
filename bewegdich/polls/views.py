@@ -41,8 +41,10 @@ def map(request):
             start = get_coords(form.cleaned_data['start'])
 
             route = get_optimized_route(form.cleaned_data['start'],form.cleaned_data['dest'])
-            for stop in route.path:
-                print(stop.__str__())
+            # For debug purpose
+            #for stop in route.path:
+            #    print(stop.__str__())
+
             context = {
                 'form': form,
                 'showpath': 1,

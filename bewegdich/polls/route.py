@@ -16,10 +16,11 @@ class Route(object):
 
     def __init__(self, json):
         self.data = json
+        self.path = []
 
-        pathlength = self.data["legs"][0]["points"].__len__()
-        for index in range(pathlength):
-            point = self.data["legs"][0]["points"][index]
+        for index in self.data["legs"][0]["stopSeq"]:
+            #point = self.data["legs"][0]["points"][index]
+            point = index
             self.path.append(Stop(point))
 
         self.origin_stop = self.path[0]
@@ -71,9 +72,12 @@ class Stop(object):
         elif "depDateTime" in json["ref"]:
             self.depaturetime = formatDateTime(json["ref"]["depDateTime"])
 
-
     def __str__(self):
-        return self.name.encode('utf-8') + " " + self.depaturetime.time().__str__() + self.lat + " : " + self.lng
+        if(self.depaturetime == 0): # If its the destination there is no depaturetime
+            return self.name + " " + self.lat + " : " + self.lng
+        else:
+            return self.name + " " + self.depaturetime.time().__str__() + self.lat + " : " + self.lng
+
 
 def formatDateTime(abfahrszeit):
     """
@@ -83,7 +87,12 @@ def formatDateTime(abfahrszeit):
     :param abfahrszeit: e.g. 27.04.2016 13:45 or 20160529 15:11
     :return: the datetime object
     """
+    time = -1
     if type(abfahrszeit) == dict:
-        return datetime.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
+        time = datetime.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
     else:
-        return datetime.strptime(abfahrszeit , '%Y%m%d %H:%M')
+        time = datetime.strptime(abfahrszeit , '%Y%m%d %H:%M')
+
+    if (type(time) == int):
+        print("WRONG WONRG")
+    return time
