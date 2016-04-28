@@ -137,6 +137,21 @@ def insertStartPoint(start,route):
 
     pass
 
+def get_nearest_stop(coords):
+    """
+        Finds the nearest station for the given location
+
+    :param coords: [latitude,longitude]
+    :return: a Stop
+    """
+    lat,lon=coords[0],coords[1]
+    origin = urllib.quote((lon+":"+lat+":WGS84").encode('utf-8'))
+    type = "coord"
+    url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON&" + \
+          "type_origin=" + type + "&name_origin=" + origin
+    print(url)
+    json = getJson(url)
+    return
 
 def get_coords(place):
     """
@@ -167,9 +182,11 @@ def getJson(url):
 
 
 #Test
-origin = "Hirblingen Augsburg"
-destination = "fachhochschule Augsburg"
-find_startstation(origin, destination)
+#origin = "Hirblingen Augsburg"
+#destination = "fachhochschule Augsburg"
+#find_startstation(origin, destination)
+get_nearest_stop(['48.358411', '10.9073826'])
+
 
 
 
