@@ -31,9 +31,12 @@ def get_optimized_route(start, dest):
     :return: : the route
     """
     startstation = find_startstation(start, dest)
-
+    if type(startstation) == int:
+        return startstation
     #Do the routesearch again with the new station
     route = get_fastest_route(startstation.name, dest)
+    if type(route) == int:
+        return route
 
     #Add the startposition of the user to the final route
     #route = insertStartPoint(start,route)
@@ -54,7 +57,8 @@ def find_startstation(start, dest):
     destpos = dest
 
     route = get_fastest_route(userpos, destpos)
-
+    if type(route) == int:
+        return route
     # Get the next 5 stations of this line
     station_list = route.get_next_stops()
 
@@ -76,7 +80,8 @@ def find_startstation(start, dest):
 
         if (current_date_time + walk_time) < station.depaturetime:
             if best_station == -1 or best_station.walkingtime < station.walkingtime :
-                best_station = station
+                #best_station = station
+                pass
 
     if best_station != -1:
         return best_station
@@ -102,16 +107,29 @@ def get_fastest_route(start, dest):
           "&type_destination="+type+ "&name_destination="+ destination
     print(url)
     json = getJson(url)
-    if "trips" in json:
+    code = checkValidJson(json)
+    if code == 0:
         for route in json["trips"]:
             r = Route(route)
             if r.depature_time > datetime.datetime.utcnow():
                 return r
-        return
+        return -1
     else:
-        print("ERR: No timetable recieved")
-        return
+        return int(code)
 
+def checkValidJson(json):
+    if "trips" not in json:
+        print("ERR: No timetable recieved")
+        return 5
+    if "message" in json["destination"]:
+       print("Destination unkown")
+       return json["destination"]["message"][0]["value"]
+
+    if "message" in json["origin"]:
+        print("Origin unkown")
+        return json["origin"]["message"][0]["value"]
+
+    return 0
 
 def get_walking_time(origin, destination):
     """

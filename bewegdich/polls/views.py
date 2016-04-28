@@ -41,21 +41,25 @@ def map(request):
             start = get_coords(form.cleaned_data['start'])
 
             route = get_optimized_route(form.cleaned_data['start'],form.cleaned_data['dest'])
-            # For debug purpose
-            #for stop in route.path:
-            #    print(stop.__str__())
+            context = dict(form=form)
+            if type(route) == int:
+                context['err'] = 1
+                if route == 1:  # Origin or Destination not found
+                    context['msg'] = "Start oder Ziel wurde nicht gefunden"
+                else:
+                    context['msg'] = "Unbekannter Fehler (" + str(route) + ")"
 
-            context = {
-                'form': form,
-                'showpath': 1,
-                'start': form.cleaned_data['start'],
-                'dest': form.cleaned_data['dest'],
-                'startlat': start[0],
-                'startlng': start[1],
-                'destlat': dest[0],
-                'destlng': dest[1],
-                'route': route.path
-            }
+            else:  # If everything is correct
+               context['showpath'] = 1
+               context['start'] = form.cleaned_data['start']
+               context['dest'] = form.cleaned_data['dest']
+               context['startlat'] = start[0]
+               context['startlng'] = start[1]
+               context['destlat'] = dest[0]
+               context['destlng'] = dest[1]
+               context['route'] = route.path
+
+
             return render(request,'map.html',context)
         else:
             return HttpResponseRedirect('/notvalid/')

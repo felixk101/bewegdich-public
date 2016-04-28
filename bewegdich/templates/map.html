@@ -32,9 +32,14 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
     <input type="submit" value="Submit" />
 </form>
 
-<div id="map"></div>
-
+{% if err %}
+    {{ msg }}
+{% else %}
+    <div id="map"></div>
+{% endif %}
 <script>
+
+
     var startPos;
 
 
@@ -50,12 +55,22 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
 
     function initMap() {
         {% if showpath %}
-             {% comment "Optional note" %}
-             var mypos =  {lat:{{ startlat }}, lng: {{ startlng }}};
-             {% endcomment %}
+
+            var mypos =  {lat:{{ startlat }}, lng: {{ startlng }}};
+            var dest =  {lat:{{ destlat }}, lng: {{ destlng }}};
+
+
+
+            {% comment "Optional note" %}
              var mypos = {lat: {{route.0.lat}}, lng: {{route.0.lng}}}
+              {% endcomment %}
         {% else %}
              var mypos =  {lat:startPos.coords.latitude, lng: startPos.coords.longitude};
+             var pos = new google.maps.Marker({
+            position: mypos,
+            map: map,
+            title: 'Ihre Position'
+            });
         {% endif %}
 
         map = new google.maps.Map(document.getElementById('map'), {
@@ -63,13 +78,19 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
         zoom: 13
          });
 
-        var marker = new google.maps.Marker({
+        {% if showpath %}
+            var markerstart = new google.maps.Marker({
             position: mypos,
             map: map,
-            title: 'Ihre Position'
+            title: 'Start'
             });
 
-        {% if showpath %}
+            var markerdestination = new google.maps.Marker({
+            position: dest,
+            map: map,
+            title: 'Ziel'
+            });
+
             var coords = [
                 {% for stop in route %}
                     {lat: {{stop.lat}}, lng: {{stop.lng}}},
