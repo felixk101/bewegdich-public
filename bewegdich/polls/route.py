@@ -18,7 +18,7 @@ class Route(object):
         self.data = json
 
         pathlength = self.data["legs"][0]["points"].__len__()
-        for index in pathlength:
+        for index in range(pathlength):
             point = self.data["legs"][0]["points"][index]
             self.path.append(Stop(point))
 

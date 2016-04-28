@@ -32,13 +32,7 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
     <input type="submit" value="Submit" />
 </form>
 
-
-
-
-
 <div id="map"></div>
-
-
 
 <script>
     var startPos;
@@ -56,7 +50,10 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
 
     function initMap() {
         {% if showpath %}
+             {% comment "Optional note" %}
              var mypos =  {lat:{{ startlat }}, lng: {{ startlng }}};
+             {% endcomment %}
+             var mypos = {lat: {{route.0.lat}}, lng: {{route.0.lng}}}
         {% else %}
              var mypos =  {lat:startPos.coords.latitude, lng: startPos.coords.longitude};
         {% endif %}
@@ -72,7 +69,6 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
             title: 'Ihre Position'
             });
 
-       {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
         {% if showpath %}
             var coords = [
                 {% for stop in route %}
@@ -93,11 +89,6 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
 
 
     };
-
-
-
-
-
 
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0&callback=initMap"

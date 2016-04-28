@@ -56,21 +56,20 @@ def find_startstation(start, dest):
     route = get_fastest_route(userpos, destpos)
 
     # Get the next 5 stations of this line
-    stationList = route.get_next_stops()
+    station_list = route.get_next_stops()
 
-    # Get the depaturetimes of the stations at the given time
-    #depatureTimes = getDepatuertimes(stationList, depature_time)
+    
 
     # Step through stations to find a better one
-    for station in stationList:
+    for station in station_list:
 
         # Calculate the time to walk to the given station
         walkTime = get_walking_time(userpos, station.name)
 
         # If there is enough time to walk, return this station
-        currentDateTime = datetime.datetime.utcnow()
-        print((currentDateTime+walkTime).__str__() + " < " + station.depaturetime.__str__())
-        if (currentDateTime+walkTime) < station.depaturetime:
+        current_date_time = datetime.datetime.utcnow()
+        print((current_date_time+walkTime).__str__() + " < " + station.depaturetime.__str__())
+        if (current_date_time+walkTime) < station.depaturetime:
             return station
 
     # No station is in range to walk to
