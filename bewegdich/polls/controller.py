@@ -95,7 +95,8 @@ def get_fastest_route(start, dest):
     origin = urllib.quote(start.encode('utf-8'))
     destination = urllib.quote(dest.encode('utf-8'))
     type="stop"
-    url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON&locationServerActive=1&" +\
+    url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON&" +\
+          "locationServerActive=1&coordOutputFormat=WGS84[DD.ddddd]&" +\
           "type_origin="+type+"&name_origin="+origin+\
           "&type_destination="+type+ "&name_destination="+ destination
     print(url)

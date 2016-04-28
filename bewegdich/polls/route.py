@@ -64,8 +64,8 @@ class Stop(object):
         self.data = json
         self.name = json["name"]
         coords = json["ref"]["coords"].split(",")
-        self.lat = coords[0]
-        self.lng = coords[1]
+        self.lat = coords[1]
+        self.lng = coords[0]
         if "dateTime" in json:
             self.depaturetime = formatDateTime(json["dateTime"])
         elif "depDateTime" in json["ref"]:
