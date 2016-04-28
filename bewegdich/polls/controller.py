@@ -4,37 +4,56 @@ import urllib
 from route import Route
 import datetime
 # coding: utf8
+"""
+ Nutzerposition holen
+ Zielposition holen
+ schnellste Route von Start nach Ziel berechnen
+ Filtern der Einstiegsstation, Endstation(Richtung) und Abfahrtszeit dieser Route
+ Naechsten z.b. 5 Stationen in Fahrtrichtung der Linie holen
+ Abfahrtszeiten der 5 Stationen holen
+ Gehzeit zwischen Nutzerposition und den 5 Stationen berechnen
+ Vergleichen der Gehzeit und den Abfahrszeiten
 
-# Nutzerposition holen
-# Zielposition holen
-# schnellste Route von Start nach Ziel berechnen
-# Filtern der Einstiegsstation, Endstation(Richtung) und Abfahrtszeit dieser Route
-# Naechsten z.b. 5 Stationen in Fahrtrichtung der Linie holen
-# Abfahrtszeiten der 5 Stationen holen
-# Gehzeit zwischen Nutzerposition und den 5 Stationen berechnen
-# Vergleichen der Gehzeit und den Abfahrszeiten
-#
-# Gehe die 5 Stationen durch
-# 	Wenn aktuelleZeit + Gehzeit < Abfahrszeit
-# 		diese Station als start setzen
+ Gehe die 5 Stationen durch
+ 	Wenn aktuelleZeit + Gehzeit < Abfahrszeit
+ 		diese Station als start setzen
 
 # Returns the best Route
-def get_optimized_route(start,dest):
+"""
+
+def get_optimized_route(start, dest):
+    """
+    Finds the purfect Route with walking opmimazation included
+
+    :rtype: Route
+    :param start: the startposition where the user currently is
+    :param dest: the destionation where the user want to go
+    :return: : the route
+    """
     startstation = find_startstation(start, dest)
 
     #Do the routesearch again with the new station
-    route = getFastestRoute(startstation.name, dest)
+    route = get_fastest_route(startstation.name, dest)
 
     #Add the startposition of the user to the final route
     #route = insertStartPoint(start,route)
     return route
 
+
 def find_startstation(start, dest):
+    """
+
+    Looks up the recommended route and try to find a station within range to walk to in time
+
+    :param start: the startposition
+    :param dest: the destination
+    :return: Stop
+    """
     # Get start and destination positions
     userpos = start
     destpos = dest
 
-    route = getFastestRoute(userpos, destpos)
+    route = get_fastest_route(userpos, destpos)
 
     # Get the next 5 stations of this line
     stationList = route.get_next_stops()
@@ -42,11 +61,11 @@ def find_startstation(start, dest):
     # Get the depaturetimes of the stations at the given time
     #depatureTimes = getDepatuertimes(stationList, depature_time)
 
-    # Step through stations
+    # Step through stations to find a better one
     for station in stationList:
 
         # Calculate the time to walk to the given station
-        walkTime = getWalkingTime(userpos, station.name)
+        walkTime = get_walking_time(userpos, station.name)
 
         # If there is enough time to walk, return this station
         currentDateTime = datetime.datetime.utcnow()
@@ -57,8 +76,15 @@ def find_startstation(start, dest):
     # No station is in range to walk to
     return route.origin_stop
 
-# Returns the fastest route from start to dest
-def getFastestRoute(start, dest):
+
+def get_fastest_route(start, dest):
+    """
+        Finds the currently best route from A to B
+
+    :param start: the startposition
+    :param dest:  the destination
+    :return: a route
+    """
     origin = urllib.quote(start.encode('utf-8'))
     destination = urllib.quote(dest.encode('utf-8'))
     type="stop"
@@ -67,29 +93,27 @@ def getFastestRoute(start, dest):
           "&type_destination="+type+ "&name_destination="+ destination
     print(url)
     json = getJson(url)
-    for route in json["trips"]:
-        r = Route(route)
-        if r.depature_time > datetime.datetime.utcnow():
-            return r
-    return
+    if "trips" in json:
+        for route in json["trips"]:
+            r = Route(route)
+            if r.depature_time > datetime.datetime.utcnow():
+                return r
+        return
+    else:
+        print("ERR: No timetable recieved")
+        return
 
 
+def get_walking_time(origin, destination):
+    """
 
-# Returns a list of stations of that given line
-def getLineList(route, number_of_stations=5):
+    Searches for a route to walk from A to B
 
-    linelist = []
-    for stop in route["legs"][0]["stopSeq"]:
-        print(stop)
-        linelist.append(stop)
-    #Remove first item because its the originstop
-    linelist.pop(0)
-    linelist.pop(linelist.__len__()-1)
-    return linelist
+    :param origin: startposition
+    :param destination: destination
+    :return: a datetime
+    """
 
-
-# Returns the time to walk from start to destition
-def getWalkingTime(origin, destination):
     origin = urllib.quote(origin.encode('utf-8'))
     destination = urllib.quote(destination.encode('utf-8'))
     key = "AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0"
@@ -106,7 +130,16 @@ def insertStartPoint(start,route):
 
     pass
 
-def getCoords(place):
+
+def get_coords(place):
+    """
+
+    Looks up the given name, try to find a place with the same name
+    and returns the coords
+
+    :param place: the place
+    :return: [latitude,longitude]
+    """
     key = "AIzaSyAV52eNjBjVhoTtaOwdWbd8iQ7Cia6X9c0"
     optionalSecondKey = "AIzaSyCVP9DkstDfjlTYgj0XlU5YlzU9gI3pqOU"
     url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + place + "&key=" + key
@@ -117,10 +150,13 @@ def getCoords(place):
 
 
 def getJson(url):
-     response = urllib.urlopen(url)
-     return json.loads(response.read())
-  #  with open('C:\json', 'r') as myfile:
-#     return json.loads(myfile.read())
+    """
+    Downloads the json from the given URL and converts it into a json object
+    :param url: the url
+    :return: a json
+    """
+    response = urllib.urlopen(url)
+    return json.loads(response.read())
 
 
 #Test
@@ -128,8 +164,10 @@ origin = "Hirblingen Augsburg"
 destination = "fachhochschule Augsburg"
 #find_startstation(origin, destination)
 
-#write json to File
 
+
+
+#write json to File
 # target = open("C:\json", 'w')
 #
 #     print "Truncating the file.  Goodbye!"

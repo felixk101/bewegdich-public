@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
 from .forms import LocationForm
-from  controller import get_optimized_route,getCoords
+from  controller import get_optimized_route,get_coords
 
 
 
@@ -37,9 +37,10 @@ def map(request):
             # ...
             # redirect to a new URL:
             print(form.cleaned_data['dest'])
-            dest = getCoords(form.cleaned_data['dest'])
-            start =  getCoords(form.cleaned_data['start'])
-            route =  get_optimized_route(form.cleaned_data['start'],form.cleaned_data['dest'])
+            dest = get_coords(form.cleaned_data['dest'])
+            start = get_coords(form.cleaned_data['start'])
+
+            route = get_optimized_route(form.cleaned_data['start'],form.cleaned_data['dest'])
 
             context = {
                 'form': form,

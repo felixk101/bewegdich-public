@@ -5,7 +5,8 @@ from datetime import datetime
 
 class Route(object):
     """
-    asd
+    Route is the main object which is filled with data by the EFA API. The json files is given in the contructor and
+    will be analysed to filter the important data.
     """
     data = []
     origin_stop = ""
@@ -29,8 +30,12 @@ class Route(object):
     def __str__(self):
         return self.origin_stop.__str__() + " -> " + self.destination_stop.__str__()
 
-    def get_next_stops(self):
+    def get_next_stops(self, number_of_stops=5):
+        """
+        Searches for the next stops in the route excluding the originstop
 
+        :return: the stops
+        """
         linelist = []
         for stop in self.data["legs"][0]["stopSeq"]:
             linelist.append(Stop(stop))
@@ -42,6 +47,12 @@ class Route(object):
 
 
 class Stop(object):
+    """
+
+    This Object represents one location with name and coords.
+    Its fed with json-data and filters the important informations
+
+    """
     data = ""
     name = ""
     lat = 0
@@ -63,6 +74,13 @@ class Stop(object):
         return self.name.encode('utf-8') + " " + self.depaturetime.time().__str__() + self.lat + " : " + self.lng
 
 def formatDateTime(abfahrszeit):
+    """
+
+    Formats the time from a json-string to a python datetime object
+
+    :param abfahrszeit: e.g. 27.04.2016 13:45 or 20160529 15:11
+    :return: the datetime object
+    """
     if type(abfahrszeit) == dict:
         return datetime.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
     else:
