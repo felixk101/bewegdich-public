@@ -3,6 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+      <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 40%;
+          width:40%;
+      }
+    </style>
+
 </head>
 <body>
 <h1>Beweg dich v0.1</h1>
@@ -21,53 +33,74 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
 </form>
 
 
-<div id="mapdiv" style="width: 600px;height: 400px"></div>
-<script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+
+
+
+<div id="map"></div>
+
+
+
 <script>
     var startPos;
-    var dis;
+
 
     window.onload = function () {
         navigator.geolocation.getCurrentPosition(function (position) {
         startPos = position;
         document.getElementById('lat').innerHTML = position.coords.latitude;
         document.getElementById('lon').innerHTML = position.coords.longitude;
-        showmap();
+        initMap();
     });
+    };
+    var map;
+
+    function initMap() {
+        {% if showpath %}
+             var mypos =  {lat:{{ startlat }}, lng: {{ startlng }}};
+        {% else %}
+             var mypos =  {lat:startPos.coords.latitude, lng: startPos.coords.longitude};
+        {% endif %}
+
+        map = new google.maps.Map(document.getElementById('map'), {
+        center: mypos,
+        zoom: 13
+         });
+
+        var marker = new google.maps.Marker({
+            position: mypos,
+            map: map,
+            title: 'Ihre Position'
+            });
+
+       {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        {% if showpath %}
+            var coords = [
+                {% for stop in route %}
+                    {lat: {{stop.lat}}, lng: {{stop.lng}}},
+                {% endfor %}
+            ];
+
+            var line = new google.maps.Polyline({
+                path: coords,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+            line.setMap(map);
+        {% endif %}
+
+
+
     };
 
 
 
-    function showmap() {
-        map = new OpenLayers.Map("mapdiv");
-        map.addLayer(new OpenLayers.Layer.OSM());
 
-        var lonLat = new OpenLayers.LonLat(startPos.coords.longitude, startPos.coords.latitude)
-                .transform(
-                        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-                        map.getProjectionObject() // to Spherical Mercator Projection
-                );
-        var dest = new OpenLayers.LonLat({{ destlng }},{{ destlat }})
-                .transform(
-                        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-                        map.getProjectionObject() // to Spherical Mercator Projection
-                );
-        var start = new OpenLayers.LonLat({{ startlng }},{{ startlat }})
-                .transform(
-                        new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-                        map.getProjectionObject() // to Spherical Mercator Projection
-                );
 
-        var zoom = 10;
 
-        var markers = new OpenLayers.Layer.Markers("Markers");
-        map.addLayer(markers);
-
-        markers.addMarker(new OpenLayers.Marker(lonLat));
-        markers.addMarker(new OpenLayers.Marker(dest));
-        markers.addMarker(new OpenLayers.Marker(start));
-        map.setCenter(lonLat, zoom);
-    }
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0&callback=initMap"
+        async defer></script>
 </body>
 </html>
