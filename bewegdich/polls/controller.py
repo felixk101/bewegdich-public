@@ -1,7 +1,8 @@
 import datetime
 import json
+from xml.etree import ElementTree
 import urllib
-from route import Route
+from route import Route, Stop
 import datetime
 # coding: utf8
 """
@@ -142,16 +143,17 @@ def get_nearest_stop(coords):
         Finds the nearest station for the given location
 
     :param coords: [latitude,longitude]
-    :return: a Stop
+    :return: the closest stop's name
     """
     lat,lon=coords[0],coords[1]
     origin = urllib.quote((lon+":"+lat+":WGS84").encode('utf-8'))
     type = "coord"
-    url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON&" + \
+    url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?" + \
           "type_origin=" + type + "&name_origin=" + origin
-    print(url)
-    json = getJson(url)
-    return
+    data = getXML(url)
+    stop = data[1][1].find('itdOdvAssignedStops')[0]
+
+    return stop.get('nameWithPlace') #extract the station's name
 
 def get_coords(place):
     """
@@ -179,6 +181,18 @@ def getJson(url):
     """
     response = urllib.urlopen(url)
     return json.loads(response.read())
+
+def getXML(url):
+    """
+    Downloads the XML from the given URL and converts it into an ElementTree
+    :param url: the url
+    :return: ElementTree root Element
+    """
+    response = urllib.urlopen(url)
+    response_string = response.read()
+    xmldoc = ElementTree.fromstring(response_string)
+    return xmldoc
+
 
 
 #Test
