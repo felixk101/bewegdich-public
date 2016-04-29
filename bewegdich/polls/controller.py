@@ -74,14 +74,14 @@ def find_startstation(start, dest):
         print("Walkingtime: " + walk_time.__str__())
 
         # If there is enough time to walk, save this station
-        current_date_time = datetime.datetime.utcnow()
+        current_date_time = datetime.datetime.now()
 
         print("to " + station.name + ": "+(current_date_time+walk_time).time().__str__() +
               " <? " + station.depaturetime.time().__str__())
 
         if (current_date_time + walk_time) < station.depaturetime:
             if best_station == -1 or best_station.walkingtime < station.walkingtime :
-                #best_station = station
+                best_station = station
                 pass
 
     if best_station != -1:
