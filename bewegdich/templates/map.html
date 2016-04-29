@@ -50,6 +50,8 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br></p>
         startPos = position;
         document.getElementById('lat').innerHTML = position.coords.latitude;
         document.getElementById('lon').innerHTML = position.coords.longitude;
+        //put coords into hidden form field
+        document.getElementById('id_coords').value = position.coords.latitude + ',' + position.coords.longitude;
         initMap();
     });
     };

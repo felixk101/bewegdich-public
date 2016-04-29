@@ -103,5 +103,5 @@ def formatDateTime(abfahrszeit):
         time = datetime.strptime(abfahrszeit , '%Y%m%d %H:%M')
 
     if (type(time) == int):
-        print("WRONG WONRG")
+        print("WRONG WRONG")
     return time
