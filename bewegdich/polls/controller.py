@@ -1,7 +1,7 @@
 import datetime
 import json
 import urllib
-from route import Route
+from route import Route,Stop
 import datetime
 # coding: utf8
 """
@@ -155,7 +155,8 @@ def get_walking_time(origin, destination):
 # Insert a new startpoint where the route should begin
 def insertStartPoint(start,route):
 
-    pass
+    route.path.insert(0, Stop(start))
+
 
 
 def get_coords(place):
