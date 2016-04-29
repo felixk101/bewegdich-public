@@ -39,7 +39,7 @@ def get_optimized_route(start, dest):
         return route
 
     #Add the startposition of the user to the final route
-    #route = insertStartPoint(start,route)
+    route = insertStartPoint(start,route)
     return route
 
 
@@ -154,9 +154,9 @@ def get_walking_time(origin, destination):
 
 # Insert a new startpoint where the route should begin
 def insertStartPoint(start,route):
-
-    route.path.insert(0, Stop(start))
-
+    coords = get_coords(start)
+    route.path.insert(0, Stop(start,coords[0],coords[1]))
+    return route
 
 
 def get_coords(place):
@@ -186,13 +186,20 @@ def getJson(url):
     response = urllib.urlopen(url)
     return json.loads(response.read())
 
+def findStation(name):
+    url = "http://efa.avv-augsburg.de/avv/XML_STOPFINDER_REQUEST?locationServerActive=1&outputFormat=JSON&" + \
+          "type_sf=any&name_sf=" + urllib.quote(name.encode('utf-8'))
+    print(url)
+    json = getJson(url)
+    print(json)
+
 
 #Test
 origin = "Hirblingen Augsburg"
 destination = "fachhochschule Augsburg"
 #find_startstation(origin, destination)
 
-
+#   findStation(destination)
 
 
 #write json to File

@@ -18,13 +18,11 @@
 </head>
 <body>
 <h1>Beweg dich v0.1</h1>
-Location (lat, lon):
-Added a search feature to the map. The entered place will be shown by a marker on the map
-
+<p>Location (lat, lon):
 <span id="lat">???</span>°, <span id="lon">???</span>°
-<br><br>
-Start: {{ start }} {{ startlat }} {{ startlng }}<br><br>
-Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
+<br>
+Start: {{ start }} {{ startlat }} {{ startlng }}<br>
+Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br></p>
 
 <form action="/map/" method="post">
     {% csrf_token %}
@@ -32,11 +30,15 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br><br>
     <input type="submit" value="Submit" />
 </form>
 
+
 {% if err %}
     {{ msg }}
 {% else %}
     <div id="map"></div>
 {% endif %}
+
+
+
 <script>
 
 

@@ -21,7 +21,7 @@ class Route(object):
         for index in self.data["legs"][0]["stopSeq"]:
             #point = self.data["legs"][0]["points"][index]
             point = index
-            self.path.append(Stop(point))
+            self.path.append(Stop.make_from_json(point))
 
         self.origin_stop = self.path[0]
         self.destination_stop = self.path[-1]
@@ -39,7 +39,7 @@ class Route(object):
         """
         linelist = []
         for stop in self.data["legs"][0]["stopSeq"]:
-            linelist.append(Stop(stop))
+            linelist.append(Stop.make_from_json(stop))
         # Remove first and last item because its the originstop and destination stop
         linelist.pop(0)
         linelist.pop(linelist.__len__() - 1)
@@ -61,16 +61,25 @@ class Stop(object):
     depaturetime = 0
     walkingtime = -1
 
-    def __init__(self, json):
-        self.data = json
-        self.name = json["name"]
+    def __init__(self,name,lat,lng):
+        self.name = name
+        self.lat = lat
+        self.lng = lng
+
+    @staticmethod
+    def make_from_json(json):
+        data = json
+        name = json["name"]
         coords = json["ref"]["coords"].split(",")
-        self.lat = coords[1]
-        self.lng = coords[0]
+        lat = coords[1]
+        lng = coords[0]
+        stop = Stop(name,lat,lng)
+        stop.data = data
         if "dateTime" in json:
-            self.depaturetime = formatDateTime(json["dateTime"])
+            stop.depaturetime = formatDateTime(json["dateTime"])
         elif "depDateTime" in json["ref"]:
-            self.depaturetime = formatDateTime(json["ref"]["depDateTime"])
+            stop.depaturetime = formatDateTime(json["ref"]["depDateTime"])
+        return stop
 
     def __str__(self):
         if(self.depaturetime == 0): # If its the destination there is no depaturetime

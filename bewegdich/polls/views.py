@@ -39,9 +39,9 @@ def map(request):
             print(form.cleaned_data['dest'])
             dest = get_coords(form.cleaned_data['dest'])
             start = get_coords(form.cleaned_data['start'])
-            city = form.cleaned_data['city'],
-			route = get_optimized_route(form.cleaned_data['start'] + ' ' + city[0],form.cleaned_data['dest'] + ' ' + city[0])
-          	context = dict(form=form)
+            city = form.cleaned_data['city']
+            route = get_optimized_route(form.cleaned_data['start'] + ' ' + city[0],form.cleaned_data['dest'] + ' ' + city[0])
+            context = dict(form=form)
             if type(route) == int:
                 context['err'] = 1
                 if route == 1:  # Origin or Destination not found
