@@ -24,7 +24,7 @@
 Start: {{ start }} {{ startlat }} {{ startlng }}<br>
 Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br></p>
 
-<form action="/map/" method="post">
+<form action="/list/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />

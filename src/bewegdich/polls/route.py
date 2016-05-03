@@ -9,6 +9,7 @@ class Route(object):
     will be analysed to filter the important data.
     """
     data = []
+    id = -1
     origin_stop = ""
     destination_stop = ""
     depature_time = 0
@@ -40,6 +41,11 @@ class Route(object):
         linelist = []
         for stop in self.data["legs"][0]["stopSeq"]:
             linelist.append(Stop.make_from_json(stop))
+
+        #when No stations inbetween start and destination found
+        if(linelist.__len__()<3):
+            return []
+
         # Remove first and last item because its the originstop and destination stop
         linelist.pop(0)
         linelist.pop(linelist.__len__() - 1)
@@ -66,8 +72,16 @@ class Stop(object):
         self.lat = lat
         self.lng = lng
 
+
     @staticmethod
     def make_from_json(json):
+        """
+        Factory method to create a Stop
+        Its somehow very difficult to make 2 contructores handle both things
+
+        :param json:
+        :return:
+        """
         data = json
         name = json["name"]
         coords = json["ref"]["coords"].split(",")
@@ -80,6 +94,9 @@ class Stop(object):
         elif "depDateTime" in json["ref"]:
             stop.depaturetime = formatDateTime(json["ref"]["depDateTime"])
         return stop
+
+    def get_coords(self):
+        return [self.lat,self.lng]
 
     def __str__(self):
         if(self.depaturetime == 0): # If its the destination there is no depaturetime

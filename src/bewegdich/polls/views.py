@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 
 from .forms import LocationForm
-from  controller import get_optimized_route,get_coords
+from  controller import get_optimized_routes,get_coords
 
 
 
@@ -26,6 +26,38 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 
+def list(request):
+    """
+
+    Shows a selection of the best routes in a list to select
+
+    :param request:
+    :return:
+    """
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = LocationForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            print('coords: ', form.cleaned_data['coords'])
+
+            print(form.cleaned_data['dest'])
+            dhest = get_coords(form.cleaned_data['dest'])
+            start = get_coords(form.cleaned_data['start'])
+            city = form.cleaned_data['city']
+            routes = get_optimized_routes(start, form.cleaned_data['dest'] + ' ' + city[0])
+
+            context = {
+                'routes': routes
+            }
+            return render(request, 'list.html', context)
+        else:
+            return HttpResponseRedirect('/notvalid/')
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        return HttpResponseRedirect('/notvalid/')
+
+
 # @login_required(login_url='/polls/login/')
 def map(request):
     if request.method == 'POST':
@@ -41,7 +73,7 @@ def map(request):
             dest = get_coords(form.cleaned_data['dest'])
             start = get_coords(form.cleaned_data['start'])
             city = form.cleaned_data['city']
-            route = get_optimized_route(form.cleaned_data['start'] + ' ' + city[0],form.cleaned_data['dest'] + ' ' + city[0])
+            routes = get_optimized_routes(start, form.cleaned_data['dest'] + ' ' + city[0])
             print('latitude:',start[0])
             context = {
                 'form': form,
@@ -52,7 +84,7 @@ def map(request):
                 'startlng': start[1],
                 'destlat': dest[0],
                 'destlng': dest[1],
-                'route': route.path
+                'route': routes
             }
             return render(request,'map.html',context)
         else:
@@ -80,4 +112,7 @@ def login_user(request):
                 return HttpResponseRedirect('/form/')
     return render_to_response('login.html', context_instance=RequestContext(request))
 
+
+def route(request,route_id):
+    return HttpResponse("Hello, world. You're at the route " + route_id)
 

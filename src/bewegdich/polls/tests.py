@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from controller import find_startstation
+from controller import find_startstations
 # Create your tests here.
 
 #Test
