@@ -76,16 +76,16 @@ WSGI_APPLICATION = 'bewegdich.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': '1_bewegdich',
-#         'USER': '1_bewegdich',
-#         'PASSWORD': '3TnTvrI,1_UAnOQb',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '1_bewegdich',
+        'USER': '1_bewegdich',
+        'PASSWORD': '3TnTvrI,1_UAnOQb',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
