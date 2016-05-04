@@ -38,10 +38,13 @@ def get_optimized_routes(start, dest):
     routes =  []
     #Do the routesearch again with the new station
     for station in startstations:
-        route = get_routes(station.get_coords(), dest)
-        if type(route) == int:
-            return route
-        routes.append(route)
+        routes_list = get_routes(station.get_coords(), dest)
+        if type(routes_list) == int:
+            return routes_list
+
+        for route in routes_list:
+            routes.append(route)
+
     #Add the startposition of the user to the final route
     #route = insertStartPoint(start,route)
     for i in range(routes.__len__()):
