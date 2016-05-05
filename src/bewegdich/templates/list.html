@@ -8,7 +8,8 @@
 <h1>Mögliche Startpunkte</h1>
 
 {% for route in routes %}
-    Route:  {{route.origin_stop.name}} to {{route.destination_stop.name}} <br>
+    Route:  {{route.origin_stop.name}} to {{route.destination_stop.name}} um {{route.depature_time}} <br>
+    Fahrtdauer:  {{route.duration.minute}} Minuten<br>
     <a href="/route{{ route.id }}">Zeige Details</a>
     <br> <br>
 {% endfor %}

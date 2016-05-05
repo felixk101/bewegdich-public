@@ -21,13 +21,11 @@
 <p>Location (lat, lon):
 <span id="lat">???</span>°, <span id="lon">???</span>°
 <br>
-Start: {{ start }} {{ startlat }} {{ startlng }}<br>
-Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br></p>
 
 <form action="/list/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Submit" />
+    <input id="submitbutton" type="submit" value="Submit" />
 </form>
 
 
@@ -44,10 +42,12 @@ Ziel: {{ dest }}  {{ destlat }}  {{ destlng }}<br></p>
 
 
     window.onload = function () {
+        document.getElementById('submitbutton').disabled = true;
         navigator.geolocation.getCurrentPosition(function (position) {
         startPos = position;
         document.getElementById('lat').innerHTML = position.coords.latitude;
         document.getElementById('lon').innerHTML = position.coords.longitude;
+         document.getElementById('submitbutton').disabled = false;
         //put coords into hidden form field
         document.getElementById('id_coords').value = position.coords.latitude + ',' + position.coords.longitude;
         initMap();

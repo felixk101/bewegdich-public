@@ -43,7 +43,8 @@ def get_optimized_routes(start, dest):
             return routes_list
 
         for route in routes_list:
-            routes.append(route)
+            if not route.isWalkOnly():
+                routes.append(route)
 
     #Add the startposition of the user to the final route
     #route = insertStartPoint(start,route)
@@ -73,6 +74,8 @@ def find_startstations(start, dest):
     for route in routes:
         # Get the next 5 stations of this line
         station_list = route.get_next_stops()
+        if route.isWalkOnly():
+            continue
 
         best_station = -1
 
@@ -97,13 +100,13 @@ def find_startstations(start, dest):
                     best_station = station
 
         if best_station != -1:
-            station_list.append(best_station)
+            startstations.append(best_station)
         else:
             # No station is in range to walk to
-            station_list.append(route.origin_stop)
-    return station_list
+            startstations.append(route.origin_stop)
+    return startstations
 
-def get_routes(start, dest):
+def get_routes(start, dest, datetime=-1):
     """
         Finds the currently best route from A to B
 
@@ -111,7 +114,7 @@ def get_routes(start, dest):
     :param dest:  the destination
     :return: a route
     """
-    lat, lon = start[0], start[1]
+    lat, lon = start[1], start[0]
     origin = urllib.quote((str(lon) + ":" + str(lat) + ":WGS84").encode('utf-8'))
     destination = urllib.quote(dest.encode('utf-8'))
     typeStart = "coord"
@@ -126,6 +129,11 @@ def get_routes(start, dest):
           "locationServerActive=1&coordOutputFormat=WGS84[DD.ddddd]&" + \
           "type_origin=" + typeStart + "&name_origin=" + origin + \
           "&type_destination=" + typeDest + "&name_destination=" + destination
+
+    if datetime != -1:
+        date = datetime.date().strftime("%Y%m%d")
+        time = datetime.time().strftime("%H:%M")
+        url += "?itdDate="+date+"&itdTime="+time+"&itdTripDateTimeDepArr=dep"
 
     print(url)
 
@@ -157,7 +165,7 @@ def checkValidJson(json):
     :param json:
     :return:
     """
-    if "trips" not in json:
+    if "trips" not in json or json["trips"] == None:
         print("ERR: No timetable recieved")
         return 5
     if "message" in json["destination"]:
@@ -181,7 +189,7 @@ def get_walking_time(origin, destination):
     if type(origin)!= list:
         return -1
 
-    origin = urllib.quote((str(origin[0])+","+str(origin[1])).encode('utf-8'))
+    origin = urllib.quote((str(origin[1])+","+str(origin[0])).encode('utf-8'))
     destination = urllib.quote(destination.encode('utf-8'))
     key = "AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0"
     url = "https://maps.googleapis.com/maps/api/directions/json?" +\
@@ -226,6 +234,15 @@ def get_coords(place):
     :param place: the place
     :return: [latitude,longitude]
     """
+    place = urllib.quote(place)
+    url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON" \
+          "&coordOutputFormat=WGS84[DD.ddddd]&" \
+          "type_origin=any&" \
+          "name_origin=" + place +\
+          "&anyObjFilter_origin=2"
+    data = getJson(url)
+    coords = data["origin"]["points"]["point"]["ref"]["coords"].split(",")
+    return coords
 
     key = "AIzaSyAV52eNjBjVhoTtaOwdWbd8iQ7Cia6X9c0"
     optionalSecondKey = "AIzaSyCVP9DkstDfjlTYgj0XlU5YlzU9gI3pqOU"
