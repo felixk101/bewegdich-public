@@ -13,20 +13,28 @@ class Route(object):
     origin_stop = ""
     destination_stop = ""
     depature_time = 0
+    duration = -1
     path = []
 
     def __init__(self, json):
         self.data = json
         self.path = []
 
-        for index in self.data["legs"][0]["stopSeq"]:
-            #point = self.data["legs"][0]["points"][index]
-            point = index
-            self.path.append(Stop.make_from_json(point))
+        for linestops in self.data["legs"]:
+            if "stopSeq" not in linestops or linestops["mode"]["product"] == "Fussweg":
+                pass
+            else:
+                for stop in linestops["stopSeq"]:
+                    self.path.append(Stop.make_from_json(stop))
 
+        self.duration = datetime.strptime(self.data["duration"], '%H:%M').time()
+
+        if(len(self.path) == 0):
+            return
         self.origin_stop = self.path[0]
         self.destination_stop = self.path[-1]
         self.depature_time = self.origin_stop.depaturetime
+
 
 
     def __str__(self):
@@ -39,8 +47,13 @@ class Route(object):
         :return: the stops
         """
         linelist = []
-        for stop in self.data["legs"][0]["stopSeq"]:
-            linelist.append(Stop.make_from_json(stop))
+
+        for linestops in self.data["legs"]:
+            if linestops["mode"]["product"] != "Fussweg":
+                for stop in linestops["stopSeq"]:
+                    linelist.append(Stop.make_from_json(stop))
+
+
 
         #when No stations inbetween start and destination found
         if(linelist.__len__()<3):
@@ -51,7 +64,12 @@ class Route(object):
         linelist.pop(linelist.__len__() - 1)
         return linelist
 
-
+    def isWalkOnly(self):
+       iswalkonly = 1
+       for linestops in self.data["legs"]:
+           if linestops["mode"]["product"] != "Fussweg":
+               iswalkonly = 0
+       return iswalkonly
 
 class Stop(object):
     """
@@ -96,13 +114,13 @@ class Stop(object):
         return stop
 
     def get_coords(self):
-        return [self.lat,self.lng]
+        return [self.lng,self.lat]
 
     def __str__(self):
         if(self.depaturetime == 0): # If its the destination there is no depaturetime
-            return self.name + " " + self.lat + " : " + self.lng
+            return self.name
         else:
-            return self.name + " " + self.depaturetime.time().__str__() + self.lat + " : " + self.lng
+            return self.name + " " + self.depaturetime.time().__str__()
 
 
 def formatDateTime(abfahrszeit):

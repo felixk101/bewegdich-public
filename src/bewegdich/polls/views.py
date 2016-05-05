@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from .forms import LocationForm
 from  controller import get_optimized_routes,get_coords
 
-
+listi = []
 
 # @login_required(login_url='/polls/login/')
 def get_dest(request):
@@ -34,19 +34,30 @@ def list(request):
     :param request:
     :return:
     """
+    global listi
+
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = LocationForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            print('coords: ', form.cleaned_data['coords'])
+          #  print('coords: ', form.cleaned_data['coords'])
+          #  print(form.cleaned_data['dest'])
 
-            print(form.cleaned_data['dest'])
-            dhest = get_coords(form.cleaned_data['dest'])
-            start = get_coords(form.cleaned_data['start'])
+            dest = form.cleaned_data['dest']
+
+            start = form.cleaned_data['coords'].split(",")
+
+            #### For Testing Only: ####
+            ### To get the same startlocation ####
+
+            start = [10.90529,48.35882]
+
             city = form.cleaned_data['city']
-            routes = get_optimized_routes(start, form.cleaned_data['dest'] + ' ' + city[0])
-
+            routes = get_optimized_routes(start, city + ' ' +dest )
+            if(type(routes) == int):
+                return HttpResponse("Bei suche trat leider Fehler: "+ str(routes) + " auf")
+            listi = routes
             context = {
                 'routes': routes
             }
@@ -60,42 +71,12 @@ def list(request):
 
 # @login_required(login_url='/polls/login/')
 def map(request):
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = LocationForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            print('coords: ',form.cleaned_data['coords'])
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            print(form.cleaned_data['dest'])
-            dest = get_coords(form.cleaned_data['dest'])
-            start = get_coords(form.cleaned_data['start'])
-            city = form.cleaned_data['city']
-            routes = get_optimized_routes(start, form.cleaned_data['dest'] + ' ' + city[0])
-            print('latitude:',start[0])
-            context = {
-                'form': form,
-                'showpath': 1,
-                'start': form.cleaned_data['start'],
-                'dest': form.cleaned_data['dest'],
-                'startlat': start[0],
-                'startlng': start[1],
-                'destlat': dest[0],
-                'destlng': dest[1],
-                'route': routes
-            }
-            return render(request,'map.html',context)
-        else:
-            return HttpResponseRedirect('/notvalid/')
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = LocationForm()
-        context = {
-            'form': form,
-        }
-        return render(request,'map.html', context)
+    form = LocationForm()
+    context = {
+        'form': form,
+    }
+    return render(request,'map.html', context)
+
 
 
 def login_user(request):
@@ -114,5 +95,13 @@ def login_user(request):
 
 
 def route(request,route_id):
-    return HttpResponse("Hello, world. You're at the route " + route_id)
+    """
+
+    With the given route_id this page returns the selected route
+    """
+    route_id = int(route_id)
+    if len(listi) < route_id:
+        return HttpResponse("Bei der ausgewaehlten Route trat leider in Fehler auf")
+
+    return HttpResponse("Sie haben folgende Route ausgewaehlt: <br> " + listi[int(route_id)].__str__())
 
