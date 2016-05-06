@@ -86,7 +86,7 @@ def find_startstations(start, dest):
         for station in station_list:
 
             # Calculate the time to walk to the given station
-            walk_time = get_walking_time(userpos, station.name)
+            walk_time = get_walking_time(userpos, station)
             station.walkingtime = walk_time
             print("Walkingtime: " + walk_time.__str__())
 
@@ -189,11 +189,11 @@ def get_walking_time(origin, destination):
     :param destination: destination
     :return: a datetime
     """
-    if type(origin)!= list:
+    if type(origin)!= list or type(destination) != list:
         return -1
 
     origin = urllib.quote((str(origin[1])+","+str(origin[0])).encode('utf-8'))
-    destination = urllib.quote(destination.encode('utf-8'))
+    destination = urllib.quote((str(destination[1]) + "," + str(destination[0])).encode('utf-8'))
     key = "AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0"
     url = "https://maps.googleapis.com/maps/api/directions/json?" +\
           "origin=" + origin + "&destination="+ destination +\
