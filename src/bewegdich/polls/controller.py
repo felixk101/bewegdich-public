@@ -47,9 +47,12 @@ def get_optimized_routes(start, dest):
                 routes.append(route)
 
     #Add the startposition of the user to the final route
-    #route = insertStartPoint(start,route)
+
     for i in range(routes.__len__()):
         routes[i].id = i
+        insert_start_point(start, routes[i])
+
+    routes = sorted(routes, key=lambda route: route.depature_time)
     return routes
 
 
@@ -201,12 +204,10 @@ def get_walking_time(origin, destination):
 
 
 # Insert a new startpoint where the route should begin
-def insertStartPoint(start,route):
-    coords = get_coords(start)
-    route.path.insert(0, Stop(start,coords[0],coords[1]))
+def insert_start_point(start, route):
+    route.path.insert(0, Stop("Ihre Position", start[0], start[1]))
     return route
 
-    pass
 
 def get_nearest_stop(coords):
     """

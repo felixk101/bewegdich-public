@@ -58,6 +58,7 @@ def list(request):
             if(type(routes) == int):
                 return HttpResponse("Bei suche trat leider Fehler: "+ str(routes) + " auf")
             listi = routes
+
             context = {
                 'routes': routes
             }
