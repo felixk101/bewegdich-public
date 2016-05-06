@@ -22,7 +22,7 @@ import datetime
 # Returns the best Route
 """
 
-def get_optimized_routes(start, dest):
+def get_optimized_routes(start, dest,datetime = -1):
     """
     Finds the purfect Route with walking opmimazation included
 
@@ -31,14 +31,14 @@ def get_optimized_routes(start, dest):
     :param dest: the destionation where the user want to go
     :return: : the route
     """
-    startstations = find_startstations(start, dest)
+    startstations = find_startstations(start, dest,datetime)
     if type(startstations) == int:
         return startstations
 
     routes =  []
     #Do the routesearch again with the new station
     for station in startstations:
-        routes_list = get_routes(station.get_coords(), dest)
+        routes_list = get_routes(station.get_coords(), dest,datetime)
         if type(routes_list) == int:
             return routes_list
 
@@ -56,7 +56,7 @@ def get_optimized_routes(start, dest):
     return routes
 
 
-def find_startstations(start, dest):
+def find_startstations(start, dest, time = -1):
     """
 
     Looks up the recommended route and try to find a station within range to walk to in time
@@ -69,7 +69,11 @@ def find_startstations(start, dest):
     userpos = start
     destpos = dest
 
-    routes = get_routes(userpos, destpos)
+    routes = get_routes(userpos, destpos,time)
+
+    #If no time was set, take the current one
+    if(time == -1):
+        time = datetime.datetime.now()
 
     if type(routes) == int:
         return routes
@@ -90,15 +94,14 @@ def find_startstations(start, dest):
             station.walkingtime = walk_time
             print("Walkingtime: " + walk_time.__str__())
 
-            # If there is enough time to walk, save this station
-            current_date_time = datetime.datetime.now()
 
-            print("to " + station.name + ": "+(current_date_time+station.walkingtime).time().__str__() +
+            # If there is enough time to walk, save this station
+            print("to " + station.name + ": "+(time+station.walkingtime).time().__str__() +
                   " <? " + station.depaturetime.time().__str__())
 
             #For test only: Reduce walkking time to get better results
-            station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
-            if (current_date_time + station.walkingtime) < station.depaturetime:
+            #station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
+            if (time + station.walkingtime) < station.depaturetime:
                 if best_station == -1 or best_station.walkingtime < station.walkingtime :
                     best_station = station
 

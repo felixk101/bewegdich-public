@@ -35,8 +35,24 @@ assert stops[1].lng == "10.89423"
 walk_time = get_walking_time([stops[0].lat,stops[0].lng],[stops[1].lat,stops[1].lng])
 assert walk_time.seconds == 759
 
-stations = find_startstations([10.90529,48.35882],"Augsburg Hbf")
-print(len(stations)) == 4
+stations = find_startstations([10.90529,48.35882],"Augsburg Hbf",test_time)
+assert(len(stations) == 4)
+
+
+assert(stations[0].name == u'Augsburg Rotes Tor')
+assert(stations[0].depaturetime == datetime.datetime(2016, 6, 1, 9, 59, 0, 0))
+
+# assert(stations[0].walkingtime.seconds == 1057)
+#
+# assert(stations[1].name == u'Augsburg Königsplatz')
+# assert(stations[1].lat == u'48.36525')
+# assert(stations[1].lng == u'10.89434')
+#
+# opt_routes = get_optimized_routes(start, "augsburg hauptbahnhof", test_time)
+#
+# print(opt_routes)
+
+
 #assert stations[0].
 
 #assert routes[0].path[0].depaturetime is datetime.datetime(2016,)
