@@ -84,9 +84,9 @@ def find_startstations(start, dest):
 
         # Step through stations to find a better one
         for station in station_list:
-
             # Calculate the time to walk to the given station
-            walk_time = get_walking_time(userpos, station)
+            walk_time = get_walking_time(userpos, station.get_coords())
+
             station.walkingtime = walk_time
             print("Walkingtime: " + walk_time.__str__())
 
