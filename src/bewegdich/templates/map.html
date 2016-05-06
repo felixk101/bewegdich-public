@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,7 @@
     {{ form.as_p }}
     <input id="submitbutton" type="submit" value="Submit" />
 </form>
-
+<div id="no-gps-text">Es konnte noch kein GPS-Position ermittelt werden</div>
 
 {% if err %}
     {{ msg }}
@@ -47,7 +47,8 @@
         startPos = position;
         document.getElementById('lat').innerHTML = position.coords.latitude;
         document.getElementById('lon').innerHTML = position.coords.longitude;
-         document.getElementById('submitbutton').disabled = false;
+        document.getElementById('submitbutton').disabled = false;
+        document.getElementById('no-gps-text').style.display = "none";
         //put coords into hidden form field
         document.getElementById('id_coords').value = position.coords.latitude + ',' + position.coords.longitude;
         initMap();
