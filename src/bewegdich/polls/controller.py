@@ -133,7 +133,7 @@ def get_routes(start, dest, datetime=-1):
     if datetime != -1:
         date = datetime.date().strftime("%Y%m%d")
         time = datetime.time().strftime("%H:%M")
-        url += "?itdDate="+date+"&itdTime="+time+"&itdTripDateTimeDepArr=dep"
+        url += "&itdDate="+date+"&itdTime="+time+"&itdTripDateTimeDepArr=dep"
 
     print(url)
 
