@@ -48,10 +48,11 @@ def get_optimized_routes(start, dest,datetime = -1):
                 continue
             # Search for Routes which are the same line but just a different depaturetime
             for tmp_route in routes:
-                if tmp_route.origin_stop == route.origin_stop and tmp_route.line == route.line:
+                if tmp_route.origin_stop.name == route.origin_stop.name and tmp_route.line == route.line:
                     duplicate_route = 1
                     break
             if duplicate_route == 1:
+               # print("Found duplicate " + str(route.origin_stop) + " at " + str(route.depature_time))
                 continue
             routes.append(route)
 
