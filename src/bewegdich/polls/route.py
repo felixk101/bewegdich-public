@@ -15,15 +15,18 @@ class Route(object):
     depature_time = 0
     duration = -1
     path = []
+    line = []
 
     def __init__(self, json):
         self.data = json
         self.path = []
-
+        self.line = []
         for linestops in self.data["legs"]:
             if "stopSeq" not in linestops or linestops["mode"]["product"] == "Fussweg":
                 pass
             else:
+                print("ROUTE: append " + self.data["legs"][1]["mode"]["product"] + " " + self.data["legs"][1]["mode"]["number"])
+                self.line.append(self.data["legs"][1]["mode"]["product"] + " " + self.data["legs"][1]["mode"]["number"])
                 for stop in linestops["stopSeq"]:
                     self.path.append(Stop.make_from_json(stop))
 
