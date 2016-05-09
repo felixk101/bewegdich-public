@@ -48,7 +48,7 @@ assert(stations[0].depaturetime == datetime.datetime(2016, 6, 1, 9, 59, 0, 0))
 # assert(stations[1].lat == u'48.36525')
 # assert(stations[1].lng == u'10.89434')
 #
-# opt_routes = get_optimized_routes(start, "augsburg hauptbahnhof", test_time)
+opt_routes = get_optimized_routes(start, "augsburg hauptbahnhof", test_time)
 #
 # print(opt_routes)
 
