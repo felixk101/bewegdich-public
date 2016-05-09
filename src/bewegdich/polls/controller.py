@@ -43,8 +43,17 @@ def get_optimized_routes(start, dest,datetime = -1):
             return routes_list
 
         for route in routes_list:
-            if not route.isWalkOnly():
-                routes.append(route)
+            duplicate_route = 0
+            if route.isWalkOnly():
+                continue
+            # Search for Routes which are the same line but just a different depaturetime
+            for tmp_route in routes:
+                if tmp_route.origin_stop == route.origin_stop and tmp_route.line == route.line:
+                    duplicate_route = 1
+                    break
+            if duplicate_route == 1:
+                continue
+            routes.append(route)
 
     #Add the startposition of the user to the final route
 
