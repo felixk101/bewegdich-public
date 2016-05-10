@@ -26,7 +26,7 @@ class Route(object):
                 pass
             else:
                 # print("ROUTE: append " + self.data["legs"][1]["mode"]["product"] + " " + self.data["legs"][1]["mode"]["number"])
-                self.line.append(self.data["legs"][1]["mode"]["product"] + " " + self.data["legs"][1]["mode"]["number"])
+                self.line.append(self.data["legs"][0]["mode"]["product"] + " " + self.data["legs"][0]["mode"]["number"])
                 for stop in linestops["stopSeq"]:
                     self.path.append(Stop.make_from_json(stop))
         self.duration = datetime.strptime(self.data["duration"], '%H:%M').time()
