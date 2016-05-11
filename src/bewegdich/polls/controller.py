@@ -36,7 +36,7 @@ def get_optimized_routes(start, dest,datetime = -1):
     if type(startstations) == int:
         return startstations
 
-    routes =  []
+    routes = []
     #Do the routesearch again with the new station
     for station in startstations:
         routes_list = get_routes(station.get_coords(), dest, datetime)
