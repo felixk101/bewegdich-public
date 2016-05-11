@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Navigation</title>
+</head>
+<body>
+
+Navigation von {{ route.origin_name }} nach {{ route.destination_name }}
+
+{% for stops in route.path %}
+    stops.name
+{% endfor %}
+
+</body>
+</html>

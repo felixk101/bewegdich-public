@@ -104,5 +104,9 @@ def route(request,route_id):
     if len(listi) < route_id:
         return HttpResponse("Bei der ausgewaehlten Route trat leider in Fehler auf")
 
-    return HttpResponse("Sie haben folgende Route ausgewaehlt: <br> " + listi[int(route_id)].__str__())
+    #return HttpResponse("Sie haben folgende Route ausgewaehlt: <br> " + listi[int(route_id)].__str__())
 
+    context = {
+        'route': listi[int(route_id)],
+    }
+    return render(request, 'navigation.html', context)
