@@ -168,9 +168,9 @@ def get_routes(start, dest, datetime=-1):
         for index,route in enumerate(data["trips"]):
            r = Route(route)
 
-           file = open("../static/testroute"+index.__str__()+".txt", 'wb')
-           pickle.dump(r, file)
-           file.close()
+    #       file = open("../static/testroute"+index.__str__()+".txt", 'wb')
+    #       pickle.dump(r, file)
+    #       file.close()
 
         #   if r.depature_time > datetime.datetime.utc():
            routes.append(r)
