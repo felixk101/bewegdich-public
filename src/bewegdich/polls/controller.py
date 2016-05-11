@@ -32,14 +32,14 @@ def get_optimized_routes(start, dest,datetime = -1):
     :param dest: the destionation where the user want to go
     :return: : the route
     """
-    startstations = find_startstations(start, dest,datetime)
+    startstations = find_startstations(start, dest, datetime)
     if type(startstations) == int:
         return startstations
 
     routes =  []
     #Do the routesearch again with the new station
     for station in startstations:
-        routes_list = get_routes(station.get_coords(), dest,datetime)
+        routes_list = get_routes(station.get_coords(), dest, datetime)
         if type(routes_list) == int:
             return routes_list
 
