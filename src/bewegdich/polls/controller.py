@@ -4,6 +4,7 @@ from xml.etree import ElementTree
 import urllib
 from route import Route, Stop
 import datetime
+import cPickle as pickle
 # coding: utf8
 """
  Nutzerposition holen
@@ -164,8 +165,13 @@ def get_routes(start, dest, datetime=-1):
     code = checkValidJson(data)
     if code == 0:
         routes = []
-        for route in data["trips"]:
+        for index,route in enumerate(data["trips"]):
            r = Route(route)
+
+           file = open("../static/testroute"+index.__str__()+".txt", 'wb')
+           pickle.dump(r, file)
+           file.close()
+
         #   if r.depature_time > datetime.datetime.utc():
            routes.append(r)
         return routes

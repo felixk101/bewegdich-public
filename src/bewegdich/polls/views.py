@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-import pickle
+import cPickle as pickle
 from django.http import *
 from django.shortcuts import render_to_response,redirect
 from django.template import RequestContext
@@ -104,7 +104,7 @@ def route(request,route_id):
     route_id = int(route_id)
 
     if route_id == 66:
-        pkl_file = open('../static/testroute.pkl', 'rb')
+        pkl_file = open('../static/testroute0.txt', 'rb')
         testroute = pickle.load(pkl_file)
         pkl_file.close()
         return HttpResponse("Sie haben die Test-Route ausgewaehlt: <br> " + testroute.__str__())
