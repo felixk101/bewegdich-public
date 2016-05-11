@@ -107,11 +107,11 @@ def find_startstations(start, dest, time = -1):
 
             # If there is enough time to walk, save this station
             print("to " + station.name + ": "+(time+station.walkingtime).time().__str__() +
-                  " <? " + station.depaturetime.time().__str__())
+                  " <? " + station.depaturetime.__str__())
 
             #For test only: Reduce walkking time to get better results
             #station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
-            if (time + station.walkingtime) < station.depaturetime:
+            if type(station.depaturetime) is datetime.datetime and (time + station.walkingtime) < station.depaturetime:
                 if best_station == -1 or best_station.walkingtime < station.walkingtime :
                     best_station = station
 
