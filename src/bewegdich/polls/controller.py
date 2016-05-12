@@ -24,7 +24,7 @@ import datetime
 """
 
 
-def get_optimized_routes(start, dest, datetime=-1):
+def get_optimized_routes(start, dest, time=-1):
     """
     Finds the purfect Route with walking opmimazation included
 
@@ -33,7 +33,7 @@ def get_optimized_routes(start, dest, datetime=-1):
     :param dest: the destionation where the user want to go
     :return: : the route
     """
-    startstations = find_startstations(start, dest, datetime)
+    startstations = find_startstations(start, dest, time)
     if type(startstations) == int:
         return startstations
 
@@ -42,7 +42,7 @@ def get_optimized_routes(start, dest, datetime=-1):
     # Do the routesearch again with the new station
     for station in startstations:
 
-        routes_list = get_routes(station.get_coords(), dest, datetime)
+        routes_list = get_routes(station.get_coords(), dest, time)
         if type(routes_list) == int:
             return routes_list
 
@@ -129,7 +129,7 @@ def find_startstations(start, dest, time=-1):
     return startstations
 
 
-def get_routes(start, dest, datetime=datetime.datetime.now()):
+def get_routes(start, dest, dtime = -1):
     """
         Finds the currently best route from A to B
 
@@ -140,7 +140,8 @@ def get_routes(start, dest, datetime=datetime.datetime.now()):
     lat, lon = start[1], start[0]
     origin = urllib.quote((str(lon) + ":" + str(lat) + ":WGS84").encode('utf-8'))
     destination = urllib.quote(dest.encode('utf-8'))
-
+    if dtime == -1:
+        dtime = datetime.datetime.now()
 
     typeStart = "coord"
     typeDest = "stop"
@@ -151,8 +152,8 @@ def get_routes(start, dest, datetime=datetime.datetime.now()):
           "&type_destination=" + typeDest + "&name_destination=" + destination
 
     if datetime != -1:
-        date = datetime.date().strftime("%Y%m%d")
-        time = datetime.time().strftime("%H:%M")
+        date = dtime.date().strftime("%Y%m%d")
+        time = dtime.time().strftime("%H:%M")
         url += "&itdDate=" + date + "&itdTime=" + time + "&itdTripDateTimeDepArr=dep"
 
     print(url)
@@ -171,13 +172,7 @@ def get_routes(start, dest, datetime=datetime.datetime.now()):
         for route in data["trips"]:
             r = Route(route)
             if not r.isWalkOnly():
-                if(type(r.depature_time) == int):
-                    print("TIMING ERROR")
-                try:
-                    r.depature_time > datetime
-                except TypeError:
-                    pass
-                if r.depature_time > datetime:
+                if r.depature_time > dtime:
                     routes.append(r)
         return routes
     else:
