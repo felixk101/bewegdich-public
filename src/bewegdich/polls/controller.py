@@ -33,6 +33,10 @@ def get_optimized_routes(start, dest, time=-1):
     :param dest: the destionation where the user want to go
     :return: : the route
     """
+    # If no time was set, take the current one
+    if time == -1:
+        time = datetime.datetime.now()
+
     startstations = find_startstations(start, dest, time)
     if type(startstations) == int:
         return startstations
@@ -42,7 +46,10 @@ def get_optimized_routes(start, dest, time=-1):
     # Do the routesearch again with the new station
     for station in startstations:
 
-        routes_list = get_routes(station.get_coords(), dest, time)
+        #The User has to walk to the first station
+        starttime = time + station.walkingtime
+
+        routes_list = get_routes(station.get_coords(), dest, starttime)
         if type(routes_list) == int:
             return routes_list
 
