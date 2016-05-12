@@ -61,8 +61,7 @@ class Route(object):
         if(linelist.__len__()<3):
             return []
 
-        # Remove first and last item because its the originstop and destination stop
-        linelist.pop(0)
+        # Remove last item because its the destination stop
         linelist.pop(linelist.__len__() - 1)
         return linelist
 
@@ -87,10 +86,11 @@ class Stop(object):
     depaturetime = 0
     walkingtime = -1
 
-    def __init__(self,name,lat,lng):
+    def __init__(self,name,lat,lng, isWalking=0):
         self.name = name
         self.lat = lat
         self.lng = lng
+        self.isWalking = isWalking
 
 
     @staticmethod

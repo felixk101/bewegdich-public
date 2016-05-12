@@ -103,18 +103,17 @@ def route(request,route_id):
     """
     route_id = int(route_id)
 
+    # This route is a testing route
     if route_id == 66:
         pkl_file = open('../static/testroute.pkl', 'rb')
-        testroute = pickle.load(pkl_file)
+        selected_route = pickle.load(pkl_file)
         pkl_file.close()
-        return HttpResponse("Sie haben die Test-Route ausgewaehlt: <br> " + testroute.__str__())
-
-    if len(listi) < route_id:
+    elif len(listi) < route_id:
         return HttpResponse("Bei der ausgewaehlten Route trat leider in Fehler auf")
-
-    #return HttpResponse("Sie haben folgende Route ausgewaehlt: <br> " + listi[int(route_id)].__str__())
+    else:
+        selected_route = listi[int(route_id)]
 
     context = {
-        'route': listi[int(route_id)],
+        'route': selected_route,
     }
     return render(request, 'navigation.html', context)

@@ -4,6 +4,7 @@ from xml.etree import ElementTree
 import urllib
 from route import Route, Stop
 import datetime
+
 # coding: utf8
 """
  Nutzerposition holen
@@ -22,7 +23,8 @@ import datetime
 # Returns the best Route
 """
 
-def get_optimized_routes(start, dest,datetime = -1):
+
+def get_optimized_routes(start, dest, datetime=-1):
     """
     Finds the purfect Route with walking opmimazation included
 
@@ -31,14 +33,16 @@ def get_optimized_routes(start, dest,datetime = -1):
     :param dest: the destionation where the user want to go
     :return: : the route
     """
-    startstations = find_startstations(start, dest,datetime)
+    startstations = find_startstations(start, dest, datetime)
     if type(startstations) == int:
         return startstations
 
-    routes =  []
-    #Do the routesearch again with the new station
+    routes = []
+    id = 0
+    # Do the routesearch again with the new station
     for station in startstations:
-        routes_list = get_routes(station.get_coords(), dest,datetime)
+
+        routes_list = get_routes(station.get_coords(), dest, datetime)
         if type(routes_list) == int:
             return routes_list
 
@@ -52,21 +56,21 @@ def get_optimized_routes(start, dest,datetime = -1):
                     duplicate_route = 1
                     break
             if duplicate_route == 1:
-               # print("Found duplicate " + str(route.origin_stop) + " at " + str(route.depature_time))
+                # print("Found duplicate " + str(route.origin_stop) + " at " + str(route.depature_time))
                 continue
+            if station.walkingtime != -1:
+                route.depature_time = route.depature_time - station.walkingtime
+
+            insert_start_point(start, station.walkingtime, route)
+            route.id = id
+            id = id + 1
             routes.append(route)
-
-    #Add the startposition of the user to the final route
-
-    for i in range(routes.__len__()):
-        routes[i].id = i
-        insert_start_point(start, routes[i])
 
     routes = sorted(routes, key=lambda route: route.depature_time)
     return routes
 
 
-def find_startstations(start, dest, time = -1):
+def find_startstations(start, dest, time=-1):
     """
 
     Looks up the recommended route and try to find a station within range to walk to in time
@@ -79,10 +83,10 @@ def find_startstations(start, dest, time = -1):
     userpos = start
     destpos = dest
 
-    routes = get_routes(userpos, destpos,time)
+    routes = get_routes(userpos, destpos, time)
 
-    #If no time was set, take the current one
-    if(time == -1):
+    # If no time was set, take the current one
+    if (time == -1):
         time = datetime.datetime.now()
 
     if type(routes) == int:
@@ -104,15 +108,14 @@ def find_startstations(start, dest, time = -1):
             station.walkingtime = walk_time
             print("Walkingtime: " + walk_time.__str__())
 
-
             # If there is enough time to walk, save this station
-            print("to " + station.name + ": "+(time+station.walkingtime).time().__str__() +
+            print("to " + station.name + ": " + (time + station.walkingtime).time().__str__() +
                   " <? " + station.depaturetime.__str__())
 
-            #For test only: Reduce walkking time to get better results
-            #station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
+            # For test only: Reduce walkking time to get better results
+            # station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
             if type(station.depaturetime) is datetime.datetime and (time + station.walkingtime) < station.depaturetime:
-                if best_station == -1 or best_station.walkingtime < station.walkingtime :
+                if best_station == -1 or best_station.walkingtime < station.walkingtime:
                     best_station = station
 
         if best_station != -1:
@@ -120,9 +123,13 @@ def find_startstations(start, dest, time = -1):
         else:
             # No station is in range to walk to
             startstations.append(route.origin_stop)
+    for station in startstations:
+        if station.walkingtime == -1:
+            print("ERROR: Walkingtime shouldnt be -1")
     return startstations
 
-def get_routes(start, dest, datetime=-1):
+
+def get_routes(start, dest, datetime=datetime.datetime.now()):
     """
         Finds the currently best route from A to B
 
@@ -133,13 +140,10 @@ def get_routes(start, dest, datetime=-1):
     lat, lon = start[1], start[0]
     origin = urllib.quote((str(lon) + ":" + str(lat) + ":WGS84").encode('utf-8'))
     destination = urllib.quote(dest.encode('utf-8'))
-    typeStart = "coord"
-    typeDest="stop"
 
-    # url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON&" +\
-    #       "locationServerActive=1&coordOutputFormat=WGS84[DD.ddddd]&" +\
-    #       "type_origin="+typeStart+"&name_origin="+origin+\
-    #       "&type_destination="+typeDest+ "&name_destination="+ destination
+
+    typeStart = "coord"
+    typeDest = "stop"
 
     url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON&" + \
           "locationServerActive=1&coordOutputFormat=WGS84[DD.ddddd]&" + \
@@ -149,28 +153,36 @@ def get_routes(start, dest, datetime=-1):
     if datetime != -1:
         date = datetime.date().strftime("%Y%m%d")
         time = datetime.time().strftime("%H:%M")
-        url += "&itdDate="+date+"&itdTime="+time+"&itdTripDateTimeDepArr=dep"
+        url += "&itdDate=" + date + "&itdTime=" + time + "&itdTripDateTimeDepArr=dep"
 
     print(url)
 
-   # with open('C:\json', 'r') as myfile:
+    # with open('C:\json', 'r') as myfile:
     #    data = myfile.read()
-    #data =  json.loads(data)
-    data = getJson(url)
+    # data =  json.loads(data)
+    data = get_json(url)
 
-   # text_file = open("json", "w")
-   # text_file.write("%s" % json)
-   # text_file.close()
+    # text_file = open("json", "w")
+    # text_file.write("%s" % json)
+    # text_file.close()
     code = checkValidJson(data)
     if code == 0:
         routes = []
         for route in data["trips"]:
-           r = Route(route)
-        #   if r.depature_time > datetime.datetime.utc():
-           routes.append(r)
+            r = Route(route)
+            if not r.isWalkOnly():
+                if(type(r.depature_time) == int):
+                    print("TIMING ERROR")
+                try:
+                    r.depature_time > datetime
+                except TypeError:
+                    pass
+                if r.depature_time > datetime:
+                    routes.append(r)
         return routes
     else:
         return int(code)
+
 
 def checkValidJson(json):
     """
@@ -185,13 +197,14 @@ def checkValidJson(json):
         print("ERR: No timetable recieved")
         return 5
     if "message" in json["destination"]:
-       print("Destination unkown")
-       return json["destination"]["message"][0]["value"]
+        print("Destination unkown")
+        return json["destination"]["message"][0]["value"]
 
     if "message" in json["origin"]:
         print("Origin unkown")
         return json["origin"]["message"][0]["value"]
     return 0
+
 
 def get_walking_time(origin, destination):
     """
@@ -202,23 +215,32 @@ def get_walking_time(origin, destination):
     :param destination: destination
     :return: a datetime
     """
-    if type(origin)!= list or type(destination) != list:
+    if type(origin) != list or type(destination) != list:
         return -1
 
-    origin = urllib.quote((str(origin[1])+","+str(origin[0])).encode('utf-8'))
+    origin = urllib.quote((str(origin[1]) + "," + str(origin[0])).encode('utf-8'))
     destination = urllib.quote((str(destination[1]) + "," + str(destination[0])).encode('utf-8'))
     key = "AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0"
-    url = "https://maps.googleapis.com/maps/api/directions/json?" +\
-          "origin=" + origin + "&destination="+ destination +\
-          "&mode=walking" +"&key=" + key
-    data = getJson(url)
+    url = "https://maps.googleapis.com/maps/api/directions/json?" + \
+          "origin=" + origin + "&destination=" + destination + \
+          "&mode=walking" + "&key=" + key
+    data = get_json(url)
     seconds = data["routes"][0]["legs"][0]["duration"]["value"]
-    return datetime.timedelta(0,seconds)  # days, seconds, then other fields.
+    return datetime.timedelta(0, seconds)  # days, seconds, then other fields.
 
 
 # Insert a new startpoint where the route should begin
-def insert_start_point(start, route):
-    route.path.insert(0, Stop("Ihre Position", start[0], start[1]))
+def insert_start_point(start, walktime, route):
+    """
+
+    Inserts the given point into the path variable of the given route as first stop
+    :param start: in coordinates [lat,lng]
+    :param route: the route-object
+    :return: the route-object
+    """
+    stop = Stop("Ihre Position", start[0], start[1], isWalking=1)
+    stop.walkingtime = walktime
+    route.path.insert(0,stop )
     return route
 
 
@@ -229,15 +251,16 @@ def get_nearest_stop(coords):
     :param coords: [latitude,longitude]
     :return: the closest stop's name
     """
-    lat,lon=coords[0],coords[1]
-    origin = urllib.quote((lon+":"+lat+":WGS84").encode('utf-8'))
+    lat, lon = coords[0], coords[1]
+    origin = urllib.quote((lon + ":" + lat + ":WGS84").encode('utf-8'))
     type = "coord"
     url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?" + \
           "type_origin=" + type + "&name_origin=" + origin
     data = getXML(url)
     stop = data[1][1].find('itdOdvAssignedStops')[0]
 
-    return stop.get('nameWithPlace') #extract the station's name
+    return stop.get('nameWithPlace')  # extract the station's name
+
 
 def get_coords(place):
     """
@@ -245,29 +268,29 @@ def get_coords(place):
     Looks up the given name, try to find a place with the same name
     and returns the coords
 
-    :param place: the place
+    :param place: a string
     :return: [latitude,longitude]
     """
     place = urllib.quote(place)
     url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON" \
           "&coordOutputFormat=WGS84[DD.ddddd]&" \
           "type_origin=any&" \
-          "name_origin=" + place +\
+          "name_origin=" + place + \
           "&anyObjFilter_origin=2"
-    data = getJson(url)
+    data = get_json(url)
     coords = data["origin"]["points"]["point"]["ref"]["coords"].split(",")
     return coords
 
     key = "AIzaSyAV52eNjBjVhoTtaOwdWbd8iQ7Cia6X9c0"
     optionalSecondKey = "AIzaSyCVP9DkstDfjlTYgj0XlU5YlzU9gI3pqOU"
     url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + place + "&key=" + key
-    data = getJson(url)
+    data = get_json(url)
     lat = data["results"][0]["geometry"]["location"]["lat"]
     long = data["results"][0]["geometry"]["location"]["lng"]
-    return [lat,long]
+    return [lat, long]
 
 
-def getJson(url):
+def get_json(url):
     """
     Downloads the json from the given URL and converts it into a json object
     :param url: the url
@@ -275,6 +298,7 @@ def getJson(url):
     """
     response = urllib.urlopen(url)
     return json.loads(response.read())
+
 
 def getXML(url):
     """
@@ -286,24 +310,3 @@ def getXML(url):
     response_string = response.read()
     xmldoc = ElementTree.fromstring(response_string)
     return xmldoc
-
-
-
-#Test
-origin = "Hirblingen Augsburg"
-destination = "fachhochschule Augsburg"
-#find_startstation(origin, destination)
-#get_nearest_stop(['48.358411', '10.9073826'])
-
-
-
-#   findStation(destination)
-
-
-#write json to File
-# target = open("C:\json", 'w')
-#
-#     print "Truncating the file.  Goodbye!"
-#     target.truncate()
-#     target.write(response.read())
-#     target.close();
