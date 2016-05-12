@@ -22,13 +22,13 @@ function setDetailContent(pageUrl) {
 
 Apperyio.AppPages = [{
     "name": "Home",
-    "location": "Home.html"
+    "location": "Home"
 }, {
     "name": "Profil",
-    "location": "Profil.html"
+    "location": "Profil"
 }, {
     "name": "App",
-    "location": "App.html"
+    "location": "App"
 }];
 
 function Profil_js() {

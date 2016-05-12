@@ -77,7 +77,7 @@ def map(request):
     context = {
         'form': form,
     }
-    return render(request,'map.html', context)
+    return render(request,'Home.html', context)
 
 
 
@@ -117,3 +117,8 @@ def route(request,route_id):
         'route': selected_route,
     }
     return render(request, 'navigation.html', context)
+
+def app(request):
+    return render(request, 'app.html')
+def profil(request):
+    return render(request, 'profil.html')
