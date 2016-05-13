@@ -77,7 +77,14 @@ def map(request):
     context = {
         'form': form,
     }
-    return render(request,'Home.html', context)
+    return render(request,'map.html', context)
+
+def home(request):
+    form = LocationForm()
+    context = {
+        'form': form,
+    }
+    return render(request,'home.html', context)
 
 
 

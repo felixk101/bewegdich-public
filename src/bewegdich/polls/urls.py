@@ -4,8 +4,8 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^$', views.map, name='home'),
-    url(r'^Home/$', views.map, name='home'),
+    url(r'^$', views.home, name='home'),
+    url(r'^Home/$', views.home, name='home'),
     url(r'^map/$', views.map, name='map'),
     url(r'^Profil/$', views.profil, name='profile'),
     url(r'^App/$', views.app, name='App'),
