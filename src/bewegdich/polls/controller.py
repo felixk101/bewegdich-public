@@ -1,7 +1,7 @@
 import datetime
 import json
 from xml.etree import ElementTree
-import urllib
+import urllib2 as urllib
 from route import Route, Stop
 import datetime
 
@@ -298,7 +298,7 @@ def get_json(url):
     :param url: the url
     :return: a json
     """
-    response = urllib.urlopen(url)
+    response = urllib.urlopen(url,timeout=2)
     return json.loads(response.read())
 
 
@@ -308,7 +308,7 @@ def getXML(url):
     :param url: the url
     :return: ElementTree root Element
     """
-    response = urllib.urlopen(url)
+    response = urllib.urlopen(url,timeout=2)
     response_string = response.read()
     xmldoc = ElementTree.fromstring(response_string)
     return xmldoc
