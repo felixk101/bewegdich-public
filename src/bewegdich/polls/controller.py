@@ -47,6 +47,7 @@ def get_optimized_routes(start, dest, time=-1):
     for station in startstations:
 
         #The User has to walk to the first station
+
         starttime = time + station.walkingtime
 
         routes_list = get_routes(station.get_coords(), dest, starttime)
@@ -69,9 +70,12 @@ def get_optimized_routes(start, dest, time=-1):
                 route.depature_time = route.depature_time - station.walkingtime
 
             insert_start_point(start, station.walkingtime, route)
+            route.duration = route.duration + station.walkingtime
             route.id = id
             id = id + 1
             routes.append(route)
+            if route.duration == datetime.timedelta(0,60):
+                pass
 
     routes = sorted(routes, key=lambda route: route.depature_time)
     return routes

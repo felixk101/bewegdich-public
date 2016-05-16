@@ -9,7 +9,7 @@
 
 {% for route in routes %}
     Route:  {{route.origin_stop.name}} to {{route.destination_stop.name}} um {{route.depature_time}} <br>
-    Fahrtdauer:  {{route.duration.minute}} Minuten<br>
+    Fahrtdauer:  {{route.get_duration}} Minuten<br>
     <a href="/route{{ route.id }}">Zeige Details</a>
     <br> <br>
 {% endfor %}

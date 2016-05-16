@@ -1,11 +1,13 @@
 from django.conf.urls import url
 
 from . import views
+from django.contrib.auth.models import User
+from rest_framework import routers, serializers, viewsets
 
 
 urlpatterns = [
-    url(r'^$', views.map, name='home'),
-    url(r'^Home/$', views.map, name='home'),
+    url(r'^$', views.home, name='home'),
+    url(r'^Home/$', views.home, name='home'),
     url(r'^map/$', views.map, name='map'),
     url(r'^Profil/$', views.profil, name='profile'),
     url(r'^App/$', views.app, name='App'),
@@ -13,5 +15,5 @@ urlpatterns = [
     url(r'^login/$', views.login_user, name='login_user'),
     url(r'^form/$', views.get_dest, name='form'),
     url(r'^route(?P<route_id>[0-9]+)/$', views.route, name='route'),
-
+    url(r'^getroute/$', views.get_route, name='getroute'),
 ]

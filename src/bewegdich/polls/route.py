@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime as dt
+import datetime
 # coding: utf8
 
 
@@ -13,7 +14,7 @@ class Route(object):
     origin_stop = ""
     destination_stop = ""
     depature_time = 0
-    duration = -1
+    duration = datetime.timedelta()
     path = []
     line = []
 
@@ -29,7 +30,10 @@ class Route(object):
                 self.line.append(linestops["mode"]["product"] + " " + self.data["legs"][0]["mode"]["number"])
                 for stop in linestops["stopSeq"]:
                     self.path.append(Stop.make_from_json(stop))
-        self.duration = datetime.strptime(self.data["duration"], '%H:%M').time()
+
+        arr = self.data["duration"].split(":")
+        self.duration = datetime.timedelta(hours=int(arr[0]), minutes=int(arr[1]))
+       # self.duration = datetime.strptime(self.data["duration"], '%H:%M').time()
 
         if(len(self.path) == 0):
             return
@@ -58,7 +62,7 @@ class Route(object):
 
 
         #when No stations inbetween start and destination found
-        if(linelist.__len__()<3):
+        if(linelist.__len__()<2):
             return []
 
         # Remove last item because its the destination stop
@@ -71,6 +75,9 @@ class Route(object):
            if linestops["mode"]["product"] != "Fussweg":
                iswalkonly = 0
        return iswalkonly
+
+    def get_duration(self):
+        return str(self.duration)
 
 class Stop(object):
     """
@@ -135,9 +142,9 @@ def formatDateTime(abfahrszeit):
     """
     time = -1
     if type(abfahrszeit) == dict:
-        time = datetime.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
+        time = dt.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
     else:
-        time = datetime.strptime(abfahrszeit , '%Y%m%d %H:%M')
+        time = dt.strptime(abfahrszeit , '%Y%m%d %H:%M')
 
     if (type(time) == int):
         print("WRONG WRONG")

@@ -38,6 +38,7 @@ class User(models.Model):
     def __str__(self):
         return self.uname
 
+
 class Usermeta(models.Model):
     # id will be generated automatically
     userid = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -47,3 +48,25 @@ class Usermeta(models.Model):
     def __str__(self):
         return self.userid + " " + self.key;
 
+
+class Stop(models.Model):
+    name = models.CharField(max_length=100)
+    lat = models.CharField(max_length=10)
+    lng = models.CharField(max_length=10)
+    depaturetime = models.DateTimeField('depature')
+    walkingtime = models.IntegerField('walkingtime')
+
+
+# class Route(models.Model):
+#     """
+#     Route is the main object which is filled with data by the EFA API. The json files is given in the contructor and
+#     will be analysed to filter the important data.
+#     """
+#
+#     id = -1
+#     origin_stop = models.Stop()
+#     destination_stop = ""
+#     depature_time = 0
+#     duration = -1
+#     path = []
+#     line = []
