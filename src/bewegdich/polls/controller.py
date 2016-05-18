@@ -4,7 +4,7 @@ from xml.etree import ElementTree
 import urllib2 as urllib
 from route import Route, Stop
 import datetime
-
+from multiprocessing import Pool
 # coding: utf8
 """
  Nutzerposition holen
@@ -81,6 +81,49 @@ def get_optimized_routes(start, dest, time=-1):
     return routes
 
 
+def find_best_station(parameters):
+    """
+        Optimized for parallel running
+        This functions searches in the given route for that farest station to walk to and still catch the same bus
+
+    :param parameters: a list with the parameters route userpos time
+    :return: the best station
+    """
+    route = parameters[0]
+    userpos = parameters[1]
+    time = parameters[2]
+
+    # Get the next 5 stations of this line
+    station_list = route.get_next_stops()
+    if route.isWalkOnly():
+        return -1
+
+    best_station = -1
+
+    # Step through stations to find a better one
+    for station in station_list:
+        # Calculate the time to walk to the given station
+        walk_time = get_walking_time(userpos, station.get_coords())
+
+        station.walkingtime = walk_time
+        print("Walkingtime: " + walk_time.__str__())
+
+        # If there is enough time to walk, save this station
+        print("to " + station.name + ": " + (time + station.walkingtime).time().__str__() +
+              " <? " + station.depaturetime.__str__())
+
+        # For test only: Reduce walkking time to get better results
+        # station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
+        if type(station.depaturetime) is datetime.datetime and (time + station.walkingtime) < station.depaturetime:
+            if best_station == -1 or best_station.walkingtime < station.walkingtime:
+                best_station = station
+
+    if best_station != -1:
+        return best_station
+    else:
+        # No station is in range to walk to
+        return route.origin_stop
+
 def find_startstations(start, dest, time=-1):
     """
 
@@ -103,37 +146,15 @@ def find_startstations(start, dest, time=-1):
     if type(routes) == int:
         return routes
     startstations = []
+    tmplist = []
     for route in routes:
-        # Get the next 5 stations of this line
-        station_list = route.get_next_stops()
-        if route.isWalkOnly():
-            continue
+        tmplist.append([route,userpos,time])
 
-        best_station = -1
+    pool = Pool()
+    startstations = pool.map(find_best_station, tmplist)
+    while [].__contains__(-1): #Remove walkonly routes
+        startstations.remove(-1)
 
-        # Step through stations to find a better one
-        for station in station_list:
-            # Calculate the time to walk to the given station
-            walk_time = get_walking_time(userpos, station.get_coords())
-
-            station.walkingtime = walk_time
-            print("Walkingtime: " + walk_time.__str__())
-
-            # If there is enough time to walk, save this station
-            print("to " + station.name + ": " + (time + station.walkingtime).time().__str__() +
-                  " <? " + station.depaturetime.__str__())
-
-            # For test only: Reduce walkking time to get better results
-            # station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
-            if type(station.depaturetime) is datetime.datetime and (time + station.walkingtime) < station.depaturetime:
-                if best_station == -1 or best_station.walkingtime < station.walkingtime:
-                    best_station = station
-
-        if best_station != -1:
-            startstations.append(best_station)
-        else:
-            # No station is in range to walk to
-            startstations.append(route.origin_stop)
     for station in startstations:
         if station.walkingtime == -1:
             print("ERROR: Walkingtime shouldnt be -1")
