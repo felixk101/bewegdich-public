@@ -91,7 +91,7 @@ class Stop(object):
     lat = 0
     lng = 0
     depaturetime = 0
-    walkingtime = -1
+    walkingtime = datetime.timedelta(0, 0)
 
     def __init__(self,name,lat,lng, isWalking=0):
         self.name = name
