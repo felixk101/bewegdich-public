@@ -1,3 +1,4 @@
+import select
 from django.http import HttpResponse
 import pickle
 from django.http import *
@@ -7,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from re import search
 
 from .forms import LocationForm
 from  controller import get_optimized_routes,get_coords
@@ -117,13 +119,17 @@ def route(request,route_id):
 
     # This route is a testing route
     if route_id == 66:
-        pkl_file = open('../static/testroute.pkl', 'rb')
+        pkl_file = open('testroute.json', 'r')
         selected_route = pickle.load(pkl_file)
         pkl_file.close()
     elif len(listi) < route_id:
         return HttpResponse("Bei der ausgewaehlten Route trat leider in Fehler auf")
     else:
         selected_route = listi[int(route_id)]
+        # text_file = open("testroute.json", "w")
+        # pickle.dump(selected_route, text_file)
+        # text_file.write(selected_route)
+        # text_file.close()
 
     context = {
         'route': selected_route,

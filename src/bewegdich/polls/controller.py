@@ -174,9 +174,7 @@ def get_routes(start, dest, dtime = -1):
     # data =  json.loads(data)
     data = get_json(url)
 
-    # text_file = open("json", "w")
-    # text_file.write("%s" % json)
-    # text_file.close()
+
     code = checkValidJson(data)
     if code == 0:
         routes = []
@@ -302,7 +300,7 @@ def get_json(url):
     :param url: the url
     :return: a json
     """
-    response = urllib.urlopen(url,timeout=2)
+    response = urllib.urlopen(url,timeout=5)
     return json.loads(response.read())
 
 
