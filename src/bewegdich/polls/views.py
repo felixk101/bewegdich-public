@@ -126,10 +126,9 @@ def route(request,route_id):
         return HttpResponse("Bei der ausgewaehlten Route trat leider in Fehler auf")
     else:
         selected_route = listi[int(route_id)]
-        # text_file = open("testroute.json", "w")
-        # pickle.dump(selected_route, text_file)
-        # text_file.write(selected_route)
-        # text_file.close()
+        text_file = open("testroute.json", "w")
+        pickle.dump(selected_route, text_file)
+        text_file.close()
 
     context = {
         'route': selected_route,
