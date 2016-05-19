@@ -1,6 +1,8 @@
 from django.conf.urls import url
 
 from . import views
+from django.contrib.auth.models import User
+from rest_framework import routers, serializers, viewsets
 
 
 urlpatterns = [
@@ -13,5 +15,5 @@ urlpatterns = [
     url(r'^login/$', views.login_user, name='login_user'),
     url(r'^form/$', views.get_dest, name='form'),
     url(r'^route(?P<route_id>[0-9]+)/$', views.route, name='route'),
-
+    url(r'^getroute/$', views.get_route, name='getroute'),
 ]

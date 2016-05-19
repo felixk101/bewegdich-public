@@ -1,3 +1,4 @@
+import select
 from django.http import HttpResponse
 import pickle
 from django.http import *
@@ -7,10 +8,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from re import search
 
 from .forms import LocationForm
 from  controller import get_optimized_routes,get_coords
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
 
+from serializers import StopSerializer
 listi = []
 
 # @login_required(login_url='/polls/login/')
@@ -86,6 +93,13 @@ def home(request):
     }
     return render(request,'home.html', context)
 
+# @login_required(login_url='/polls/login/')
+def home(request):
+    form = LocationForm()
+    context = {
+        'form': form,
+    }
+    return render(request,'home.html', context)
 
 
 def login_user(request):
@@ -112,13 +126,16 @@ def route(request,route_id):
 
     # This route is a testing route
     if route_id == 66:
-        pkl_file = open('../static/testroute.pkl', 'rb')
+        pkl_file = open('testroute.json', 'r')
         selected_route = pickle.load(pkl_file)
         pkl_file.close()
     elif len(listi) < route_id:
         return HttpResponse("Bei der ausgewaehlten Route trat leider in Fehler auf")
     else:
         selected_route = listi[int(route_id)]
+        text_file = open("testroute.json", "w")
+        pickle.dump(selected_route, text_file)
+        text_file.close()
 
     context = {
         'route': selected_route,
@@ -129,3 +146,47 @@ def app(request):
     return render(request, 'app.html')
 def profil(request):
     return render(request, 'profil.html')
+
+
+import datetime
+from route import Stop
+
+@csrf_exempt
+def get_route(request):
+    """
+    List all code snippets, or create a new snippet.
+    """
+    if request.method == 'GET':
+      #  snippets = Stop.objects.all()
+
+        #stop = Stop("asdf", lat="3", lng="351",depaturetime=datetime.datetime.now(),walkingtime=10)
+        stop = Stop("asdf", "3", "351", 10)
+        if "origin" not in request.GET:
+            return JSONResponse("origin not found", status=201)
+        if "destination" not in request.GET:
+            return JSONResponse("destination not found", status=201)
+
+        origin = request.GET["origin"]
+        destination = request.GET["destination"]
+
+        # Here you could do the search for the optimized Route
+
+        serializer = StopSerializer(stop)
+        return JSONResponse(serializer.data)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = StopSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JSONResponse(serializer.data, status=201)
+        return JSONResponse(serializer.errors, status=400)
+
+class JSONResponse(HttpResponse):
+    """
+    An HttpResponse that renders its content into JSON.
+    """
+    def __init__(self, data, **kwargs):
+        content = JSONRenderer().render(data)
+        kwargs['content_type'] = 'application/json'
+        super(JSONResponse, self).__init__(content, **kwargs)

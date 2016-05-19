@@ -6,11 +6,34 @@
 </head>
 <body>
 
-Navigation von {{ route.origin_name }} nach {{ route.destination_name }}
+Navigation von <em>{{ route.path.0.name }}</em> nach <em>{{ route.destination_stop.name }}</em>
+<br>Dauer: {{ route.duration.seconds }} Sekunden
+<ul>
+{% for stop in route.path %}
+    <li>
+        {%  if forloop.first %}
+            Ursprung:
+        {%  elif forloop.last %}
+            Ankunft:
+        {%  endif %}
+        <em> {{ stop.name }} </em>
+        <ul>
+            {%  if stop.depaturetime.hour %}
+                <li>Abfahrtszeit: {{ stop.depaturetime.hour }}:{{ stop.depaturetime.minute }}</li>
+            {%  endif %}
+            {%  if stop.isWalking %}
+                <li>zu Fuß</li>
+            {%  endif %}
+            {%  if stop.data.platformName %}
+                <li>Bahnsteig: {{ stop.data.platformName }} </li>
+            {%  endif %}
+            <li>lat: {{ stop.lat }}</li>
+            <li>lng: {{ stop.lng }}</li>
 
-{% for stops in route.path %}
-    stops.name
+        </ul>
+    </li>
 {% endfor %}
+</ul>
 
 </body>
 </html>
