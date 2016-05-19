@@ -26,8 +26,13 @@ class Route(object):
             if "stopSeq" not in linestops or linestops["mode"]["product"] == "Fussweg":
                 pass
             else:
+<<<<<<< HEAD
                 # print("ROUTE: append " + linestops["mode"]["product"] + " " + linestops["mode"]["number"])
                 self.line.append(linestops["mode"]["product"] + " " + self.data["legs"][0]["mode"]["number"])
+=======
+                # print("ROUTE: append " + self.data["legs"][1]["mode"]["product"] + " " + self.data["legs"][1]["mode"]["number"])
+                self.line.append(linestops["mode"]["product"] + " " + linestops["mode"]["number"])
+>>>>>>> c041e809cc33d5e804c18780c7e24634f42e474f
                 for stop in linestops["stopSeq"]:
                     self.path.append(Stop.make_from_json(stop))
 
