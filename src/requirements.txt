@@ -1,3 +1,6 @@
 django
 django-admin
 mysql-python
+djangorestframework
+markdown
+django-filter
