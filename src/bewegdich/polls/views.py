@@ -16,8 +16,11 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+import datetime
+from route import Stop
 
-from serializers import StopSerializer
+
+from serializers import StopSerializer,RouteSerializer
 listi = []
 
 # @login_required(login_url='/polls/login/')
@@ -141,30 +144,35 @@ def profil(request):
     return render(request, 'profil.html')
 
 
-import datetime
-from route import Stop
 
 @csrf_exempt
 def get_route(request):
     """
-    List all code snippets, or create a new snippet.
+    Searches for the best Routes including walking and returns it as json
     """
     if request.method == 'GET':
       #  snippets = Stop.objects.all()
 
         #stop = Stop("asdf", lat="3", lng="351",depaturetime=datetime.datetime.now(),walkingtime=10)
         stop = Stop("asdf", "3", "351", 10)
-        if "origin" not in request.GET:
-            return JSONResponse("origin not found", status=201)
+        if "originlat" not in request.GET:
+            return JSONResponse("origin latitude not found", status=201)
+        if "originlng" not in request.GET:
+            return JSONResponse("origin longitude not found", status=201)
         if "destination" not in request.GET:
             return JSONResponse("destination not found", status=201)
 
-        origin = request.GET["origin"]
+        originlat = request.GET["originlat"]
+        originlng = request.GET["originlng"]
         destination = request.GET["destination"]
 
         # Here you could do the search for the optimized Route
+        routes = get_optimized_routes([originlng,originlat], destination)
+        if (type(routes) == int):
+            return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
 
-        serializer = StopSerializer(stop)
+
+        serializer = RouteSerializer(stop)
         return JSONResponse(serializer.data)
 
     elif request.method == 'POST':
