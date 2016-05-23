@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from route import Stop
-
+from route import Stop,Route
 
 
 class StopSerializer(serializers.Serializer):
@@ -8,7 +7,7 @@ class StopSerializer(serializers.Serializer):
     lat = serializers.CharField(required=True, allow_blank=False, max_length=10)
     lng = serializers.CharField(required=True, allow_blank=False, max_length=10)
     depaturetime = serializers.DateTimeField(required=False)
-    walkingtime = serializers.IntegerField(read_only=False)
+    walkingtime = serializers.DurationField(required=False)
 
     def create(self, validated_data):
         """
@@ -33,14 +32,14 @@ class RouteSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=False)
     origin_stop = StopSerializer()
     destination_stop = StopSerializer()
-    depaturetime = serializers.DateTimeField(required=True)
-    duration = serializers.TimeField(required=True)
+    depaturetime = serializers.DateTimeField(required=False)
+    duration = serializers.DurationField(required=True)
     path = StopSerializer(many=True)
-    line = StopSerializer(many=True)
+    line = serializers.CharField(required=True, allow_blank=True, max_length=50)
 
     def create(self, validated_data):
         """
-        Create and return a new `Snippet` instance, given the validated data.
+        Create and return a new Route instance, given the validated data.
         """
         return Route.objects.create(**validated_data)
 
@@ -49,10 +48,39 @@ class RouteSerializer(serializers.Serializer):
         Update and return an existing `Snippet` instance, given the validated data.
         """
         instance.id = validated_data.get('id', instance.id)
-        instance.origin_stop  = validated_data.get('origin', instance.origin_stop)
-        instance.destination_stop = validated_data.get('destination', instance.destination_stop)
+        instance.origin = validated_data.get('origin', instance.origin)
+        instance.destination = validated_data.get('destination', instance.destination)
         instance.depaturetime = validated_data.get('depaturetime', instance.depaturetime)
         instance.path = validated_data.get('path', instance.path)
         instance.line = validated_data.get('line', instance.line)
         instance.save()
         return instance
+
+class RouteList():
+    """
+        This Object is only needed to convert a list of routes into a JSON-Array
+    """
+    routes = []
+
+    def __init__(self, routes):
+        self.routes = routes
+
+class RouteListSerializer(serializers.Serializer):
+    """
+
+    It converts a list of routes into serializable data
+
+    """
+    routes = RouteSerializer(many=True)
+
+    def create(self, validated_data):
+        """
+        Create and return a new List of Routes instance, given the validated data.
+        """
+        return RouteList.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `Snippet` instance, given the validated data.
+        """
+        instance.routes = validated_data.get('routes', instance.routes)

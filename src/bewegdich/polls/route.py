@@ -1,4 +1,5 @@
-from datetime import datetime
+import datetime
+from datetime import datetime as dt
 # coding: utf8
 
 
@@ -29,7 +30,7 @@ class Route(object):
                 self.line.append(linestops["mode"]["product"] + " " + linestops["mode"]["number"])
                 for stop in linestops["stopSeq"]:
                     self.path.append(Stop.make_from_json(stop))
-        self.duration = datetime.strptime(self.data["duration"], '%H:%M').time()
+        self.duration = dt.strptime(self.data["duration"], '%H:%M').time()
 
         if(len(self.path) == 0):
             return
@@ -85,12 +86,15 @@ class Stop(object):
     lat = 0
     lng = 0
     depaturetime = 0
-    walkingtime = -1
+    walkingtime = datetime.timedelta(0,0)
+    isWalking = 0
 
-    def __init__(self,name,lat,lng):
+    def __init__(self, name, lat, lng, isWalking=0):
         self.name = name
         self.lat = lat
         self.lng = lng
+        self.isWalking = isWalking
+
 
 
     @staticmethod
@@ -135,9 +139,9 @@ def formatDateTime(abfahrszeit):
     """
     time = -1
     if type(abfahrszeit) == dict:
-        time = datetime.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
+        time = dt.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
     else:
-        time = datetime.strptime(abfahrszeit , '%Y%m%d %H:%M')
+        time = dt.strptime(abfahrszeit , '%Y%m%d %H:%M')
 
     if (type(time) == int):
         print("WRONG WRONG")
