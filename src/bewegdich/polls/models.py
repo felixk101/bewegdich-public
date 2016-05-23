@@ -50,24 +50,24 @@ class Usermeta(models.Model):
         return self.userid + " " + self.key;
 
 
-class Stop(models.Model):
-    name = models.CharField(max_length=100)
-    lat = models.CharField(max_length=10)
-    lng = models.CharField(max_length=10)
-    depaturetime = models.DateTimeField('depature')
-    walkingtime = models.IntegerField('walkingtime')
+# class Stop(models.Model):
+#     name = models.CharField(max_length=100)
+#     lat = models.CharField(max_length=10)
+#     lng = models.CharField(max_length=10)
+#     depaturetime = models.DateTimeField('depature')
+#     walkingtime = models.IntegerField('walkingtime')
 
 
-class Route(models.Model):
-    """
-    Route is the main object which is filled with data by the EFA API. The json files is given in the contructor and
-    will be analysed to filter the important data.
-    """
-
-    origin_stop = Stop()
-    destination_stop = Stop()
-    depature_time = models.DateTimeField('depature')
-    duration = models.TimeField('duration')
+# class Route(models.Model):
+#     """
+#     Route is the main object which is filled with data by the EFA API. The json files is given in the contructor and
+#     will be analysed to filter the important data.
+#     """
+#
+#     origin_stop = Stop()
+#     destination_stop = Stop()
+#     depature_time = models.DateTimeField('depature')
+#     duration = models.TimeField('duration')
 #    path = models.ForeignKey(RouteStop)
 
 #     line = RouteStop()
