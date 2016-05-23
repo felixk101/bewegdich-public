@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 
+
 @python_2_unicode_compatible  # only if you need to support Python 2
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -57,16 +58,23 @@ class Stop(models.Model):
     walkingtime = models.IntegerField('walkingtime')
 
 
-# class Route(models.Model):
-#     """
-#     Route is the main object which is filled with data by the EFA API. The json files is given in the contructor and
-#     will be analysed to filter the important data.
-#     """
-#
-#     id = -1
-#     origin_stop = models.Stop()
-#     destination_stop = ""
-#     depature_time = 0
-#     duration = -1
-#     path = []
-#     line = []
+class Route(models.Model):
+    """
+    Route is the main object which is filled with data by the EFA API. The json files is given in the contructor and
+    will be analysed to filter the important data.
+    """
+
+    origin_stop = Stop()
+    destination_stop = Stop()
+    depature_time = models.DateTimeField('depature')
+    duration = models.TimeField('duration')
+#    path = models.ForeignKey(RouteStop)
+
+#     line = RouteStop()
+
+
+#class RouteStop(models.Model):
+#    stop = models.ForeignKey(Stop)
+#    route = models.ForeignKey(Route)
+
+
