@@ -17,10 +17,10 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 import datetime
-from route import Stop
+from route import Stop, Route
 
 
-from serializers import StopSerializer, RouteSerializer
+from serializers import StopSerializer, RouteListSerializer,RouteList
 listi = []
 
 # @login_required(login_url='/polls/login/')
@@ -156,14 +156,11 @@ def profil(request):
 def get_route(request):
     """
     Searches for the best Routes including walking and returns it as json
+
+    Example: http://127.0.0.1:8000/getroute/?originlat=48.35882&originlng=10.90529&destination=augsburg%20hauptbahnhof
+
     """
     if request.method == 'GET':
-      #  snippets = Stop.objects.all()
-
-        #stop = Stop("asdf", lat="3", lng="351",depaturetime=datetime.datetime.now(),walkingtime=10)
-        stop = Stop("asdf", "3", "351")
-        serializer = StopSerializer(stop)
-        return JSONResponse(serializer.data)
         if "originlat" not in request.GET:
             return JSONResponse("origin latitude not found", status=201)
         if "originlng" not in request.GET:
@@ -175,13 +172,16 @@ def get_route(request):
         originlng = request.GET["originlng"]
         destination = request.GET["destination"]
 
-        # Here you could do the search for the optimized Route
+        # Here we do the search for the optimized Route
         routes = get_optimized_routes([originlng,originlat], destination)
         if (type(routes) == int):
             return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
 
+        # pkl_file = open('C:/UNI/beweg/testroute.json', 'r')
+        # route = pickle.load(pkl_file)
+        # pkl_file.close()
 
-        serializer = RouteSerializer(stop)
+        serializer = RouteListSerializer(RouteList(routes))
         return JSONResponse(serializer.data)
 
     elif request.method == 'POST':
