@@ -14,9 +14,9 @@ class Route(object):
     destination_stop = ""
     depature_time = 0
     duration = datetime.timedelta(0,0)
-    path = []
-    line = []
-
+    path = [] # the part of the hole route where you ride by bus/train, a list of stops
+    line = [] # The different names of the bus/train e.g. bus 101
+    walkingPath = [] # The part of the hole route where you walk, a list with coords
     def __init__(self, json):
         self.data = json
         self.path = []
@@ -114,8 +114,9 @@ class Stop(object):
         coords = json["ref"]["coords"].split(",")
         lat = coords[1]
         lng = coords[0]
-        stop = Stop(name,lat,lng)
+        stop = Stop(name, lat, lng)
         stop.data = data
+
         if "dateTime" in json:
             stop.depaturetime = formatDateTime(json["dateTime"])
         elif "depDateTime" in json["ref"]:

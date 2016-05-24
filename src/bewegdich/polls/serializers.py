@@ -27,6 +27,8 @@ class StopSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+class StringListField(serializers.ListField):
+    child = serializers.CharField()
 
 class RouteSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=False)
@@ -36,6 +38,7 @@ class RouteSerializer(serializers.Serializer):
     duration = serializers.DurationField(required=True)
     path = StopSerializer(many=True)
     line = serializers.CharField(required=True, allow_blank=True, max_length=50)
+    #walkingPath = StringListField()
 
     def create(self, validated_data):
         """
@@ -53,6 +56,8 @@ class RouteSerializer(serializers.Serializer):
         instance.depaturetime = validated_data.get('depaturetime', instance.depaturetime)
         instance.path = validated_data.get('path', instance.path)
         instance.line = validated_data.get('line', instance.line)
+        #instance.walkingPath = validated_data.get('walkingPath', instance.walkingPath)
+
         instance.save()
         return instance
 
