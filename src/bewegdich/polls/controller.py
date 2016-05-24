@@ -70,6 +70,7 @@ def get_optimized_routes(start, dest, time=-1):
                 route.depature_time = route.depature_time - station.walkingtime
 
             insert_start_point(start, station.walkingtime, route)
+            route.walkingPath = get_walking_coords(start, route.origin_stop.get_coords())
 
            # route.duration = (datetime.datetime.combine(datetime.date(1, 1, 1), route.duration.time()) + station.walkingtime).time()
             route.duration = route.duration + station.walkingtime
@@ -79,6 +80,7 @@ def get_optimized_routes(start, dest, time=-1):
 
     routes = sorted(routes, key=lambda route: route.depature_time)
     return routes
+
 
 
 def find_best_station(parameters):
@@ -104,7 +106,6 @@ def find_best_station(parameters):
     for station in station_list:
         # Calculate the time to walk to the given station
         walk_time = get_walking_time(userpos, station.get_coords())
-
         station.walkingtime = walk_time
         print("Walkingtime: " + walk_time.__str__())
 
@@ -295,10 +296,11 @@ def get_walking_coords(origin,destination):
     """
     data = get_walking_Route(origin, destination)
 
-    #Should be somewhere in the first leg
-    coords = data["routes"][0]["legs"][0]
+    coords = []
+    for waypoint in data["routes"][0]["legs"][0]["steps"]:
+        coords.append(waypoint["start_location"]["lat"])
+        coords.append(waypoint["start_location"]["lng"])
 
-    #Convert it into a list with coords only
     return coords
 
 # Insert a new startpoint where the route should begin
@@ -312,6 +314,7 @@ def insert_start_point(start, walktime, route):
     """
     stop = Stop("Ihre Position", start[0], start[1], isWalking=1)
     stop.walkingtime = walktime
+
     route.path.insert(0,stop )
     return route
 
