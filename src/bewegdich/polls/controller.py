@@ -71,7 +71,7 @@ def get_optimized_routes(start, dest, time=-1):
 
             insert_start_point(start, station.walkingtime, route)
 
-            route.duration = (datetime.datetime.combine(datetime.date(1, 1, 1), route.duration) + station.walkingtime).time()
+            route.duration = (datetime.datetime.combine(datetime.date(1, 1, 1), route.duration.time()) + station.walkingtime).time()
          #  route.duration = route.duration + station.walkingtime
             route.id = id
             id = id + 1
