@@ -31,7 +31,7 @@ class Route(object):
                     self.path.append(Stop.make_from_json(stop))
 
         arr = self.data["duration"].split(":")
-        self.duration = datetime.timedelta(hours=int(arr[0]), minutes=int[arr[1]])
+        self.duration = datetime.timedelta(hours=int(arr[0]), minutes=int(arr[1]))
 
         # self.duration = datetime.datetime.strptime(self.data["duration"], '%H:%M')
 
