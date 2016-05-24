@@ -149,37 +149,16 @@ def find_startstations(start, dest, time=-1):
     startstations = []
     tmplist = []
     for route in routes:
-        # Get the next 5 stations of this line
-        station_list = route.get_next_stops()
-        if route.isWalkOnly():
-            continue
+        tmplist.append([route,userpos,time])
 
-        best_station = -1
+    pool = Pool()
+    startstations = pool.map(find_best_station, tmplist)
+    while [].__contains__(-1): #Remove walkonly routes
+        startstations.remove(-1)
 
-        # Step through stations to find a better one
-        for station in station_list:
-            # Calculate the time to walk to the given station
-            walk_time = get_walking_time(userpos, station.get_coords())
-
-            station.walkingtime = walk_time
-            print("Walkingtime: " + walk_time.__str__())
-
-
-            # If there is enough time to walk, save this station
-            # print("to " + station.name + ": "+(time+station.walkingtime).time().__str__() +
-            #       " <? " + station.depaturetime.__str__())
-
-            #For test only: Reduce walkking time to get better results
-            #station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
-            if type(station.depaturetime) is datetime.datetime and (time + station.walkingtime) < station.depaturetime:
-                if best_station == -1 or best_station.walkingtime < station.walkingtime :
-                    best_station = station
-
-        if best_station != -1:
-            startstations.append(best_station)
-        else:
-            # No station is in range to walk to
-            startstations.append(route.origin_stop)
+    for station in startstations:
+        if station.walkingtime == -1:
+            print("ERROR: Walkingtime shouldnt be -1")
     return startstations
 
 
@@ -221,15 +200,11 @@ def get_routes(start, dest, dtime = -1):
     code = checkValidJson(data)
     if code == 0:
         routes = []
-        for index,route in enumerate(data["trips"]):
-           r = Route(route)
-
-    #       file = open("../static/testroute"+index.__str__()+".txt", 'wb')
-    #       pickle.dump(r, file)
-    #       file.close()
-
-        #   if r.depature_time > datetime.datetime.utc():
-           routes.append(r)
+        for route in data["trips"]:
+            r = Route(route)
+            if not r.isWalkOnly():
+                if r.depature_time > dtime:
+                    routes.append(r)
         return routes
     else:
         return int(code)
@@ -312,7 +287,7 @@ def insert_start_point(start, walktime, route):
     :param route: the route-object
     :return: the route-object
     """
-    stop = Stop("Ihre Position", start[1], start[0], isWalking=1)
+    stop = Stop("Ihre Position", start[0], start[1], isWalking=1)
     stop.walkingtime = walktime
 
     route.path.insert(0,stop )
