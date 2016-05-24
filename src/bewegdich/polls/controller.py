@@ -312,7 +312,7 @@ def insert_start_point(start, walktime, route):
     :param route: the route-object
     :return: the route-object
     """
-    stop = Stop("Ihre Position", start[0], start[1], isWalking=1)
+    stop = Stop("Ihre Position", start[1], start[0], isWalking=1)
     stop.walkingtime = walktime
 
     route.path.insert(0,stop )
