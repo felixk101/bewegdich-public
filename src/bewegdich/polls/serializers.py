@@ -28,6 +28,9 @@ class StopSerializer(serializers.Serializer):
         return instance
 
 class StringListField(serializers.ListField):
+    """
+    Helps to serialize a List of Strings
+    """
     child = serializers.CharField()
 
 class RouteSerializer(serializers.Serializer):
@@ -38,7 +41,7 @@ class RouteSerializer(serializers.Serializer):
     duration = serializers.DurationField(required=True)
     path = StopSerializer(many=True)
     line = serializers.CharField(required=True, allow_blank=True, max_length=50)
-    #walkingPath = StringListField()
+    walkingPath = StringListField()
 
     def create(self, validated_data):
         """

@@ -157,7 +157,7 @@ def get_route(request):
     """
     Searches for the best Routes including walking and returns it as json
 
-    Example: http://127.0.0.1:8000/getroute/?originlat=48.35882&originlng=10.90529&destination=augsburg%20hauptbahnhof
+    Example: http://127.0.0.1:8000/api/getroute/?originlat=48.35882&originlng=10.90529&destination=augsburg%20hauptbahnhof
 
     """
     if request.method == 'GET':
