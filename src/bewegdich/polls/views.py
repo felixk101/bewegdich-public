@@ -11,11 +11,13 @@ from django.http import HttpResponseRedirect
 from re import search
 
 from .forms import LocationForm
-from  controller import get_optimized_routes,get_coords
+from  controller import get_optimized_routes,get_coords,get_stoplist
+from controller import get_stoplist as getStopList
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+from serializers import Efa_stop_list_serializer
 import datetime
 from route import Stop, Route
 
@@ -150,7 +152,23 @@ def app(request):
 def profil(request):
     return render(request, 'profil.html')
 
+def get_stoplist(request):
+    """
+     Returns a List of possible Stops which fit to the given name
+     e.g. http://127.0.0.1:8000/api/getstoplist/?name=hauptbahnhof
+    :param request:
+    :return: a json
+    """
+    if request.method == 'GET':
+        if "name" not in request.GET:
+            return JSONResponse("name not found", status=201)
+        name = request.GET["name"]
+        stoplist = getStopList(name)
 
+        if (type(stoplist) == int):
+            return HttpResponse("Bei suche trat leider Fehler: " + str(stoplist) + " auf")
+        serializer = Efa_stop_list_serializer(stoplist)
+        return JSONResponse(serializer.data)
 
 @csrf_exempt
 def get_route(request):
@@ -192,6 +210,8 @@ def get_route(request):
             serializer.save()
             return JSONResponse(serializer.data, status=201)
         return JSONResponse(serializer.errors, status=400)
+
+
 
 class JSONResponse(HttpResponse):
     """

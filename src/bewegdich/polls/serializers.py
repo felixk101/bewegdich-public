@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from route import Stop,Route
+from models import efaStop
 
 
 class StopSerializer(serializers.Serializer):
@@ -92,3 +93,28 @@ class RouteListSerializer(serializers.Serializer):
         Update and return an existing `Snippet` instance, given the validated data.
         """
         instance.routes = validated_data.get('routes', instance.routes)
+
+
+class Efa_stop_serializer(serializers.Serializer):
+    """
+    It converts an efa_stops into serializable data
+    """
+    stopid = serializers.IntegerField(required=True)
+    name = serializers.CharField(required=True, allow_blank=True)
+
+
+    def create(self, validated_data):
+        """
+        Create and return a new List of Routes instance, given the validated data.
+        """
+        return efaStop.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing `Snippet` instance, given the validated data.
+        """
+        instance.stopid = validated_data.get('stopid', instance.stopid)
+        instance.name = validated_data.get('name', instance.name)
+
+class Efa_stop_list_serializer(serializers.ListSerializer):
+    child = Efa_stop_serializer()

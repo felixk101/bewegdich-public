@@ -5,6 +5,7 @@ import urllib2 as urllib
 from route import Route, Stop
 import datetime
 from multiprocessing import Pool
+from models import efaStop
 # coding: utf8
 """
  Nutzerposition holen
@@ -339,6 +340,21 @@ def get_coords(place):
     long = data["results"][0]["geometry"]["location"]["lng"]
     return [lat, long]
 
+def get_stoplist(place):
+    place = urllib.quote(place)
+    url = "http://efa.avv-augsburg.de/avv/XML_STOPFINDER_REQUEST?outputFormat=JSON" \
+          "&coordOutputFormat=WGS84[DD.ddddd]&" \
+          "type_sf=stop&" \
+          "name_sf=" + place
+
+    data = get_json(url)
+    stops = []
+    for point in data["stopFinder"]["points"]:
+       stops.append(efaStop(point["ref"]["id"],point["name"], point["ref"]["omc"]))
+
+    stops = sorted(stops,reverse=True, key=lambda efaStop: efaStop.quality)
+    return stops
+
 
 def get_json(url):
     """
@@ -360,3 +376,5 @@ def getXML(url):
     response_string = response.read()
     xmldoc = ElementTree.fromstring(response_string)
     return xmldoc
+
+#get_stoplist("hauptbahnhof")

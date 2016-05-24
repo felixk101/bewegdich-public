@@ -77,4 +77,13 @@ class Usermeta(models.Model):
 #    stop = models.ForeignKey(Stop)
 #    route = models.ForeignKey(Route)
 
+class efaStop():
+    stopid = -1
+    name = ""
+    quality = -1
+
+    def __init__(self, stopid, name, quality):
+        self.stopid = int(stopid)
+        self.name = name
+        self.quality = int(quality)
 
