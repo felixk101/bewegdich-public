@@ -1,5 +1,4 @@
 import datetime
-from datetime import datetime as dt
 # coding: utf8
 
 
@@ -14,7 +13,7 @@ class Route(object):
     origin_stop = ""
     destination_stop = ""
     depature_time = 0
-    duration = -1
+    duration = datetime.timedelta(0,0)
     path = []
     line = []
 
@@ -30,7 +29,11 @@ class Route(object):
                 self.line.append(linestops["mode"]["product"] + " " + linestops["mode"]["number"])
                 for stop in linestops["stopSeq"]:
                     self.path.append(Stop.make_from_json(stop))
-        self.duration = dt.strptime(self.data["duration"], '%H:%M').time()
+
+        arr = self.data["duration"].split(":")
+        self.duration = datetime.timedelta(hours=int(arr[0]), minutes=int[arr[1]])
+
+        # self.duration = datetime.datetime.strptime(self.data["duration"], '%H:%M')
 
         if(len(self.path) == 0):
             return
@@ -139,9 +142,9 @@ def formatDateTime(abfahrszeit):
     """
     time = -1
     if type(abfahrszeit) == dict:
-        time = dt.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
+        time = datetime.datetime.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
     else:
-        time = dt.strptime(abfahrszeit , '%Y%m%d %H:%M')
+        time = datetime.datetime.strptime(abfahrszeit , '%Y%m%d %H:%M')
 
     if (type(time) == int):
         print("WRONG WRONG")

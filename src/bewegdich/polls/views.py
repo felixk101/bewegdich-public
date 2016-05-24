@@ -179,6 +179,7 @@ def get_route(request):
 
         # pkl_file = open('C:/UNI/beweg/testroute.json', 'r')
         # route = pickle.load(pkl_file)
+        # routes = [route,route]
         # pkl_file.close()
 
         serializer = RouteListSerializer(RouteList(routes))
