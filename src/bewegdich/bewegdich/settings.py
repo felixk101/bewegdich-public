@@ -77,16 +77,16 @@ WSGI_APPLICATION = 'bewegdich.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '1_matthiaskrempel',
-        'USER': '1_matthiaskrempe',
-        'PASSWORD': '0lek42WrLHhHGUc,',
-        'HOST': 'bewegdich.informatik.hs-augsburg.de',
-        'PORT': '3306',
-    }
-}
+# DATABASES = {
+#     'default'b: {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': '1_matthiaskrempel',
+#         'USER': '1_matthiaskrempe',
+#         'PASSWORD': '0lek42WrLHhHGUc,',
+#         'HOST': 'bewegdich.informatik.hs-augsburg.de',
+#         'PORT': '3306',
+#     }
+# }
 
 # DATABASES = {
 #     'default': {

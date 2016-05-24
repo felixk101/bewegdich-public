@@ -1,4 +1,3 @@
-from datetime import datetime as dt
 import datetime
 # coding: utf8
 
@@ -14,7 +13,7 @@ class Route(object):
     origin_stop = ""
     destination_stop = ""
     depature_time = 0
-    duration = datetime.timedelta()
+    duration = datetime.timedelta(0,0)
     path = []
     line = []
 
@@ -33,7 +32,8 @@ class Route(object):
 
         arr = self.data["duration"].split(":")
         self.duration = datetime.timedelta(hours=int(arr[0]), minutes=int(arr[1]))
-       # self.duration = datetime.strptime(self.data["duration"], '%H:%M').time()
+
+        # self.duration = datetime.datetime.strptime(self.data["duration"], '%H:%M')
 
         if(len(self.path) == 0):
             return
@@ -62,10 +62,11 @@ class Route(object):
 
 
         #when No stations inbetween start and destination found
-        if(linelist.__len__()<2):
+        if(linelist.__len__()<3):
             return []
 
-        # Remove last item because its the destination stop
+        # Remove first and last item because its the originstop and destination stop
+        linelist.pop(0)
         linelist.pop(linelist.__len__() - 1)
         return linelist
 
@@ -75,9 +76,6 @@ class Route(object):
            if linestops["mode"]["product"] != "Fussweg":
                iswalkonly = 0
        return iswalkonly
-
-    def get_duration(self):
-        return str(self.duration)
 
 class Stop(object):
     """
@@ -91,13 +89,15 @@ class Stop(object):
     lat = 0
     lng = 0
     depaturetime = 0
-    walkingtime = datetime.timedelta(0, 0)
+    walkingtime = datetime.timedelta(0,0)
+    isWalking = 0
 
-    def __init__(self,name,lat,lng, isWalking=0):
+    def __init__(self, name, lat, lng, isWalking=0):
         self.name = name
         self.lat = lat
         self.lng = lng
         self.isWalking = isWalking
+
 
 
     @staticmethod
@@ -142,9 +142,9 @@ def formatDateTime(abfahrszeit):
     """
     time = -1
     if type(abfahrszeit) == dict:
-        time = dt.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
+        time = datetime.datetime.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
     else:
-        time = dt.strptime(abfahrszeit , '%Y%m%d %H:%M')
+        time = datetime.datetime.strptime(abfahrszeit , '%Y%m%d %H:%M')
 
     if (type(time) == int):
         print("WRONG WRONG")

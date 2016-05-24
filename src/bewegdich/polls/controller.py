@@ -71,13 +71,11 @@ def get_optimized_routes(start, dest, time=-1):
 
             insert_start_point(start, station.walkingtime, route)
 
-            route.duration = (datetime.datetime.combine(datetime.date(1, 1, 1), route.duration.time()) + station.walkingtime).time()
-         #  route.duration = route.duration + station.walkingtime
+           # route.duration = (datetime.datetime.combine(datetime.date(1, 1, 1), route.duration.time()) + station.walkingtime).time()
+            route.duration = route.duration + station.walkingtime
             route.id = id
             id = id + 1
             routes.append(route)
-            if route.duration == datetime.timedelta(0,60):
-                pass
 
     routes = sorted(routes, key=lambda route: route.depature_time)
     return routes
@@ -258,14 +256,12 @@ def checkValidJson(json):
     return 0
 
 
-def get_walking_time(origin, destination):
+def get_walking_Route(origin, destination):
     """
-
     Searches for a route to walk from A to B
-
     :param origin: startposition
     :param destination: destination
-    :return: a datetime
+    :return: a json
     """
     if type(origin) != list or type(destination) != list:
         return -1
@@ -277,9 +273,33 @@ def get_walking_time(origin, destination):
           "origin=" + origin + "&destination=" + destination + \
           "&mode=walking" + "&key=" + key
     data = get_json(url)
+    return data
+
+def get_walking_time(origin, destination):
+    """
+    Searches for a walking route and returns the time
+    :param origin: startposition
+    :param destination: destination
+    :return: the walkingtime
+    """
+    data = get_walking_Route(origin,destination)
     seconds = data["routes"][0]["legs"][0]["duration"]["value"]
     return datetime.timedelta(0, seconds)  # days, seconds, then other fields.
 
+def get_walking_coords(origin,destination):
+    """
+    Searches for a walking route and returns the coordinates on this route from start to destination
+    :param origin: startposition
+    :param destination: destination
+    :return: list of coords
+    """
+    data = get_walking_Route(origin, destination)
+
+    #Should be somewhere in the first leg
+    coords = data["routes"][0]["legs"][0]
+
+    #Convert it into a list with coords only
+    return coords
 
 # Insert a new startpoint where the route should begin
 def insert_start_point(start, walktime, route):
