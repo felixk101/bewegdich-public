@@ -87,3 +87,6 @@ class efaStop():
         self.name = name
         self.quality = int(quality)
 
+    def __str__(self):
+        return self.stopid + " " + self.name
+
