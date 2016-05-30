@@ -8,9 +8,9 @@ from rest_framework import routers, serializers, viewsets
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^Home/$', views.home, name='home'),
-    url(r'^map/$', views.map, name='map'),
-    url(r'^Profil/$', views.profil, name='profile'),
     url(r'^App/$', views.app, name='App'),
+    url(r'^Profil/$', views.profil, name='profile'),
+    url(r'^map/$', views.map, name='map'),
     url(r'^list/$', views.list, name='map'),
     url(r'^login/$', views.login_user, name='login_user'),
     url(r'^form/$', views.get_dest, name='form'),
