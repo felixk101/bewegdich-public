@@ -351,8 +351,12 @@ def get_stoplist(place):
 
     data = get_json(url)
     stops = []
-    for point in data["stopFinder"]["points"]:
-        stops.append(efaStop(point["ref"]["id"],point["name"], point["ref"]["omc"]))
+    if len(data["stopFinder"]["points"]) == 1: # One Result only must be handled differently, because of JSON
+        point = data["stopFinder"]["points"]["point"]
+        stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
+    else:
+        for point in data["stopFinder"]["points"]:
+            stops.append(efaStop(point["ref"]["id"],point["name"], point["ref"]["omc"]))
 
 
     stops = sorted(stops,reverse=True, key=lambda efaStop: efaStop.quality)
