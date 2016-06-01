@@ -1,33 +1,22 @@
-import select
-from django.http import HttpResponse
-import cPickle as pickle
 import base64
-from django.http import *
-from django.shortcuts import render_to_response,redirect
-from django.template import RequestContext
-from django.contrib.auth.decorators import login_required
+import cPickle as pickle
+
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from re import search
-from django.utils.six import BytesIO
-from rest_framework.parsers import JSONParser
-import ast
-
-
-from .forms import LocationForm
-from  controller import get_optimized_routes,get_coords,get_stoplist
-from controller import get_stoplist as getStopList
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
+
+from  controller import get_optimized_routes
+from controller import get_stoplist as getStopList
 from serializers import Efa_stop_list_serializer
-import datetime
-from route import Stop, Route
+from serializers import StopSerializer, RouteListSerializer, RouteList
+from .forms import LocationForm
 
-
-from serializers import StopSerializer, RouteListSerializer,RouteList
 
 # @login_required(login_url='/polls/login/')
 def get_dest(request):
@@ -48,8 +37,8 @@ def list(request):
 
     Shows a selection of the best routes in a list to select
 
-    :param request:
-    :return:
+    :param request
+    :return a rendered list.html document with the given context
     """
 
     if request.method == 'POST':
@@ -57,8 +46,8 @@ def list(request):
         form = LocationForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-          #  print('coords: ', form.cleaned_data['coords'])
-          #  print(form.cleaned_data['dest'])
+            #  print('coords: ', form.cleaned_data['coords'])
+            #  print(form.cleaned_data['dest'])
 
             dest = form.cleaned_data['dest']
 
@@ -67,12 +56,12 @@ def list(request):
             #### For Testing Only: ####
             ### To get the same startlocation ####
 
-            start = [10.90529,48.35882]
+            start = [10.90529, 48.35882]
 
             city = form.cleaned_data['city']
-            routes = get_optimized_routes(start, city + ' ' +dest )
-            if(type(routes) == int):
-                return HttpResponse("Bei suche trat leider Fehler: "+ str(routes) + " auf")
+            routes = get_optimized_routes(start, city + ' ' + dest)
+            if (type(routes) == int):
+                return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
             listi = routes
 
             request.session['session_routes'] = base64.b64encode(pickle.dumps(routes))
@@ -90,19 +79,15 @@ def list(request):
 
 # @login_required(login_url='/polls/login/')
 def map(request):
+    """
+    Shows destination form along with a map
+    """
     form = LocationForm()
     context = {
         'form': form,
     }
 
-    return render(request,'map.html', context)
-
-def home(request):
-    form = LocationForm()
-    context = {
-        'form': form,
-    }
-    return render(request,'home.html', context)
+    return render(request, 'map.html', context)
 
 # @login_required(login_url='/polls/login/')
 def home(request):
@@ -110,7 +95,7 @@ def home(request):
     context = {
         'form': form,
     }
-    return render(request,'home.html', context)
+    return render(request, 'home.html', context)
 
 
 def login_user(request):
@@ -128,7 +113,7 @@ def login_user(request):
     return render_to_response('login.html', context_instance=RequestContext(request))
 
 
-def route(request,route_id):
+def route(request, route_id):
     """
 
     With the given route_id this page returns the selected route
@@ -146,17 +131,20 @@ def route(request,route_id):
     else:
         selected_route = listi[int(route_id)]
 
-
     context = {
         'route': selected_route,
     }
 
     return render(request, 'navigation.html', context)
 
+
 def app(request):
     return render(request, 'app.html')
+
+
 def profil(request):
     return render(request, 'profil.html')
+
 
 def get_stoplist(request):
     """
@@ -175,6 +163,7 @@ def get_stoplist(request):
             return HttpResponse("Bei suche trat leider Fehler: " + str(stoplist) + " auf")
         serializer = Efa_stop_list_serializer(stoplist)
         return JSONResponse(serializer.data)
+
 
 @csrf_exempt
 def get_route(request):
@@ -197,7 +186,7 @@ def get_route(request):
         destination = request.GET["destination"]
 
         # Here we do the search for the optimized Route
-        routes = get_optimized_routes([originlng,originlat], destination)
+        routes = get_optimized_routes([originlng, originlat], destination)
         if (type(routes) == int):
             return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
 
@@ -218,11 +207,11 @@ def get_route(request):
         return JSONResponse(serializer.errors, status=400)
 
 
-
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
     """
+
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'
