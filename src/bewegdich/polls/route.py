@@ -8,24 +8,45 @@ class Route(object):
     Route is the main object which is filled with data by the EFA API. The json files is given in the contructor and
     will be analysed to filter the important data.
     """
+    # the hole raw JSON-String
     data = []
+
+    # the id which identifies this route only in this session. This number will be set later in the process
     id = -1
+
+    # The first station the vehicle(Bus/Train) start.
     origin_stop = ""
+
+    # The destination the user wants to go
     destination_stop = ""
+
+    # The time the user has to start walking to catch the vehicle(Bus/Train).
+    # This time will be calculated later in the process
     depature_time = 0
+
+    # The duration the hole route including the walk takes. This duration will be calculated later in the process
     duration = datetime.timedelta(0,0)
-    path = [] # the part of the hole route where you ride by bus/train, a list of stops
-    line = [] # The different names of the bus/train e.g. bus 101
-    walkingPath = [] # The part of the hole route where you walk, a list with coords
+
+    # the part of the hole route where you ride by bus/train, a list of stops
+    path = []
+
+    # The different names of the bus/train e.g. bus 101
+    line = []
+
+    # The part of the hole route where you walk, a list with coords
+    walkingPath = []
+
     def __init__(self, json):
         self.data = json
         self.path = []
         self.line = []
+
+        #Find out each Stop of the route and the vehiclenames e.g. Bus 102
+        #Filter routes which are only one long footwalk
         for linestops in self.data["legs"]:
             if "stopSeq" not in linestops or linestops["mode"]["product"] == "Fussweg":
                 pass
             else:
-                # print("ROUTE: append " + self.data["legs"][1]["mode"]["product"] + " " + self.data["legs"][1]["mode"]["number"])
                 self.line.append(linestops["mode"]["product"] + " " + linestops["mode"]["number"])
                 for stop in linestops["stopSeq"]:
                     self.path.append(Stop.make_from_json(stop))
@@ -33,10 +54,10 @@ class Route(object):
         arr = self.data["duration"].split(":")
         self.duration = datetime.timedelta(hours=int(arr[0]), minutes=int(arr[1]))
 
-        # self.duration = datetime.datetime.strptime(self.data["duration"], '%H:%M')
-
+        # If its only one long walk don't list this route
         if(len(self.path) == 0):
             return
+
         self.origin_stop = self.path[0]
         self.destination_stop = self.path[-1]
         self.depature_time = self.origin_stop.depaturetime
@@ -84,15 +105,23 @@ class Stop(object):
     Its fed with json-data and filters the important informations
 
     """
-    data = ""
+    data = "" #The hole raw JSON-String
     name = ""
     lat = 0
     lng = 0
-    depaturetime = 0
-    walkingtime = datetime.timedelta(0,0)
+    depaturetime = 0 #Defines the time the spesific Vehicle(Bus/Train) leaves this stop; 0 when walk
+    walkingtime = datetime.timedelta(0,0) #Defines the walking time from this Stop to the next one
     isWalking = 0
 
     def __init__(self, name, lat, lng, isWalking=0):
+        """
+
+        :param name: the name of the stop
+        :param lat:  the latitude
+        :param lng:  the longitude
+        :param isWalking: 1 if you walk from this stop to the next one;
+                          0 if you down walk
+        """
         self.name = name
         self.lat = lat
         self.lng = lng
@@ -148,5 +177,5 @@ def formatDateTime(abfahrszeit):
         time = datetime.datetime.strptime(abfahrszeit , '%Y%m%d %H:%M')
 
     if (type(time) == int):
-        print("WRONG WRONG")
+        print("ERROR: Timeconversion gone wrong")
     return time

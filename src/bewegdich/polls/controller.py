@@ -30,9 +30,10 @@ def get_optimized_routes(start, dest, time=-1):
     Finds the purfect Route with walking opmimazation included
 
     :rtype: Route
-    :param start(Coordinates): the startposition where the user currently is
+    :param start: (Coordinates) the startposition where the user currently is
     :param dest: the destionation where the user want to go
-    :return: : the route
+    :param time: the time when the user wants to start
+    :return: the optimized routes as a list
     """
     # If no time was set, take the current one
     if time == -1:
@@ -73,7 +74,6 @@ def get_optimized_routes(start, dest, time=-1):
             insert_start_point(start, station.walkingtime, route)
             route.walkingPath = get_walking_coords(start, route.origin_stop.get_coords())
 
-           # route.duration = (datetime.datetime.combine(datetime.date(1, 1, 1), route.duration.time()) + station.walkingtime).time()
             route.duration = route.duration + station.walkingtime
             route.id = id
             id = id + 1
@@ -165,11 +165,11 @@ def find_startstations(start, dest, time=-1):
 
 def get_routes(start, dest, dtime = -1):
     """
-        Finds the currently best route from A to B
+        Finds the routes from A to B directly from EFA
 
     :param start: the startposition
     :param dest:  the destination
-    :return: a route
+    :return: a list of routes
     """
     lat, lon = start[1], start[0]
     origin = urllib.quote((str(lon) + ":" + str(lat) + ":WGS84").encode('utf-8'))
@@ -192,11 +192,7 @@ def get_routes(start, dest, dtime = -1):
 
     print(url)
 
-    # with open('C:\json', 'r') as myfile:
-    #    data = myfile.read()
-    # data =  json.loads(data)
     data = get_json(url)
-
 
     code = checkValidJson(data)
     if code == 0:
@@ -218,7 +214,7 @@ def checkValidJson(json):
             - Origin or destination not found
 
     :param json:
-    :return:
+    :return: 0= Everything okay; else the spesific errornumber
     """
     if "trips" not in json or json["trips"] == None:
         print("ERR: No timetable recieved")
@@ -283,7 +279,7 @@ def get_walking_coords(origin,destination):
 def insert_start_point(start, walktime, route):
     """
 
-    Inserts the given point into the path variable of the given route as first stop
+    Inserts the given point of the user into the path(List) variable of the given route as first stop
     :param start: in coordinates [lat,lng]
     :param route: the route-object
     :return: the route-object
@@ -340,7 +336,13 @@ def get_coords(place):
     long = data["results"][0]["geometry"]["location"]["lng"]
     return [lat, long]
 
+
 def get_stoplist(place):
+    """
+        Searches for the closes matching stops with the same name as the given one.
+    :param place: the first few letters of the desired stop
+    :return: a list of Stops each containts the stopid and the name
+    """
     place = urllib.quote(place)
     url = "http://efa.avv-augsburg.de/avv/XML_STOPFINDER_REQUEST?outputFormat=JSON" \
           "&coordOutputFormat=WGS84[DD.ddddd]&" \
