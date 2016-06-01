@@ -1,6 +1,7 @@
 import select
 from django.http import HttpResponse
-import pickle
+import cPickle as pickle
+import base64
 from django.http import *
 from django.shortcuts import render_to_response,redirect
 from django.template import RequestContext
@@ -9,6 +10,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from re import search
+from django.utils.six import BytesIO
+from rest_framework.parsers import JSONParser
+import ast
+
 
 from .forms import LocationForm
 from  controller import get_optimized_routes,get_coords,get_stoplist
@@ -23,7 +28,6 @@ from route import Stop, Route
 
 
 from serializers import StopSerializer, RouteListSerializer,RouteList
-listi = []
 
 # @login_required(login_url='/polls/login/')
 def get_dest(request):
@@ -47,7 +51,6 @@ def list(request):
     :param request:
     :return:
     """
-    global listi
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -72,6 +75,8 @@ def list(request):
                 return HttpResponse("Bei suche trat leider Fehler: "+ str(routes) + " auf")
             listi = routes
 
+            request.session['session_routes'] = base64.b64encode(pickle.dumps(routes))
+
             context = {
                 'routes': routes
             }
@@ -89,6 +94,7 @@ def map(request):
     context = {
         'form': form,
     }
+
     return render(request,'map.html', context)
 
 def home(request):
@@ -128,6 +134,7 @@ def route(request,route_id):
     With the given route_id this page returns the selected route
     """
     route_id = int(route_id)
+    listi = pickle.loads(base64.b64decode(request.session['session_routes']))
 
     # This route is a testing route
     if route_id == 66:
@@ -138,13 +145,12 @@ def route(request,route_id):
         return HttpResponse("Bei der ausgewaehlten Route trat leider in Fehler auf")
     else:
         selected_route = listi[int(route_id)]
-        text_file = open("testroute.json", "w")
-        pickle.dump(selected_route, text_file)
-        text_file.close()
+
 
     context = {
         'route': selected_route,
     }
+
     return render(request, 'navigation.html', context)
 
 def app(request):
