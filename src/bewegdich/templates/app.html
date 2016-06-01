@@ -13,15 +13,15 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="msapplication-tap-highlight" content="no">
-        <link href="files/resources/lib/theme/jqm/jqm.css" rel="stylesheet" />
-        <link href="files/resources/lib/theme/flat-ui/flat-ui.css" rel="stylesheet" />
-        <link href="files/resources/lib/jquerymobile/1.4.4/jquery.mobile.structure-1.4.4.css"
+        <link href="{% static "files/resources/lib/theme/jqm/jqm.css" %}" rel="stylesheet" />
+        <link href="{% static "files/resources/lib/theme/flat-ui/flat-ui.css" %}" rel="stylesheet" />
+        <link href="{% static "files/resources/lib/jquerymobile/1.4.4/jquery.mobile.structure-1.4.4.css" %}"
         rel="stylesheet" />
-        <script type="text/javascript" src="files/resources/lib/underscore/underscore.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/underscore/underscore.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/store/json2.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/store/json2.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/jquery/jquery-2.1.1.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/jquery/jquery-2.1.1.js"%}" >
         </script>
         <script type="text/javascript">
                     $(document).bind("mobileinit", function()
@@ -42,67 +42,67 @@
                 }
             });
         </script>
-        <script type="text/javascript" src="files/resources/lib/jquerymobile/1.4.4/jquery.mobile-1.4.4.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/jquerymobile/1.4.4/jquery.mobile-1.4.4.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/js/mobilebase.js">
+        <script type="text/javascript" src="{% static "files/resources/js/mobilebase.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/event/customEventHandler.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/event/customEventHandler.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/base/sha1.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/base/sha1.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/base/oauth.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/base/oauth.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/base/contexts.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/base/contexts.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/base/jquery.xml2json.min.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/base/jquery.xml2json.min.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/q/q.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/q/q.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/EventEmitter.js/EventEmitter.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/EventEmitter.js/EventEmitter.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/tv4/tv4.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/tv4/tv4.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/localforage/dist/localforage.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/localforage/dist/localforage.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/localforage/plugins/localforage-setitems/localforage-setitems.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/localforage/plugins/localforage-setitems/localforage-setitems.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/localforage/plugins/localforage-find/localforage-find.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/localforage/plugins/localforage-find/localforage-find.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/crypto-js-md5/crypto-js-md5.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/crypto-js-md5/crypto-js-md5.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/moment/moment.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/moment/moment.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/underscore-query/underscore-query.min.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/underscore-query/underscore-query.min.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/offline/offline.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/offline/offline.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/ms_sdk_bundle/client-sdk.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/ms_sdk_bundle/client-sdk.js"%}" >
         </script>
         <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true">
         </script>
-        <script type="text/javascript" src="files/resources/lib/jquery-ui-map/jquery.ui.map.full.min.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/jquery-ui-map/jquery.ui.map.full.min.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/base/appery.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/base/appery.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/base/component-manager.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/base/component-manager.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/base/mapping-impl.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/base/mapping-impl.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/base/entity-api.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/base/entity-api.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/base/login.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/base/login.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/base/storage-api.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/base/storage-api.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/get_target_platform.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/get_target_platform.js"%}" >
         </script>
-        <script type="text/javascript" src="files/resources/lib/cordova.js">
+        <script type="text/javascript" src="{% static "files/resources/lib/cordova.js"%}" >
         </script>
-        <link href="files/resources/css/mobilebase.css" rel="stylesheet" type="text/css"
+        <link href="{% static "files/resources/css/mobilebase.css"%}" rel="stylesheet" type="text/css"
         />
-        <script type="text/javascript" src="../../static/files/views/assets/js/services/model.js">
+        <script type="text/javascript" src="{% static "files/views/assets/js/services/model.js"%}" >
         </script>
-        <script type="text/javascript" src="../../static/files/views/assets/js/services/service.js">
+        <script type="text/javascript" src="{% static "files/views/assets/js/services/service.js"%}" >
         </script>
     </head>
     
@@ -134,59 +134,12 @@
                 </script>
                 <!-- mobileworkarea_10 -->
                 <div class="App_mobileworkarea_10 App_mobileworkarea_10">
-                    <!-- mobileradiogroup_40 -->
-                    <div data-role="fieldcontain" class="App_mobileradiogroup_40" id="App_mobileradiogroup_40"
-                    dsid="mobileradiogroup_40">
-                        <fieldset data-role="controlgroup" data-theme="a">
-                            <!-- currentCity_Augsburg -->
-                            <span dsid="currentCity_Augsburg" class="App_currentCity_Augsburg" name="currentCity_Augsburg">
-                                <input type="radio" name="mobileradiogroup_40" id="App_currentCity_Augsburg" City_Augsburg="0"
-                                tabindex="9" value="Augsburg" />
-                                <label id="App_currentCity_Augsburg_label" for="App_currentCity_Augsburg">
-                                    Augsburg
-                                </label>
-                            </span>
-                            <!-- currentCity_Basel -->
-                            <span dsid="currentCity_Basel" class="App_currentCity_Basel" name="currentCity_Basel">
-                                <input type="radio" name="mobileradiogroup_40" id="App_currentCity_Basel" City_Basel="0"
-                                value="Basel" />
-                                <label id="App_currentCity_Basel_label" for="App_currentCity_Basel">
-                                    Basel
-                                </label>
-                            </span>
-                        </fieldset>
-                    </div>
                     <!-- mobilegrid_25 -->
                     <div class="App_mobilegrid_25_wrapper" data-wrapper-for="mobilegrid_25">
                         <table id="App_mobilegrid_25" class="App_mobilegrid_25" dsid="mobilegrid_25" name="mobilegrid_25"
                         cellpadding=0 cellspacing=0>
                             <col style="width:81px;" />
                             <col style="width:auto;" />
-                            <tr class="App_mobilegrid_25_row_0">
-                                <!-- mobilegridcell_26 -->
-                                <td id="App_mobilegridcell_26" name="mobilegridcell_26" class="App_mobilegridcell_26"
-                                colspan=1 rowspan=1>
-                                    <div class="cell-wrapper">
-                                        <!-- start_label -->
-                                        <div name="start_label" id="App_start_label" dsid="start_label" data-role="appery_label"
-                                        class="App_start_label">
-                                            Start
-                                        </div>
-                                    </div>
-                                </td>
-                                <!-- mobilegridcell_27 -->
-                                <td id="App_mobilegridcell_27" name="mobilegridcell_27" class="App_mobilegridcell_27"
-                                colspan=1 rowspan=1>
-                                    <div class="cell-wrapper">
-                                        <!-- start_input -->
-                                        <div data-role="fieldcontain" class="App_start_input ">
-                                            <input type="text" name="start_input" dsid="start_input" value="" placeholder="Startort eingeben"
-                                            id="App_start_input" tabindex="5" multiple data-theme="a" class="App_start_input"
-                                            />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
                             <tr class="App_mobilegrid_25_row_1">
                                 <!-- mobilegridcell_28 -->
                                 <td id="App_mobilegridcell_28" name="mobilegridcell_28" class="App_mobilegridcell_28"
