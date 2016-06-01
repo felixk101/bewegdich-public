@@ -8,18 +8,17 @@ from multiprocessing import Pool
 from models import efaStop
 # coding: utf8
 """
- Nutzerposition holen
- Zielposition holen
- schnellste Route von Start nach Ziel berechnen
- Filtern der Einstiegsstation, Endstation(Richtung) und Abfahrtszeit dieser Route
- Naechsten z.b. 5 Stationen in Fahrtrichtung der Linie holen
- Abfahrtszeiten der 5 Stationen holen
- Gehzeit zwischen Nutzerposition und den 5 Stationen berechnen
- Vergleichen der Gehzeit und den Abfahrszeiten
-
- Gehe die 5 Stationen durch
- 	Wenn aktuelleZeit + Gehzeit < Abfahrszeit
- 		diese Station als start setzen
+ get user position
+ get destination position
+ calculate fastest route from start to destination
+ filter start station, final stop (direction) and departure times of route
+ get next (e.g. 5) stops in driving direction
+ get departure times for these stops
+ calculate walking time between user position and these stops
+ compare walking time and departure times
+ go over these stops:
+     if current time + walking time < departure time
+        set this stop as starting point
 
 # Returns the best Route
 """
