@@ -14,12 +14,45 @@
           width:40%;
       }
     </style>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script>
+    $(function() {
+    function log( message ) {
+      $( "<div>" ).text( message ).prependTo( "#log" );
+      $( "#log" ).scrollTop( 0 );
+    }
+
+    $( "#stops" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "http://127.0.0.1:8000/api/getstoplist/",
+          type: "get",
+          data: {
+            name: request.term
+          },
+          success: function( data ) {
+            console.log(data)
+            response( data );
+          }
+        });
+      },
+      minLength: 3,
+      select: function( event, ui ) {
+        log( ui.item ?
+          "Selected: " + ui.item.name + " aka " + ui.item.stopid :
+          "Nothing selected, input was " + this.value );
+      }
+    });
+    });
+    </script>
 
 </head>
 <body>
 <h1>Beweg dich v0.1</h1>
 <p>Location (lat, lon):
 <span id="lat">???</span>°, <span id="lon">???</span>°
+<br>
 <br>
 
 <form action="/list/" method="post">
@@ -117,5 +150,13 @@
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0&callback=initMap"
         async defer></script>
+<div class="ui-widget">
+  <label for="stops">Destination: </label>
+  <input id="stops">
+</div>
+<div class="ui-widget" style="margin-top:2em; font-family:Arial">
+  Result:
+  <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
+</div>
 </body>
 </html>
