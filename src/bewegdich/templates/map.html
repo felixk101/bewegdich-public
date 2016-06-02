@@ -32,8 +32,15 @@
             name: request.term
           },
           success: function( data ) {
-            console.log(data)
-            response( data );
+            response($.map(data, function (item) {
+                return {
+                    label: item.name,
+                    value: item.stopid
+                };
+            }));
+
+            //console.log(data)
+            //response( data );
           }
         });
       },
