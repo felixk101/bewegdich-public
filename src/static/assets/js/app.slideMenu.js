@@ -1,20 +1,25 @@
 jQuery(document).ready(function () {
-    App_slideMenu.init();
+    AppSlideMenu.init();
 });
 
-var App_slideMenu = {
+var AppSlideMenu = {
     snap: null,
     init: function () {
         this.snap = new Snap({
             element: jQuery('#content')[0]
         });
 
+        this.hooks();
+    },
+    hooks: function () {
+        var that = this;
+
         jQuery('.snap-open-left').on('click', function () {
-            snapper.open('left');
+            that.snap.open('left');
         });
 
         jQuery('.snap-open-right').on('click', function () {
-            snapper.open('right');
+            that.snap.open('right');
         });
     }
 };

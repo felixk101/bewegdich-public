@@ -1,28 +1,48 @@
 jQuery(document).ready(function () {
-    App_location.init();
+    AppLocation.init();
 });
 
-var App_location = {
+var AppLocation = {
     position: {
-        latitude: 0,
-        longitude: 0
+        longitude: 0,
+        latitude: 0
     },
     init: function () {
         this.get();
     },
-    get: function () {
+    get: function (options) {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(this.set, this.error);
+            navigator.geolocation.getCurrentPosition(this.set, this.error, options);
         } else {
             this.error();
         }
     },
     set: function (position) {
-        this.position.latitude = position.coords.latitude;
-        this.position.longitude = position.coords.longitude;
-        alert(this.position.latitude);
+        jQuery(document).trigger('AppLocation.before.PositionSet');
+
+        AppLocation.position.longitude = position.coords.longitude;
+        AppLocation.position.latitude = position.coords.latitude;
+
+        jQuery(document).trigger('AppLocation.after.PositionSet');
     },
-    error: function () {
-        alert("error");
+    error: function (e) {
+        switch (e.code) {
+            case e.PERMISSION_DENIED:
+                AppError.show('location-denied');
+                break;
+            case e.POSITION_UNAVAILABLE:
+                AppError.show('location-unavailable');
+                break;
+            case e.TIMEOUT:
+                AppError.show('location-unavailable');
+                break;
+            case e.UNKNOWN_ERROR:
+                AppError.show('location-unavailable');
+                break;
+            default:
+                AppError.show('location-unavailable');
+                break;
+        }
+
     }
 };

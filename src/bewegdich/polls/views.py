@@ -34,10 +34,22 @@ def get_dest(request):
     return render(request, 'form.html', {'form': form})
 
 
-# @login_required(login_url='/polls/login/')
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return render(request,'index.html')
 
+def login(request):
+    logout(request)
+    username = password = ''
+    if request.POST:
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect('/form/')
+    return render_to_response('login.html', context_instance=RequestContext(request))
 
 def list(request):
     """
@@ -91,37 +103,6 @@ def map(request):
     }
     return render(request,'map.html', context)
 
-def home(request):
-    form = LocationForm()
-    context = {
-        'form': form,
-    }
-    return render(request,'home.html', context)
-
-# @login_required(login_url='/polls/login/')
-def home(request):
-    form = LocationForm()
-    context = {
-        'form': form,
-    }
-    return render(request,'home.html', context)
-
-
-def login_user(request):
-    logout(request)
-    username = password = ''
-    if request.POST:
-        username = request.POST['username']
-        password = request.POST['password']
-
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect('/form/')
-    return render_to_response('login.html', context_instance=RequestContext(request))
-
-
 def route(request,route_id):
     """
 
@@ -147,15 +128,10 @@ def route(request,route_id):
     }
     return render(request, 'navigation.html', context)
 
-def app(request):
-    return render(request, 'app.html')
-def profil(request):
-    return render(request, 'profil.html')
-
 def get_stoplist(request):
     """
      Returns a List of possible Stops which fit to the given name
-     e.g. http://127.0.0.1:8000/api/getstoplist/?s=hauptbahnhof
+     e.g. http://127.0.0.1:8000/api/getstoplist/?query=hauptbahnhof
     :param request:
     :return: a json
     """

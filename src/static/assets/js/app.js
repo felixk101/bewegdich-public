@@ -4,10 +4,10 @@ jQuery(document).ready(function () {
 
 var App = {
     init: function () {
-        jQuery('#search input').autocomplete({
-            serviceUrl: '/api/getstoplist',
+        jQuery('#search #s').autocomplete({
+            serviceUrl: '/api/getStopList/',
             dataType: 'json',
-            paramName: 'search',
+            paramName: 'query',
             onSelect: function (suggestion) {
                 alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
             }
