@@ -155,20 +155,26 @@ def profil(request):
 def get_stoplist(request):
     """
      Returns a List of possible Stops which fit to the given name
-     e.g. http://127.0.0.1:8000/api/getstoplist/?name=hauptbahnhof
+     e.g. http://127.0.0.1:8000/api/getstoplist/?s=hauptbahnhof
     :param request:
     :return: a json
     """
     if request.method == 'GET':
-        if "name" not in request.GET:
-            return JSONResponse("name not found", status=201)
-        name = request.GET["name"]
-        stoplist = getStopList(name)
+        if "query" not in request.GET:
+            return JSONResponse("query not found", status=201)
+        query = request.GET["query"]
+        stoplist = getStopList(query)
 
         if (type(stoplist) == int):
-            return HttpResponse("Bei suche trat leider Fehler: " + str(stoplist) + " auf")
+            return HttpResponse("There was an error on search: " + str(stoplist))
+
         serializer = Efa_stop_list_serializer(stoplist)
-        return JSONResponse(serializer.data)
+
+        json = {
+            'query': query,
+            'suggestions': serializer.data
+        }
+        return JSONResponse(json)
 
 @csrf_exempt
 def get_route(request):
