@@ -350,7 +350,11 @@ def get_stoplist(place):
 
     data = get_json(url)
     stops = []
-    if len(data["stopFinder"]["points"]) == 1: # One Result only must be handled differently, because of JSON
+
+    if ('message' in data["stopFinder"] and data["stopFinder"]["message"][1]["value"] == "stop invalid"):
+        print("Warning: No stop suggestions found with name '"+place+"' according to:")
+        print(url)
+    elif len(data["stopFinder"]["points"]) == 1: # One Result only must be handled differently, because of JSON
         point = data["stopFinder"]["points"]["point"]
         stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
     else:
