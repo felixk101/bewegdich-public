@@ -152,3 +152,6 @@ REST_FRAMEWORK = {
     'rest_framework.parsers.JSONParser'),
     'UNICODE_JSON': True
 }
+
+import django
+django.setup()
