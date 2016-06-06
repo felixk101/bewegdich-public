@@ -4,3 +4,4 @@ mysql-python
 djangorestframework
 markdown
 django-filter
+django-static-precompiler
