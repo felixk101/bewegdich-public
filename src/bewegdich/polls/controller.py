@@ -357,7 +357,6 @@ def get_stoplist(place):
         for point in data["stopFinder"]["points"]:
             stops.append(efaStop(point["ref"]["id"],point["name"], point["ref"]["omc"]))
 
-
     stops = sorted(stops,reverse=True, key=lambda efaStop: efaStop.quality)
     return stops
 

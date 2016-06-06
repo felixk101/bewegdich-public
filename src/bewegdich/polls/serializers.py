@@ -102,7 +102,6 @@ class Efa_stop_serializer(serializers.Serializer):
     value = serializers.IntegerField(required=True)
     data = serializers.CharField(required=True, allow_blank=True)
 
-
     def create(self, validated_data):
         """
         Create and return a new List of Routes instance, given the validated data.
