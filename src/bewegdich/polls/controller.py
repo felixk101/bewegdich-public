@@ -23,6 +23,11 @@ from models import efaStop
 # Returns the best Route
 """
 
+cityUrl = {} # empty dict
+cityUrl['Augsburg'] = "http://efa.avv-augsburg.de/avv/"
+cityUrl['Basel'] = "http://www.efa-bw.de/nvbw/"
+#overwriting the dictionary just for now
+cityUrl = "http://efa.avv-augsburg.de/avv/"
 
 def get_optimized_routes(start, dest, time=-1):
     """
@@ -186,7 +191,7 @@ def get_routes(start, dest, dtime = -1):
     typeStart = "coord"
     typeDest = "stopID"
 
-    url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON&" + \
+    url = cityUrl + "XML_TRIP_REQUEST2?outputFormat=JSON&" + \
           "locationServerActive=1&coordOutputFormat=WGS84[DD.ddddd]&" + \
           "type_origin=" + typeStart + "&name_origin=" + origin + \
           "&type_destination=" + typeDest + "&name_destination=" + dest
@@ -307,7 +312,7 @@ def get_nearest_stop(coords):
     lat, lon = coords[0], coords[1]
     origin = urllib.quote((lon + ":" + lat + ":WGS84").encode('utf-8'))
     type = "coord"
-    url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?" + \
+    url = cityUrl + "XML_TRIP_REQUEST2?" + \
           "type_origin=" + type + "&name_origin=" + origin
     data = getXML(url)
     stop = data[1][1].find('itdOdvAssignedStops')[0]
@@ -325,7 +330,7 @@ def get_coords(place):
     :return: [latitude,longitude]
     """
     place = urllib.quote(place)
-    url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON" \
+    url = cityUrl + "XML_TRIP_REQUEST2?outputFormat=JSON" \
           "&coordOutputFormat=WGS84[DD.ddddd]&" \
           "type_origin=any&" \
           "name_origin=" + place + \
@@ -350,7 +355,7 @@ def get_stoplist(place):
     :return: a list of Stops each containts the stopid and the name
     """
     place = urllib.quote(place)
-    url = "http://efa.avv-augsburg.de/avv/XML_STOPFINDER_REQUEST?outputFormat=JSON" \
+    url = cityUrl + "XML_STOPFINDER_REQUEST?outputFormat=JSON" \
           "&coordOutputFormat=WGS84[DD.ddddd]&" \
           "type_sf=stop&" \
           "name_sf=" + place
