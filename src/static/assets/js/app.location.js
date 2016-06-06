@@ -1,0 +1,48 @@
+jQuery(document).ready(function () {
+    AppLocation.init();
+});
+
+var AppLocation = {
+    position: {
+        longitude: 0,
+        latitude: 0
+    },
+    init: function () {
+        this.get();
+    },
+    get: function (options) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(this.set, this.error, options);
+        } else {
+            this.error();
+        }
+    },
+    set: function (position) {
+        jQuery(document).trigger('AppLocation.before.PositionSet');
+
+        AppLocation.position.longitude = position.coords.longitude;
+        AppLocation.position.latitude = position.coords.latitude;
+
+        jQuery(document).trigger('AppLocation.after.PositionSet');
+    },
+    error: function (e) {
+        switch (e.code) {
+            case e.PERMISSION_DENIED:
+                AppError.show('location-denied');
+                break;
+            case e.POSITION_UNAVAILABLE:
+                AppError.show('location-unavailable');
+                break;
+            case e.TIMEOUT:
+                AppError.show('location-unavailable');
+                break;
+            case e.UNKNOWN_ERROR:
+                AppError.show('location-unavailable');
+                break;
+            default:
+                AppError.show('location-unavailable');
+                break;
+        }
+
+    }
+};

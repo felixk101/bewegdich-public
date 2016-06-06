@@ -56,15 +56,15 @@ class Usermeta(models.Model):
 
 @python_2_unicode_compatible  # only if you need to support Python 2
 class efaStop():
-    stopid = -1
-    name = ""
+    value = -1
+    data = ""
     quality = -1
 
     def __init__(self, stopid, name, quality):
-        self.stopid = int(stopid)
-        self.name = name
+        self.value = int(stopid)
+        self.data = name
         self.quality = int(quality)
 
     def __str__(self):
-        return self.stopid + " " + self.name
+        return self.value + " " + self.data
 

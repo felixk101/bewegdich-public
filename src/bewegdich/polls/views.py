@@ -1,22 +1,29 @@
-import base64
-import cPickle as pickle
-
-from django.contrib.auth import authenticate, login, logout
+import select
 from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.shortcuts import render_to_response
+import pickle
+from django.http import *
+from django.shortcuts import render_to_response,redirect
 from django.template import RequestContext
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
-from rest_framework.renderers import JSONRenderer
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from re import search
 
-from  controller import get_optimized_routes
-from controller import get_stoplist as getStopList
-from serializers import Efa_stop_list_serializer
-from serializers import StopSerializer, RouteListSerializer, RouteList
 from .forms import LocationForm
+from  controller import get_optimized_routes,get_coords,get_stoplist
+from controller import get_stoplist as getStopList
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+from serializers import Efa_stop_list_serializer
+import datetime
+from route import Stop, Route
 
+
+from serializers import StopSerializer, RouteListSerializer,RouteList
+listi = []
 
 # @login_required(login_url='/polls/login/')
 def get_dest(request):
@@ -27,27 +34,40 @@ def get_dest(request):
     return render(request, 'form.html', {'form': form})
 
 
-# @login_required(login_url='/polls/login/')
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return render(request,'index.html')
 
+def login(request):
+    logout(request)
+    username = password = ''
+    if request.POST:
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect('/form/')
+    return render_to_response('login.html', context_instance=RequestContext(request))
 
 def list(request):
     """
 
     Shows a selection of the best routes in a list to select
 
-    :param request
-    :return a rendered list.html document with the given context
+    :param request:
+    :return:
     """
+    global listi
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = LocationForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            #  print('coords: ', form.cleaned_data['coords'])
-            #  print(form.cleaned_data['dest'])
+          #  print('coords: ', form.cleaned_data['coords'])
+          #  print(form.cleaned_data['dest'])
 
             dest = form.cleaned_data['dest']
 
@@ -56,15 +76,13 @@ def list(request):
             #### For Testing Only: ####
             ### To get the same startlocation ####
 
-            start = [10.90529, 48.35882]
+            start = [10.90529,48.35882]
 
             city = form.cleaned_data['city']
-            routes = get_optimized_routes(start, city + ' ' + dest)
-            if (type(routes) == int):
-                return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
+            routes = get_optimized_routes(start, city + ' ' +dest )
+            if(type(routes) == int):
+                return HttpResponse("Bei suche trat leider Fehler: "+ str(routes) + " auf")
             listi = routes
-
-            request.session['session_routes'] = base64.b64encode(pickle.dumps(routes))
 
             context = {
                 'routes': routes
@@ -79,47 +97,18 @@ def list(request):
 
 # @login_required(login_url='/polls/login/')
 def map(request):
-    """
-    Shows destination form along with a map
-    """
     form = LocationForm()
     context = {
         'form': form,
     }
+    return render(request,'map.html', context)
 
-    return render(request, 'map.html', context)
-
-# @login_required(login_url='/polls/login/')
-def home(request):
-    form = LocationForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'home.html', context)
-
-
-def login_user(request):
-    logout(request)
-    username = password = ''
-    if request.POST:
-        username = request.POST['username']
-        password = request.POST['password']
-
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect('/form/')
-    return render_to_response('login.html', context_instance=RequestContext(request))
-
-
-def route(request, route_id):
+def route(request,route_id):
     """
 
     With the given route_id this page returns the selected route
     """
     route_id = int(route_id)
-    listi = pickle.loads(base64.b64decode(request.session['session_routes']))
 
     # This route is a testing route
     if route_id == 66:
@@ -130,40 +119,38 @@ def route(request, route_id):
         return HttpResponse("Bei der ausgewaehlten Route trat leider in Fehler auf")
     else:
         selected_route = listi[int(route_id)]
+        text_file = open("testroute.json", "w")
+        pickle.dump(selected_route, text_file)
+        text_file.close()
 
     context = {
         'route': selected_route,
     }
-
     return render(request, 'navigation.html', context)
-
-
-def app(request):
-    return render(request, 'app.html')
-
-
-def profil(request):
-    return render(request, 'profil.html')
-
 
 def get_stoplist(request):
     """
      Returns a List of possible Stops which fit to the given name
-     e.g. http://127.0.0.1:8000/api/getstoplist/?name=hauptbahnhof
+     e.g. http://127.0.0.1:8000/api/getStopList/?query=hauptbahnhof
     :param request:
     :return: a json
     """
     if request.method == 'GET':
-        if "name" not in request.GET:
-            return JSONResponse("name not found", status=201)
-        name = request.GET["name"]
-        stoplist = getStopList(name)
+        if "query" not in request.GET:
+            return JSONResponse("query not found", status=201)
+        query = request.GET["query"]
+        stoplist = getStopList(query)
 
         if (type(stoplist) == int):
-            return HttpResponse("Bei suche trat leider Fehler: " + str(stoplist) + " auf")
-        serializer = Efa_stop_list_serializer(stoplist)
-        return JSONResponse(serializer.data)
+            return HttpResponse("There was an error on search: " + str(stoplist))
 
+        serializer = Efa_stop_list_serializer(stoplist)
+
+        json = {
+            'query': query,
+            'suggestions': serializer.data
+        }
+        return JSONResponse(json)
 
 @csrf_exempt
 def get_route(request):
@@ -186,7 +173,7 @@ def get_route(request):
         destination = request.GET["destination"]
 
         # Here we do the search for the optimized Route
-        routes = get_optimized_routes([originlng, originlat], destination)
+        routes = get_optimized_routes([originlng,originlat], destination)
         if (type(routes) == int):
             return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
 
@@ -207,11 +194,11 @@ def get_route(request):
         return JSONResponse(serializer.errors, status=400)
 
 
+
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
     """
-
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'
