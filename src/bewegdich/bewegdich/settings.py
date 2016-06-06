@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'static_precompiler'
+    'rest_framework'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -154,8 +153,6 @@ REST_FRAMEWORK = {
     'rest_framework.parsers.JSONParser'),
     'UNICODE_JSON': True
 }
-
-STATIC_PRECOMPILER_ROOT = os.path.abspath(os.path.join(os.path.split(__file__)[0], '..', '..', 'static'))
 
 import django
 django.setup()
