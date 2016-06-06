@@ -16,14 +16,6 @@ var App = {
                     return AppLocation.position.latitude;
                 }
             },
-            transformResult: function (response) {
-                return {
-                    query: response.query,
-                    suggestions: jQuery.map(response.suggestions, function (dataItem) {
-                        return {value: dataItem.data, data: dataItem.value.toString()};
-                    })
-                };
-            },
             onSelect: function (suggestion) {
                 jQuery(document).trigger('App.destination.selected', [suggestion]);
             }
