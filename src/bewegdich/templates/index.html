@@ -1,49 +1,8 @@
-{% load staticfiles %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html ng-app>
-<!--Startseite -->
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-touch-fullscreen" content="yes">
-    <title>
-        Beweg Dich
-    </title>
-    <link href="{% static "assets/css/bootstrap.min.css" %}" rel="stylesheet"/>
-    <link href="{% static "assets/css/bootstrap-theme.min.css" %}" rel="stylesheet"/>
-    <link href="{% static "assets/css/font-awesome.min.css" %}" rel="stylesheet"/>
-    <link href="{% static "assets/css/snap.min.css" %}" rel="stylesheet"/>
-    <link href="{% static "assets/css/ol.css" %}" rel="stylesheet"/>
-    <link href="{% static "assets/css/app.css" %}" rel="stylesheet"/>
-    <script type="text/javascript" src="{% static "assets/js/jquery.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "assets/js/bootstrap.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "assets/js/snap.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "assets/js/ol.js" %}"></script>
-    <script type="text/javascript" src="{% static "assets/js/jquery.autocomplete.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "assets/js/app.js" %}"></script>
-    <script type="text/javascript" src="{% static "assets/js/app.error.js" %}"></script>
-    <script type="text/javascript" src="{% static "assets/js/app.slideMenu.js" %}"></script>
-    <script type="text/javascript" src="{% static "assets/js/app.location.js" %}"></script>
-    <script type="text/javascript" src="{% static "assets/js/app.map.js" %}"></script>
-</head>
-<body>
-<div class="snap-drawers">
-    <div class="snap-drawer snap-drawer-left">
-        <h3>Menu</h3>
-        <ul>
-            <li>Home</li>
-            <li>Profile</li>
-            <li>Logout</li>
-        </ul>
-    </div>
-    <div class="snap-drawer snap-drawer-right">
-        <span>Blabla</span>
-    </div>
-</div>
-<div id="content" class="snap-content">
+{% block title %}Beweg Dich | Home{% endblock %}
+
+{% block content %}
     <div id="search">
         <div class="search-container container-fluid">
             <div class="col-xs-12">
@@ -53,7 +12,7 @@
                             <i class="fa fa-fw fa-bars"></i>
                         </button>
                     </span>
-                    <input type="text" id="s" class="form-control" placeholder="Destination"/>
+                    <input type="text" id="s" class="form-control" placeholder="{{ section.destination|default:"Destination" }}"/>
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-secondary">
                             <i class="fa fa-fw fa-search"></i>
@@ -67,16 +26,4 @@
         </div>
     </div>
     <div id="map" class="map" data-snap-ignore="true"></div>
-    <div id="errors">
-        <div class="errors-container container-fluid">
-            <div id="error-location-denied" class="error col-xs-12 text-center">
-                <span>No permission to get your position.</span>
-            </div>
-            <div id="error-location-unavailable" class="error col-xs-12 text-center">
-                <span>Your position is unavailable.</span>
-            </div>
-        </div>
-    </div>
-</div>
-</body>
-</html>
+{% endblock %}
