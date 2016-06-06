@@ -30,13 +30,19 @@ def get_optimized_routes(start, dest, time=-1):
 
     :rtype: Route
     :param start: (Coordinates) the startposition where the user currently is
-    :param dest: the destionation where the user want to go
+    :param dest: the stopid where the user want to go
     :param time: the time when the user wants to start
     :return: the optimized routes as a list
     """
     # If no time was set, take the current one
     if time == -1:
         time = datetime.datetime.now()
+
+    try: #Check if the dest is really a stopID
+        int(dest)
+    except ValueError:
+        print("Error: Destination was not a stopID")
+        return 8;
 
     startstations = find_startstations(start, dest, time)
     if type(startstations) == int:
@@ -171,18 +177,19 @@ def get_routes(start, dest, dtime = -1):
     :return: a list of routes
     """
     lat, lon = start[1], start[0]
+
     origin = urllib.quote((str(lon) + ":" + str(lat) + ":WGS84").encode('utf-8'))
-    destination = urllib.quote(dest.encode('utf-8'))
+    #destination = urllib.quote(dest.encode('utf-8'))
     if dtime == -1:
         dtime = datetime.datetime.now()
 
     typeStart = "coord"
-    typeDest = "stop"
+    typeDest = "stopID"
 
     url = "http://efa.avv-augsburg.de/avv/XML_TRIP_REQUEST2?outputFormat=JSON&" + \
           "locationServerActive=1&coordOutputFormat=WGS84[DD.ddddd]&" + \
           "type_origin=" + typeStart + "&name_origin=" + origin + \
-          "&type_destination=" + typeDest + "&name_destination=" + destination
+          "&type_destination=" + typeDest + "&name_destination=" + dest
 
     if datetime != -1:
         date = dtime.date().strftime("%Y%m%d")

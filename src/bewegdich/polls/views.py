@@ -157,7 +157,8 @@ def get_route(request):
     """
     Searches for the best Routes including walking and returns it as json
 
-    Example: http://127.0.0.1:8000/api/getroute/?originlat=48.35882&originlng=10.90529&destination=augsburg%20hauptbahnhof
+    Example: http://127.0.0.1:8000/api/getRoute/?originlat=48.35882&originlng=10.90529&destination=augsburg%20hauptbahnhof
+             http://127.0.0.1:8000/api/getRoute/?originlat=48.35882&originlng=10.90529&stopid=2000100
 
     """
     if request.method == 'GET':
@@ -165,15 +166,15 @@ def get_route(request):
             return JSONResponse("origin latitude not found", status=201)
         if "originlng" not in request.GET:
             return JSONResponse("origin longitude not found", status=201)
-        if "destination" not in request.GET:
-            return JSONResponse("destination not found", status=201)
+        if "stopid" not in request.GET:
+            return JSONResponse("stopid not found", status=201)
 
         originlat = request.GET["originlat"]
         originlng = request.GET["originlng"]
-        destination = request.GET["destination"]
+        stopid = request.GET["stopid"]
 
         # Here we do the search for the optimized Route
-        routes = get_optimized_routes([originlng,originlat], destination)
+        routes = get_optimized_routes([originlng,originlat], stopid)
         if (type(routes) == int):
             return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
 
