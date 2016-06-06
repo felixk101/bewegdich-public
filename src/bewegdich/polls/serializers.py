@@ -99,7 +99,7 @@ class Efa_stop_serializer(serializers.Serializer):
     """
     It converts an efa_stops into serializable data
     """
-    value = serializers.IntegerField(required=True)
+    value = serializers.CharField(required=True, allow_blank=True)
     data = serializers.CharField(required=True, allow_blank=True)
 
     def create(self, validated_data):
