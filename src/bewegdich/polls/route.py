@@ -162,19 +162,19 @@ class Stop(object):
             return self.name + " " + self.depaturetime.time().__str__()
 
 
-def formatDateTime(abfahrszeit):
+def formatDateTime(departuretime):
     """
 
     Formats the time from a json-string to a python datetime object
 
-    :param abfahrszeit: e.g. 27.04.2016 13:45 or 20160529 15:11
+    :param departuretime: e.g. 27.04.2016 13:45 or 20160529 15:11
     :return: the datetime object
     """
     time = -1
-    if type(abfahrszeit) == dict:
-        time = datetime.datetime.strptime(abfahrszeit["date"] + " " + abfahrszeit["time"], '%d.%m.%Y %H:%M')
+    if type(departuretime) == dict:
+        time = datetime.datetime.strptime(departuretime["date"] + " " + departuretime["time"], '%d.%m.%Y %H:%M')
     else:
-        time = datetime.datetime.strptime(abfahrszeit , '%Y%m%d %H:%M')
+        time = datetime.datetime.strptime(departuretime, '%Y%m%d %H:%M')
 
     if (type(time) == int):
         print("ERROR: Timeconversion gone wrong")
