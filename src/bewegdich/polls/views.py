@@ -20,6 +20,7 @@ from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
 import datetime
 from route import Stop, Route
+import codecs
 
 
 from serializers import StopSerializer, RouteListSerializer,RouteList
@@ -138,7 +139,8 @@ def get_stoplist(request):
     if request.method == 'GET':
         if "query" not in request.GET:
             return JSONResponse("query not found", status=201)
-        query = request.GET["query"]
+        query = codecs.encode(request.GET["query"], 'utf-8')
+
         stoplist = getStopList(query)
 
         if (type(stoplist) == int):
