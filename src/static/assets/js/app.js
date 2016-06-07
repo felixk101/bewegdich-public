@@ -6,7 +6,6 @@ var App = {
     init: function () {
         jQuery('#search #s').autocomplete({
             serviceUrl: '/api/getStopList/',
-            noCache: true,
             dataType: 'json',
             paramName: 'query',
             params: {
