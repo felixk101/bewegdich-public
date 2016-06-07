@@ -6,6 +6,7 @@ var App = {
     init: function () {
         jQuery('#search #s').autocomplete({
             serviceUrl: '/api/getStopList/',
+            noCache: true,
             dataType: 'json',
             paramName: 'query',
             params: {
@@ -64,7 +65,8 @@ var App = {
                         originStop: value.origin_stop.name,
                         destinationStop: value.destination_stop.name,
                         duration: value.duration,
-                        line: value.line.join(', ')
+                        line: value.line.join(', '),
+                        walkingPath: JSON.stringify(value.walkingPath)
                     }, {
                         append: true,
                         noDivWrapper: true,
