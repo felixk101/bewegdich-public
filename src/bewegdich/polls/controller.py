@@ -130,6 +130,9 @@ def find_best_station(parameters):
         if type(station.depaturetime) is datetime.datetime and (time + station.walkingtime) < station.depaturetime:
             if best_station == -1 or best_station.walkingtime < station.walkingtime:
                 best_station = station
+        else: #If this Stop cannot be reached via walking, its not likley the next stop can be reached
+            print("### Stop Stationsearch")
+            break
 
     if best_station != -1:
         return best_station
@@ -163,8 +166,10 @@ def find_startstations(start, dest, time=-1):
     for route in routes:
         tmplist.append([route,userpos,time])
 
-    pool = Pool()
-    startstations = pool.map(find_best_station, tmplist)
+    #pool = Pool()
+    #startstations = pool.map(find_best_station, tmplist)
+    for route in tmplist:
+       startstations.append(find_best_station(route))
     while [].__contains__(-1): #Remove walkonly routes
         startstations.remove(-1)
 
