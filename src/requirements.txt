@@ -1,5 +1,4 @@
 django
-django-admin
 mysql-python
 djangorestframework
 markdown
