@@ -294,7 +294,9 @@ def get_walking_coords(origin,destination):
 
     coords = []
     for waypoint in data["routes"][0]["legs"][0]["steps"]:
-        coords.append([waypoint["start_location"]["lat"],waypoint["start_location"]["lng"]])
+        from models import Coord
+        coord = Coord(waypoint["start_location"]["lat"],waypoint["start_location"]["lng"])
+        coords.append(coord)
 
     return coords
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from route import Stop,Route
-from models import efaStop
+from models import efaStop, Coord
 
 
 class StopSerializer(serializers.Serializer):
@@ -28,13 +28,19 @@ class StopSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class StringListField(serializers.ListField):
+class CoordSerializer(serializers.Serializer):
     """
     Helps to serialize a List of Strings
     """
-    child = serializers.ListField(
-        child=serializers.CharField(required=True, allow_blank=False, max_length=10)
-    )
+    latitude = serializers.CharField(required=True, allow_blank=False, max_length=10)
+    longitude = serializers.CharField(required=True, allow_blank=False, max_length=10)
+
+
+    def create(self, validated_data):
+        """
+        Create and return a new `Snippet` instance, given the validated data.
+        """
+        return Coord.objects.create(**validated_data)
 
 class RouteSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=False)
@@ -48,7 +54,7 @@ class RouteSerializer(serializers.Serializer):
         child=serializers.CharField(required=True, allow_blank=True, max_length=50)
     )
 
-    walkingPath = StringListField()
+    walkingPath = CoordSerializer(many=True)
 
     def create(self, validated_data):
         """
