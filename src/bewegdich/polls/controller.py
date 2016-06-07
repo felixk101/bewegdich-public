@@ -8,6 +8,7 @@ import datetime
 from multiprocessing import Pool
 from models import efaStop
 import codecs
+
 """
  get user position
  get destination position
@@ -24,11 +25,12 @@ import codecs
 # Returns the best Route
 """
 
-cityUrl = {} # empty dict
+cityUrl = {}  # empty dict
 cityUrl['Augsburg'] = "http://efa.avv-augsburg.de/avv/"
 cityUrl['Basel'] = "http://www.efa-bw.de/nvbw/"
-#overwriting the dictionary just for now
+# overwriting the dictionary just for now
 cityUrl = "http://efa.avv-augsburg.de/avv/"
+
 
 def get_optimized_routes(start, dest, time=-1):
     """
@@ -44,7 +46,7 @@ def get_optimized_routes(start, dest, time=-1):
     if time == -1:
         time = datetime.datetime.now()
 
-    try: #Check if the dest is really a stopID
+    try:  # Check if the dest is really a stopID
         int(dest)
     except ValueError:
         print("Error: Destination was not a stopID")
@@ -59,7 +61,7 @@ def get_optimized_routes(start, dest, time=-1):
     # Do the routesearch again with the new station
     for station in startstations:
 
-        #The User has to walk to the first station
+        # The User has to walk to the first station
 
         starttime = time + station.walkingtime
 
@@ -92,7 +94,6 @@ def get_optimized_routes(start, dest, time=-1):
 
     routes = sorted(routes, key=lambda route: route.depature_time)
     return routes
-
 
 
 def find_best_station(parameters):
@@ -130,7 +131,7 @@ def find_best_station(parameters):
         if type(station.depaturetime) is datetime.datetime and (time + station.walkingtime) < station.depaturetime:
             if best_station == -1 or best_station.walkingtime < station.walkingtime:
                 best_station = station
-        else: #If this Stop cannot be reached via walking, its not likley the next stop can be reached
+        else:  # If this Stop cannot be reached via walking, its not likley the next stop can be reached
             print("### Stop Stationsearch")
             break
 
@@ -139,6 +140,7 @@ def find_best_station(parameters):
     else:
         # No station is in range to walk to
         return route.origin_stop
+
 
 def find_startstations(start, dest, time=-1):
     """
@@ -164,10 +166,9 @@ def find_startstations(start, dest, time=-1):
     startstations = []
     tmplist = []
     for route in routes:
-        tmplist.append([route,userpos,time])
+        tmplist.append([route, userpos, time])
 
-
-    #These Lines to the search paralell. Sometimes there where errors,
+    # These Lines to the search paralell. Sometimes there where errors,
     # but that could be because of the bad internet connection
     pool = Pool()
     startstations = pool.map(find_best_station, tmplist)
@@ -177,7 +178,7 @@ def find_startstations(start, dest, time=-1):
     #   startstations.append(find_best_station(route))
 
 
-    while [].__contains__(-1): #Remove walkonly routes
+    while [].__contains__(-1):  # Remove walkonly routes
         startstations.remove(-1)
 
     for station in startstations:
@@ -186,7 +187,7 @@ def find_startstations(start, dest, time=-1):
     return startstations
 
 
-def get_routes(start, dest, dtime = -1):
+def get_routes(start, dest, dtime=-1):
     """
         Finds the routes from A to B directly from EFA
 
@@ -272,6 +273,7 @@ def get_walking_Route(origin, destination):
     data = get_json(url)
     return data
 
+
 def get_walking_time(origin, destination):
     """
     Searches for a walking route and returns the time
@@ -279,11 +281,12 @@ def get_walking_time(origin, destination):
     :param destination: destination
     :return: the walkingtime
     """
-    data = get_walking_Route(origin,destination)
+    data = get_walking_Route(origin, destination)
     seconds = data["routes"][0]["legs"][0]["duration"]["value"]
     return datetime.timedelta(0, seconds)  # days, seconds, then other fields.
 
-def get_walking_coords(origin,destination):
+
+def get_walking_coords(origin, destination):
     """
     Searches for a walking route and returns the coordinates on this route from start to destination
     :param origin: startposition
@@ -295,10 +298,11 @@ def get_walking_coords(origin,destination):
     coords = []
     for waypoint in data["routes"][0]["legs"][0]["steps"]:
         from models import Coord
-        coord = Coord(waypoint["start_location"]["lat"],waypoint["start_location"]["lng"])
+        coord = Coord(waypoint["start_location"]["lat"], waypoint["start_location"]["lng"])
         coords.append(coord)
 
     return coords
+
 
 # Insert a new startpoint where the route should begin
 def insert_start_point(start, walktime, route):
@@ -312,7 +316,7 @@ def insert_start_point(start, walktime, route):
     stop = Stop("Ihre Position", start[0], start[1], isWalking=1)
     stop.walkingtime = walktime
 
-    route.path.insert(0,stop )
+    route.path.insert(0, stop)
     return route
 
 
@@ -345,9 +349,9 @@ def get_coords(place):
     """
     place = urllib.quote(place)
     url = cityUrl + "XML_TRIP_REQUEST2?outputFormat=JSON" \
-          "&coordOutputFormat=WGS84[DD.ddddd]&" \
-          "type_origin=any&" \
-          "name_origin=" + place + \
+                    "&coordOutputFormat=WGS84[DD.ddddd]&" \
+                    "type_origin=any&" \
+                    "name_origin=" + place + \
           "&anyObjFilter_origin=2"
     data = get_json(url)
     coords = data["origin"]["points"]["point"]["ref"]["coords"].split(",")
@@ -370,24 +374,24 @@ def get_stoplist(place):
     """
     place = urllib.quote(place)
     url = cityUrl + "XML_STOPFINDER_REQUEST?outputFormat=JSON" \
-          "&coordOutputFormat=WGS84[DD.ddddd]&" \
-          "type_sf=stop&" \
-          "name_sf=" + place
+                    "&coordOutputFormat=WGS84[DD.ddddd]&" \
+                    "type_sf=stop&" \
+                    "name_sf=" + place
 
     data = get_json(url)
     stops = []
 
     if ('message' in data["stopFinder"] and data["stopFinder"]["message"][1]["value"] == "stop invalid"):
-        print("Warning: No stop suggestions found with name '"+place+"' according to:")
+        print("Warning: No stop suggestions found with name '" + place + "' according to:")
         print(url)
-    elif len(data["stopFinder"]["points"]) == 1: # One Result only must be handled differently, because of JSON
+    elif len(data["stopFinder"]["points"]) == 1:  # One Result only must be handled differently, because of JSON
         point = data["stopFinder"]["points"]["point"]
         stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
     else:
         for point in data["stopFinder"]["points"]:
-            stops.append(efaStop(point["ref"]["id"],point["name"], point["ref"]["omc"]))
+            stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
 
-    stops = sorted(stops,reverse=True, key=lambda efaStop: efaStop.quality)
+    stops = sorted(stops, reverse=True, key=lambda efaStop: efaStop.quality)
     return stops
 
 
@@ -397,8 +401,7 @@ def get_json(url):
     :param url: the url
     :return: a json
     """
-    response = urllib.urlopen(url,timeout=10)
-    #response = codecs.encode(response, 'utf-8')
+    response = urllib.urlopen(url, timeout=10)
     return json.loads(response.read())
 
 
@@ -408,8 +411,7 @@ def getXML(url):
     :param url: the url
     :return: ElementTree root Element
     """
-    response = urllib.urlopen(url,timeout=2)
-    #response = codecs.encode(response, 'utf-8')
+    response = urllib.urlopen(url, timeout=2)
     response_string = response.read()
     xmldoc = ElementTree.fromstring(response_string)
     return xmldoc
