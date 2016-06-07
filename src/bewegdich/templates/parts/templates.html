@@ -1,0 +1,24 @@
+<script type="text/html" id="template-route">
+    <div class="panel panel-default">
+        <div data-template-bind='[
+        {"attribute": "data-id", "value": "panelId"},
+        {"attribute": "data-parent", "value": "panelDetailId"},
+        {"attribute": "href", "value": "panelDetailIdHref"}]' class="panel-heading" role="button"
+             data-toggle="collapse">
+            <h4 class="panel-title">
+                <span data-content="originStop"></span> - <span data-content="destinationStop"></span>
+                <i class="fa fa-info-circle pull-right"></i>
+            </h4>
+        </div>
+        <div data-template-bind='[{"attribute": "id", "value": "panelDetailId"}]'
+             class="panel-collapse collapse" role="tabpanel">
+            <div class="panel-body">
+                <ul class="stop-path list-group"></ul>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="template-route-detail">
+    <li class="list-group-item" data-content="stopPathName"></li>
+</script>
