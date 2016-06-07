@@ -2,7 +2,7 @@ import select
 from django.http import HttpResponse
 import pickle
 from django.http import *
-from django.shortcuts import render_to_response,redirect
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -12,7 +12,7 @@ from re import search
 import math
 from collections import namedtuple
 from .forms import LocationForm
-from  controller import get_optimized_routes,get_coords,get_stoplist
+from  controller import get_optimized_routes, get_coords, get_stoplist
 from controller import get_stoplist as getStopList
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -21,10 +21,12 @@ from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
 import datetime
 from route import Stop, Route
+import codecs
 
+from serializers import StopSerializer, RouteListSerializer, RouteList
 
-from serializers import StopSerializer, RouteListSerializer,RouteList
 listi = []
+
 
 # @login_required(login_url='/polls/login/')
 def get_dest(request):
@@ -36,14 +38,15 @@ def get_dest(request):
 
 
 def index(request):
-    return render(request,'index.html')
+    return render(request, 'index.html')
+
 
 def login(request):
     logout(request)
     username = password = ''
     if request.POST:
-        username = request.POST['username']
-        password = request.POST['password']
+        username = codecs.encode(request.POST['username'], 'utf-8')
+        password = codecs.encode(request.POST['password'], 'utf-8')
 
         user = authenticate(username=username, password=password)
         if user is not None:
@@ -51,6 +54,7 @@ def login(request):
                 login(request, user)
                 return HttpResponseRedirect('/form/')
     return render_to_response('login.html', context_instance=RequestContext(request))
+
 
 def list(request):
     """
@@ -67,8 +71,8 @@ def list(request):
         form = LocationForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-          #  print('coords: ', form.cleaned_data['coords'])
-          #  print(form.cleaned_data['dest'])
+            #  print('coords: ', form.cleaned_data['coords'])
+            #  print(form.cleaned_data['dest'])
 
             dest = form.cleaned_data['dest']
 
@@ -77,12 +81,12 @@ def list(request):
             #### For Testing Only: ####
             ### To get the same startlocation ####
 
-            start = [10.90529,48.35882]
+            start = [10.90529, 48.35882]
 
             city = form.cleaned_data['city']
-            routes = get_optimized_routes(start, city + ' ' +dest )
-            if(type(routes) == int):
-                return HttpResponse("Bei suche trat leider Fehler: "+ str(routes) + " auf")
+            routes = get_optimized_routes(start, city + ' ' + dest)
+            if (type(routes) == int):
+                return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
             listi = routes
 
             context = {
@@ -102,9 +106,10 @@ def map(request):
     context = {
         'form': form,
     }
-    return render(request,'map.html', context)
+    return render(request, 'map.html', context)
 
-def route(request,route_id):
+
+def route(request, route_id):
     """
 
     With the given route_id this page returns the selected route
@@ -139,6 +144,8 @@ def get_stoplist(request):
     if request.method == 'GET':
         if "query" not in request.GET:
             return JSONResponse("query not found", status=201)
+        query = codecs.encode(request.GET["query"], 'utf-8')
+
         if "latitude" not in request.GET:
             return JSONResponse("latitude not found", status=201)
         if "longitude" not in request.GET:
@@ -151,7 +158,7 @@ def get_stoplist(request):
         stoplist = getStopList(query)
 
         if (type(stoplist) == int):
-            return HttpResponse("There was an error on search: " + str(stoplist))
+            return HttpResponse({error: "There was an error on search: " + str(stoplist)}, status=400)
 
         serializer = Efa_stop_list_serializer(stoplist)
 
@@ -160,6 +167,7 @@ def get_stoplist(request):
             'suggestions': serializer.data
         }
         return JSONResponse(json)
+
 
 @csrf_exempt
 def get_route(request):
@@ -170,29 +178,29 @@ def get_route(request):
 
     """
     if request.method == 'GET':
-        if "originlat" not in request.GET:
-            return JSONResponse("origin latitude not found", status=201)
-        if "originlng" not in request.GET:
-            return JSONResponse("origin longitude not found", status=201)
         if "stopid" not in request.GET:
-            return JSONResponse("stopid not found", status=201)
+            return JSONResponse({error: "stopid not found"}, status=400)
+        if "longitude" not in request.GET:
+            return JSONResponse({error: "longitude not found"}, status=400)
+        if "latitude" not in request.GET:
+            return JSONResponse({error: "latitude not found"}, status=400)
 
-        originlat = request.GET["originlat"]
-        originlng = request.GET["originlng"]
-        stopid = request.GET["stopid"]
+        stopid = codecs.encode(request.GET["stopid"], 'utf-8')
+        longitude = codecs.encode(request.GET["longitude"], 'utf-8')
+        latitude = codecs.encode(request.GET["latitude"], 'utf-8')
 
         # Here we do the search for the optimized Route
-        routes = get_optimized_routes([originlng,originlat], stopid)
+        routes = get_optimized_routes([longitude, latitude], stopid)
         if (type(routes) == int):
-            return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
-
-        # pkl_file = open('C:/UNI/beweg/testroute.json', 'r')
-        # route = pickle.load(pkl_file)
-        # routes = [route,route]
-        # pkl_file.close()
+            return HttpResponse({error: "There was an error on search: " + str(routes)}, status=400)
 
         serializer = RouteListSerializer(RouteList(routes))
-        return JSONResponse(serializer.data)
+        return JSONResponse({
+            'stopid': stopid,
+            'longitude': longitude,
+            'latitude': latitude,
+            'data': serializer.data
+        })
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
@@ -237,11 +245,11 @@ def distance(lon1, lat1, lon2, lat2):
     d = R * c
     return d * 1000; # meters
 
-
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
     """
+
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'

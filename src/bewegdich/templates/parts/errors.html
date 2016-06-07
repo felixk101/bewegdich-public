@@ -1,10 +1,16 @@
 <div id="errors">
     <div class="errors-container container-fluid">
+        <div id="error" class="error col-xs-12 text-center">
+            <span></span>
+        </div>
         <div id="error-location-denied" class="error col-xs-12 text-center">
             <span>{{ section.error.location.denied|default:"No permission to get your position." }}</span>
         </div>
         <div id="error-location-unavailable" class="error col-xs-12 text-center">
             <span>{{ section.error.location.unavailable|default:"Your position is unavailable." }}</span>
+        </div>
+        <div id="error-request" class="error col-xs-12 text-center">
+            <span>{{ section.error.request|default:"Request error." }}</span>
         </div>
     </div>
 </div>
