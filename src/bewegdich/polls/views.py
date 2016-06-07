@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import base64
 import cPickle as pickle
 
@@ -136,7 +135,6 @@ def route(request, route_id):
     }
     return render(request, 'navigation.html', context)
 
-
 def get_stoplist(request):
     """
      Returns a List of possible Stops which fit to the given name
@@ -157,7 +155,7 @@ def get_stoplist(request):
             request.session['closest_city'] = closestCity(longitude, latitude)
 
         query = codecs.encode(request.GET["query"], 'utf-8')
-        stoplist = getStopList(query)
+        stoplist = getStopList(query, request.session['closest_city'])
 
         if (type(stoplist) == int):
             return HttpResponse({error: "There was an error on search: " + str(stoplist)}, status=400)
@@ -212,7 +210,6 @@ def get_route(request):
             return JSONResponse(serializer.data, status=201)
         return JSONResponse(serializer.errors, status=400)
 
-
 def closestCity(longitude, latitude):
     """
 
@@ -225,30 +222,28 @@ def closestCity(longitude, latitude):
     City = namedtuple('blubb', ['cityname', 'long', 'lat']);
     cities = [City('Augsburg', 10.890779, 48.3705449), City('Basel', 7.58769, 47.55814)];
 
-    min_radius = 15000  # 15 km
+    min_radius = 15000 #15 km
     for city in cities:
         dist = distance(city.long, city.lat, longitude, latitude)
-        if (dist < min_radius):
+        if(dist < min_radius):
             return city.cityname;
-    # throw error here
+    #throw error here
     return ''
-
 
 def distance(lon1, lat1, lon2, lat2):
     """
        Determines the distance for two sets of lon and lat
        :return: distance in meters
        """
-    R = 6378.137  # Radius of earth in km
+    R = 6378.137 #Radius of earth in km
     dLat = (lat2 - lat1) * math.pi / 180
     dLon = (lon2 - lon1) * math.pi / 180
-    a = math.sin(dLat / 2) * math.sin(dLat / 2) + \
+    a = math.sin(dLat / 2) * math.sin(dLat / 2) +\
         + math.cos(lat1 * math.pi / 180) * math.cos(lat2 * math.pi / 180) \
         * math.sin(dLon / 2) * math.sin(dLon / 2)
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     d = R * c
-    return d * 1000;  # meters
-
+    return d * 1000; # meters
 
 class JSONResponse(HttpResponse):
     """
