@@ -161,7 +161,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),'DEFAULT_PARSER_CLASSES': (
     'rest_framework.parsers.JSONParser'),
-    'UNICODE_JSON': True
+    'UNICODE_JSON': False
 }
 
 import django
