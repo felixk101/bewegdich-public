@@ -9,7 +9,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from re import search
-
+import math
+from collections import namedtuple
 from .forms import LocationForm
 from  controller import get_optimized_routes,get_coords,get_stoplist
 from controller import get_stoplist as getStopList
@@ -138,7 +139,15 @@ def get_stoplist(request):
     if request.method == 'GET':
         if "query" not in request.GET:
             return JSONResponse("query not found", status=201)
+        if "latitude" not in request.GET:
+            return JSONResponse("latitude not found", status=201)
+        if "longitude" not in request.GET:
+            return JSONResponse("longitude not found", status=201)
+
         query = request.GET["query"]
+        latitude = float(request.GET["latitude"])
+        longitude = float(request.GET["longitude"])
+        city = closestCity(longitude, latitude)
         stoplist = getStopList(query)
 
         if (type(stoplist) == int):
@@ -193,6 +202,40 @@ def get_route(request):
             return JSONResponse(serializer.data, status=201)
         return JSONResponse(serializer.errors, status=400)
 
+def closestCity(longitude, latitude):
+    """
+
+    Determines the closest city for a given latitude and longitude
+    using a list of the supported cities
+
+    :return: the city as a string
+    """
+    ##longitude, latitude
+    City = namedtuple('blubb', ['cityname', 'long', 'lat']);
+    cities = [City('Augsburg', 10.890779, 48.3705449), City('Basel', 7.58769, 47.55814)];
+
+    min_radius = 15000 #15 km
+    for city in cities:
+        dist = distance(city.long, city.lat, longitude, latitude)
+        if(dist < min_radius):
+            return city.cityname;
+    #throw error here
+    return ''
+
+def distance(lon1, lat1, lon2, lat2):
+    """
+       Determines the distance for two sets of lon and lat
+       :return: distance in meters
+       """
+    R = 6378.137 #Radius of earth in km
+    dLat = (lat2 - lat1) * math.pi / 180
+    dLon = (lon2 - lon1) * math.pi / 180
+    a = math.sin(dLat / 2) * math.sin(dLat / 2) +\
+        + math.cos(lat1 * math.pi / 180) * math.cos(lat2 * math.pi / 180) \
+        * math.sin(dLon / 2) * math.sin(dLon / 2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    d = R * c
+    return d * 1000; # meters
 
 
 class JSONResponse(HttpResponse):
