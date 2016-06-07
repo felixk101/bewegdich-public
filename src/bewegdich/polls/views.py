@@ -145,7 +145,7 @@ def get_stoplist(request):
     if request.method == 'GET':
         if "query" not in request.GET:
             return JSONResponse("query not found", status=201)
-        query = codecs.encode(request.GET["query"], 'utf-8')
+
 
         #determine closest city, if not already present
         if not request.session.get('closest_city)'):
@@ -155,8 +155,8 @@ def get_stoplist(request):
             longitude = float(request.GET["longitude"])
             request.session['closest_city'] = closestCity(longitude, latitude)
 
-        query = request.GET["query"]
 
+        query = codecs.encode(request.GET["query"], 'utf-8')
         stoplist = getStopList(query)
 
         if (type(stoplist) == int):
