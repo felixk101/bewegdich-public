@@ -1,10 +1,6 @@
-import select
-from django.http import HttpResponse
-import pickle
-from django.http import *
-from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext
-from django.contrib.auth.decorators import login_required
+import base64
+import cPickle as pickle
+
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
@@ -64,7 +60,6 @@ def list(request):
     :param request:
     :return:
     """
-    global listi
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -89,6 +84,8 @@ def list(request):
                 return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
             listi = routes
 
+            request.session['session_routes'] = base64.b64encode(pickle.dumps(routes))
+
             context = {
                 'routes': routes
             }
@@ -102,6 +99,9 @@ def list(request):
 
 # @login_required(login_url='/polls/login/')
 def map(request):
+    """
+    Shows destination form along with a map
+    """
     form = LocationForm()
     context = {
         'form': form,
@@ -115,6 +115,7 @@ def route(request, route_id):
     With the given route_id this page returns the selected route
     """
     route_id = int(route_id)
+    listi = pickle.loads(base64.b64decode(request.session['session_routes']))
 
     # This route is a testing route
     if route_id == 66:
