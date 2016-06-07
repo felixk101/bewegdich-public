@@ -1,14 +1,72 @@
 # -*- coding: utf-8 -*-
-import datetime
+import math
 import json
+import datetime
+from collections import namedtuple
 from xml.etree import ElementTree
 import urllib as urllib1
 import urllib2 as urllib
 from route import Route, Stop
-import datetime
 from multiprocessing import Pool
 from models import efaStop
-import codecs
+
+def distance(lon1, lat1, lon2, lat2):
+    """
+       Determines the distance for two sets of lon and lat
+       :return: distance in meters
+       """
+    r = 6378.137  # Radius of earth in km
+    dLat = (lat2 - lat1) * math.pi / 180
+    dLon = (lon2 - lon1) * math.pi / 180
+    a = math.sin(dLat / 2) * math.sin(dLat / 2) +\
+        + math.cos(lat1 * math.pi / 180) * math.cos(lat2 * math.pi / 180) \
+        * math.sin(dLon / 2) * math.sin(dLon / 2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    d = r * c
+    return d * 1000  # meters
+
+def closestCity(longitude, latitude):
+    """
+
+    Determines the closest city for a given latitude and longitude
+    using a list of the supported cities
+
+    :return: the city as a string
+    """
+    ##longitude, latitude
+    City = namedtuple('blubb', ['cityname', 'long', 'lat'])
+    cities = [
+        City('Augsburg', 10.890779, 48.3705449),
+        City('Basel', 7.58769, 47.55814)
+    ]
+
+    min_radius = 15000  # 15 km
+    for city in cities:
+        dist = distance(city.long, city.lat, float(longitude), float(latitude))
+        if (dist < min_radius):
+            return city.cityname
+    # throw error here
+    return ''
+
+
+def getCityUrl(longitude, latitude):
+    """
+    Returns the city url
+
+    :rtype: Route
+    :param longitude: Longitude
+    :param latitude: Latitude
+    :return: City url
+    """
+    city = closestCity(longitude, latitude)
+
+    if (city == 'Augsburg'):
+        return "http://efa.avv-augsburg.de/avv/"
+    elif (city == 'Basel'):
+        return "http://www.efa-bvb.ch/bvb/"
+
+    return ''
+
 
 """
  get user position
@@ -26,9 +84,10 @@ import codecs
 # Returns the best Route
 """
 
+
 def get_optimized_routes(start, dest, time=-1):
     """
-    Finds the purfect Route with walking opmimazation included
+    Finds the perfect Route with walking opmimazation included
 
     :rtype: Route
     :param start: (Coordinates) the startposition where the user currently is
@@ -59,7 +118,7 @@ def get_optimized_routes(start, dest, time=-1):
 
         starttime = time + station.walkingtime
 
-        routes_list = get_routes(station.get_coords(), dest, starttime)
+        routes_list = get_routes(get_coords(station, start), dest, starttime)
         if type(routes_list) == int:
             return routes_list
 
@@ -79,7 +138,7 @@ def get_optimized_routes(start, dest, time=-1):
                 route.depature_time = route.depature_time - station.walkingtime
 
             insert_start_point(start, station.walkingtime, route)
-            route.walkingPath = get_walking_coords(start, route.origin_stop.get_coords())
+            route.walkingPath = get_walking_coords(start, get_coords(route.origin_stop, start))
 
             route.duration = route.duration + station.walkingtime
             route.id = id
@@ -112,7 +171,7 @@ def find_best_station(parameters):
     # Step through stations to find a better one
     for station in station_list:
         # Calculate the time to walk to the given station
-        walk_time = get_walking_time(userpos, station.get_coords())
+        walk_time = get_walking_time(userpos, get_coords(station, userpos))
         station.walkingtime = walk_time
         print("Walkingtime: " + walk_time.__str__())
 
@@ -220,7 +279,7 @@ def get_routes(start, dest, dtime=-1):
             'itdTripDateTimeDepArr': 'dep'
         })
 
-    url = cityUrl + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
+    url = getCityUrl(lon, lat) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
 
     print(url)
 
@@ -286,6 +345,7 @@ def get_walking_Route(origin, destination):
     data = get_json(url)
     return data
 
+
 def get_walking_time(origin, destination):
     """
     Searches for a walking route and returns the time
@@ -347,7 +407,7 @@ def get_nearest_stop(coords):
         'type_origin': type,
         'name_origin': origin
     }
-    url = cityUrl + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
+    url = getCityUrl(lon, lat) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
 
     data = getXML(url)
     stop = data[1][1].find('itdOdvAssignedStops')[0]
@@ -355,13 +415,14 @@ def get_nearest_stop(coords):
     return stop.get('nameWithPlace')  # extract the station's name
 
 
-def get_coords(place):
+def get_coords(place, start):
     """
 
     Looks up the given name, try to find a place with the same name
     and returns the coords
 
     :param place: a string
+    :param start: [latitude,longitude]
     :return: [latitude,longitude]
     """
     param = {
@@ -371,7 +432,7 @@ def get_coords(place):
         'name_origin': place,
         'anyObjFilter_origin': 2
     }
-    url = cityUrl + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
+    url = getCityUrl(start[0], start[1]) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
 
     data = get_json(url)
     coords = data["origin"]["points"]["point"]["ref"]["coords"].split(",")
@@ -393,15 +454,11 @@ def get_coords(place):
     return [lat, long]
 
 
-def get_stoplist(place, city):
-    if (city == 'Augsburg'):
-        cityUrl = "http://efa.avv-augsburg.de/avv/"
-    elif (city == 'Basel'):
-        cityUrl = "http://www.efa-bvb.ch/bvb/"
-
+def get_stoplist(place, coords):
     """
         Searches for the closes matching stops with the same name as the given one.
     :param place: the first few letters of the desired stop
+    :param coords: [latitude,longitude]
     :return: a list of Stops each containts the stopid and the name
     """
     param = {
@@ -410,12 +467,13 @@ def get_stoplist(place, city):
         'type_sf': 'stop',
         'name_sf': place
     }
-    url = cityUrl + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
+    url = getCityUrl(coords[0], coords[1]) + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
 
     data = get_json(url)
 
     stops = []
 
+    city = closestCity(coords[0], coords[1])
     if (city == 'Augsburg'):
         if ('message' in data["stopFinder"] and data["stopFinder"]["message"][1]["value"] == "stop invalid"):
             print("Warning: No stop suggestions found with name '" + place + "' according to:")
@@ -437,7 +495,6 @@ def get_stoplist(place, city):
             for point in data["stopFinder"]:
                 stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
                 print(point["ref"]["id"])
-
 
     stops = sorted(stops, reverse=True, key=lambda efaStop: efaStop.quality)
     return stops

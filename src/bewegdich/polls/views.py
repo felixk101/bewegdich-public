@@ -1,28 +1,23 @@
+# -*- coding: utf-8 -*-
 import base64
 import cPickle as pickle
-
+import codecs
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from re import search
-import math
-from collections import namedtuple
-from .forms import LocationForm
-from controller import get_optimized_routes, get_coords, get_stoplist
-from controller import get_stoplist as getStopList
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from .forms import LocationForm
+from controller import get_optimized_routes
+from controller import get_stoplist as getStopList
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
-import datetime
-from route import Stop, Route
-import codecs
+
 
 from serializers import StopSerializer, RouteListSerializer, RouteList
 
 listi = []
-
 
 # @login_required(login_url='/polls/login/')
 def get_dest(request):
@@ -144,18 +139,16 @@ def get_stoplist(request):
     """
     if request.method == 'GET':
         if "query" not in request.GET:
-            return JSONResponse("query not found", status=201)
-
-        # determine closest city, if not already present
-        if not request.session.get('closest_city)'):
-            if "latitude" not in request.GET or "longitude" not in request.GET:
-                return JSONResponse("latitude or latitude not found", status=201)
-            latitude = float(request.GET["latitude"])
-            longitude = float(request.GET["longitude"])
-            request.session['closest_city'] = closestCity(longitude, latitude)
+            return JSONResponse({'error': "qurey not found"}, status=400)
+        if "longitude" not in request.GET:
+            return JSONResponse({'error': "longitude not found"}, status=400)
+        if "latitude" not in request.GET:
+            return JSONResponse({'error': "latitude not found"}, status=400)
 
         query = codecs.encode(request.GET["query"], 'utf-8')
-        stoplist = getStopList(query, request.session['closest_city'])
+        longitude = codecs.encode(request.GET["longitude"], 'utf-8')
+        latitude = codecs.encode(request.GET["latitude"], 'utf-8')
+        stoplist = getStopList(query, [longitude, latitude])
 
         if (type(stoplist) == int):
             return JSONResponse({error: "There was an error on search: " + str(stoplist)}, status=400)
@@ -209,41 +202,6 @@ def get_route(request):
             serializer.save()
             return JSONResponse(serializer.data, status=201)
         return JSONResponse(serializer.errors, status=400)
-
-def closestCity(longitude, latitude):
-    """
-
-    Determines the closest city for a given latitude and longitude
-    using a list of the supported cities
-
-    :return: the city as a string
-    """
-    ##longitude, latitude
-    City = namedtuple('blubb', ['cityname', 'long', 'lat']);
-    cities = [City('Augsburg', 10.890779, 48.3705449), City('Basel', 7.58769, 47.55814)];
-
-    min_radius = 15000 #15 km
-    for city in cities:
-        dist = distance(city.long, city.lat, longitude, latitude)
-        if(dist < min_radius):
-            return city.cityname;
-    #throw error here
-    return ''
-
-def distance(lon1, lat1, lon2, lat2):
-    """
-       Determines the distance for two sets of lon and lat
-       :return: distance in meters
-       """
-    R = 6378.137 #Radius of earth in km
-    dLat = (lat2 - lat1) * math.pi / 180
-    dLon = (lon2 - lon1) * math.pi / 180
-    a = math.sin(dLat / 2) * math.sin(dLat / 2) +\
-        + math.cos(lat1 * math.pi / 180) * math.cos(lat2 * math.pi / 180) \
-        * math.sin(dLon / 2) * math.sin(dLon / 2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    d = R * c
-    return d * 1000; # meters
 
 class JSONResponse(HttpResponse):
     """
