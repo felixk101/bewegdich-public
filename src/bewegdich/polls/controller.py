@@ -355,11 +355,8 @@ def get_stoplist(place, city):
     :return: a list of Stops each containts the stopid and the name
     """
 
-    # cityUrl = {} # empty dict
     # cityUrl['Augsburg'] = "http://efa.avv-augsburg.de/avv/"
     # cityUrl['Basel'] = "http://www.efa-bvb.ch/bvb/"
-    # overwriting the dictionary just for now
-    # cityUrl = "http://efa.avv-augsburg.de/avv/"
 
     place = urllib.quote(place)
     stops = []
