@@ -166,10 +166,17 @@ def find_startstations(start, dest, time=-1):
     for route in routes:
         tmplist.append([route,userpos,time])
 
-    #pool = Pool()
-    #startstations = pool.map(find_best_station, tmplist)
-    for route in tmplist:
-       startstations.append(find_best_station(route))
+
+    #These Lines to the search paralell. Sometimes there where errors,
+    # but that could be because of the bad internet connection
+    pool = Pool()
+    startstations = pool.map(find_best_station, tmplist)
+
+    # The following lines do the search serial.
+    # for route in tmplist:
+    #   startstations.append(find_best_station(route))
+
+
     while [].__contains__(-1): #Remove walkonly routes
         startstations.remove(-1)
 
@@ -287,8 +294,7 @@ def get_walking_coords(origin,destination):
 
     coords = []
     for waypoint in data["routes"][0]["legs"][0]["steps"]:
-        coords.append(waypoint["start_location"]["lat"])
-        coords.append(waypoint["start_location"]["lng"])
+        coords.append([waypoint["start_location"]["lat"],waypoint["start_location"]["lng"]])
 
     return coords
 

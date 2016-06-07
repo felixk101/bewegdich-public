@@ -32,7 +32,9 @@ class StringListField(serializers.ListField):
     """
     Helps to serialize a List of Strings
     """
-    child = serializers.CharField()
+    child = serializers.ListField(
+        child=serializers.CharField(required=True, allow_blank=False, max_length=10)
+    )
 
 class RouteSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=False)
