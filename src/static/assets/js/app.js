@@ -31,7 +31,7 @@ var App = {
         });
 
         jQuery('#routes').on('show.bs.collapse', function () {
-            alert("sds");
+            //alert("sds");
         });
     },
     getRoute: function (destination) {
