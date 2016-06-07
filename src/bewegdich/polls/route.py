@@ -1,7 +1,5 @@
+# -*- coding: utf-8 -*-
 import datetime
-# coding: utf8
-
-
 
 class Route(object):
     """

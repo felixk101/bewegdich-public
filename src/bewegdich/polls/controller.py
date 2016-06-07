@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 import json
 from xml.etree import ElementTree
@@ -7,7 +8,6 @@ import datetime
 from multiprocessing import Pool
 from models import efaStop
 import codecs
-# coding: utf8
 """
  get user position
  get destination position
@@ -123,7 +123,7 @@ def find_best_station(parameters):
 
         # If there is enough time to walk, save this station
         print("to " + station.name + ": " + (time + station.walkingtime).time().__str__() +
-              " : " + station.depaturetime.__str__(),"utf8")
+              " : " + station.depaturetime.__str__())
 
         # For test only: Reduce walkking time to get better results
         # station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
@@ -196,8 +196,8 @@ def get_routes(start, dest, dtime = -1):
     """
     lat, lon = start[1], start[0]
 
-    origin = urllib.quote((str(lon) + ":" + str(lat) + ":WGS84").encode('utf-8'))
-    #destination = urllib.quote(dest.encode('utf-8'))
+    origin = urllib.quote((str(lon) + ":" + str(lat) + ":WGS84"))
+
     if dtime == -1:
         dtime = datetime.datetime.now()
 
@@ -263,8 +263,8 @@ def get_walking_Route(origin, destination):
     if type(origin) != list or type(destination) != list:
         return -1
 
-    origin = urllib.quote((str(origin[1]) + "," + str(origin[0])).encode('utf-8'))
-    destination = urllib.quote((str(destination[1]) + "," + str(destination[0])).encode('utf-8'))
+    origin = urllib.quote(str(origin[1]) + "," + str(origin[0]))
+    destination = urllib.quote(str(destination[1]) + "," + str(destination[0]))
     key = "AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0"
     url = "https://maps.googleapis.com/maps/api/directions/json?" + \
           "origin=" + origin + "&destination=" + destination + \
@@ -324,7 +324,7 @@ def get_nearest_stop(coords):
     :return: the closest stop's name
     """
     lat, lon = coords[0], coords[1]
-    origin = urllib.quote((lon + ":" + lat + ":WGS84").encode('utf-8'))
+    origin = urllib.quote(lon + ":" + lat + ":WGS84")
     type = "coord"
     url = cityUrl + "XML_TRIP_REQUEST2?" + \
           "type_origin=" + type + "&name_origin=" + origin
@@ -398,6 +398,7 @@ def get_json(url):
     :return: a json
     """
     response = urllib.urlopen(url,timeout=10)
+    #response = codecs.encode(response, 'utf-8')
     return json.loads(response.read())
 
 
@@ -408,8 +409,7 @@ def getXML(url):
     :return: ElementTree root Element
     """
     response = urllib.urlopen(url,timeout=2)
+    #response = codecs.encode(response, 'utf-8')
     response_string = response.read()
     xmldoc = ElementTree.fromstring(response_string)
     return xmldoc
-
-#get_stoplist("hauptbahnhof")
