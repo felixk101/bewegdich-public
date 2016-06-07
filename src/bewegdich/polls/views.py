@@ -9,7 +9,7 @@ from re import search
 import math
 from collections import namedtuple
 from .forms import LocationForm
-from  controller import get_optimized_routes, get_coords, get_stoplist
+from controller import get_optimized_routes, get_coords, get_stoplist
 from controller import get_stoplist as getStopList
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -160,7 +160,7 @@ def get_stoplist(request):
         stoplist = getStopList(query)
 
         if (type(stoplist) == int):
-            return HttpResponse({error: "There was an error on search: " + str(stoplist)}, status=400)
+            return JSONResponse({error: "There was an error on search: " + str(stoplist)}, status=400)
 
         serializer = Efa_stop_list_serializer(stoplist)
 
@@ -194,7 +194,7 @@ def get_route(request):
         # Here we do the search for the optimized Route
         routes = get_optimized_routes([longitude, latitude], stopid)
         if (type(routes) == int):
-            return HttpResponse({'error': "There was an error on search: " + str(routes)}, status=400)
+            return JSONResponse({'error': "There was an error on search: " + str(routes)}, status=400)
 
         serializer = RouteListSerializer(RouteList(routes))
         return JSONResponse({

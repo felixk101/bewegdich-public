@@ -2,6 +2,7 @@
 import datetime
 import json
 from xml.etree import ElementTree
+import urllib as urllib1
 import urllib2 as urllib
 from route import Route, Stop
 import datetime
@@ -205,15 +206,26 @@ def get_routes(start, dest, dtime=-1):
     typeStart = "coord"
     typeDest = "stopID"
 
-    url = cityUrl + "XML_TRIP_REQUEST2?outputFormat=JSON&" + \
-          "locationServerActive=1&coordOutputFormat=WGS84[DD.ddddd]&" + \
-          "type_origin=" + typeStart + "&name_origin=" + origin + \
-          "&type_destination=" + typeDest + "&name_destination=" + dest
+    param = {
+        'outputFormat': 'JSON',
+        'locationServerActive': 1,
+        'coordOutputFormat': 'WGS84[DD.ddddd]',
+        'type_origin': typeStart,
+        'name_origin': origin,
+        'type_destination': typeDest,
+        'name_destination': dest
+    }
 
     if datetime != -1:
         date = dtime.date().strftime("%Y%m%d")
         time = dtime.time().strftime("%H:%M")
-        url += "&itdDate=" + date + "&itdTime=" + time + "&itdTripDateTimeDepArr=dep"
+        param.update({
+            'itdDate': date,
+            'itdTime': time,
+            'itdTripDateTimeDepArr': 'dep'
+        })
+
+    url = cityUrl + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
 
     print(url)
 
@@ -267,9 +279,15 @@ def get_walking_Route(origin, destination):
     origin = urllib.quote(str(origin[1]) + "," + str(origin[0]))
     destination = urllib.quote(str(destination[1]) + "," + str(destination[0]))
     key = "AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0"
-    url = "https://maps.googleapis.com/maps/api/directions/json?" + \
-          "origin=" + origin + "&destination=" + destination + \
-          "&mode=walking" + "&key=" + key
+
+    param = {
+        'origin': origin,
+        'destination': destination,
+        'mode': 'walking',
+        'key': key
+    }
+    url = "https://maps.googleapis.com/maps/api/directions/json?" + urllib1.urlencode(param)
+
     data = get_json(url)
     return data
 
@@ -330,8 +348,13 @@ def get_nearest_stop(coords):
     lat, lon = coords[0], coords[1]
     origin = urllib.quote(lon + ":" + lat + ":WGS84")
     type = "coord"
-    url = cityUrl + "XML_TRIP_REQUEST2?" + \
-          "type_origin=" + type + "&name_origin=" + origin
+
+    param = {
+        'type_origin': type,
+        'name_origin': origin
+    }
+    url = cityUrl + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
+
     data = getXML(url)
     stop = data[1][1].find('itdOdvAssignedStops')[0]
 
@@ -347,20 +370,30 @@ def get_coords(place):
     :param place: a string
     :return: [latitude,longitude]
     """
-    place = urllib.quote(place)
-    url = cityUrl + "XML_TRIP_REQUEST2?outputFormat=JSON" \
-                    "&coordOutputFormat=WGS84[DD.ddddd]&" \
-                    "type_origin=any&" \
-                    "name_origin=" + place + \
-          "&anyObjFilter_origin=2"
+    param = {
+        'outputFormat': 'JSON',
+        'coordOutputFormat': 'WGS84[DD.ddddd]',
+        'type_origin': 'any',
+        'name_origin': place,
+        'anyObjFilter_origin': 2
+    }
+    url = cityUrl + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
+
     data = get_json(url)
     coords = data["origin"]["points"]["point"]["ref"]["coords"].split(",")
     return coords
 
     key = "AIzaSyAV52eNjBjVhoTtaOwdWbd8iQ7Cia6X9c0"
     optionalSecondKey = "AIzaSyCVP9DkstDfjlTYgj0XlU5YlzU9gI3pqOU"
-    url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + place + "&key=" + key
+
+    param = {
+        'address': place,
+        'key': key
+    }
+    url = "https://maps.googleapis.com/maps/api/geocode/json?" + urllib1.urlencode(param)
+
     data = get_json(url)
+
     lat = data["results"][0]["geometry"]["location"]["lat"]
     long = data["results"][0]["geometry"]["location"]["lng"]
     return [lat, long]
@@ -372,13 +405,16 @@ def get_stoplist(place):
     :param place: the first few letters of the desired stop
     :return: a list of Stops each containts the stopid and the name
     """
-    place = urllib.quote(place)
-    url = cityUrl + "XML_STOPFINDER_REQUEST?outputFormat=JSON" \
-                    "&coordOutputFormat=WGS84[DD.ddddd]&" \
-                    "type_sf=stop&" \
-                    "name_sf=" + place
+    param = {
+        'outputFormat': 'JSON',
+        'coordOutputFormat': 'WGS84[DD.ddddd]',
+        'type_sf': 'stop',
+        'name_sf': place
+    }
+    url = cityUrl + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
 
     data = get_json(url)
+
     stops = []
 
     if ('message' in data["stopFinder"] and data["stopFinder"]["message"][1]["value"] == "stop invalid"):
