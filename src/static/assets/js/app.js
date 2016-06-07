@@ -31,6 +31,28 @@ var App = {
         });
     },
     getRoute: function (destination) {
-        //alert(destination);
+        jQuery.ajax({
+            url: '/api/getRoute/',
+            data: {
+                /*stopid: destination,
+                 longitude: function () {
+                 return AppLocation.position.longitude;
+                 },
+                 latitude: function () {
+                 return AppLocation.position.latitude;
+                 }*/
+            },
+            dataType: 'json',
+            success: function (json) {
+                if (json.error) {
+                    AppError.show('request');
+                }
+
+                alert(json);
+            },
+            error: function (e) {
+                AppError.show('request');
+            }
+        });
     }
 };

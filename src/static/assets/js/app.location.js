@@ -28,19 +28,19 @@ var AppLocation = {
     error: function (e) {
         switch (e.code) {
             case e.PERMISSION_DENIED:
-                AppError.show('location-denied');
+                AppError.show('location-denied', 0);
                 break;
             case e.POSITION_UNAVAILABLE:
-                AppError.show('location-unavailable');
+                AppError.show('location-unavailable', 0);
                 break;
             case e.TIMEOUT:
-                AppError.show('location-unavailable');
+                AppError.show('location-unavailable', 0);
                 break;
             case e.UNKNOWN_ERROR:
-                AppError.show('location-unavailable');
+                AppError.show('location-unavailable', 0);
                 break;
             default:
-                AppError.show('location-unavailable');
+                AppError.show('location-unavailable', 0);
                 break;
         }
 
