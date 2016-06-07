@@ -13,11 +13,10 @@ from controller import get_stoplist as getStopList
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
-
-
 from serializers import StopSerializer, RouteListSerializer, RouteList
 
 listi = []
+
 
 # @login_required(login_url='/polls/login/')
 def get_dest(request):
@@ -130,6 +129,7 @@ def route(request, route_id):
     }
     return render(request, 'navigation.html', context)
 
+
 def get_stoplist(request):
     """
      Returns a List of possible Stops which fit to the given name
@@ -202,6 +202,7 @@ def get_route(request):
             serializer.save()
             return JSONResponse(serializer.data, status=201)
         return JSONResponse(serializer.errors, status=400)
+
 
 class JSONResponse(HttpResponse):
     """

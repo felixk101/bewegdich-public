@@ -10,6 +10,7 @@ from route import Route, Stop
 from multiprocessing import Pool
 from models import efaStop
 
+
 def distance(lon1, lat1, lon2, lat2):
     """
        Determines the distance for two sets of lon and lat
@@ -18,12 +19,13 @@ def distance(lon1, lat1, lon2, lat2):
     r = 6378.137  # Radius of earth in km
     dLat = (lat2 - lat1) * math.pi / 180
     dLon = (lon2 - lon1) * math.pi / 180
-    a = math.sin(dLat / 2) * math.sin(dLat / 2) +\
+    a = math.sin(dLat / 2) * math.sin(dLat / 2) + \
         + math.cos(lat1 * math.pi / 180) * math.cos(lat2 * math.pi / 180) \
         * math.sin(dLon / 2) * math.sin(dLon / 2)
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     d = r * c
     return d * 1000  # meters
+
 
 def closestCity(longitude, latitude):
     """
@@ -228,8 +230,8 @@ def find_startstations(start, dest, time=-1):
 
     # The following lines do the search serial.
     # for route in tmplist:
-    #startstations = []
-    #startstations.append(find_best_station(route))
+    # startstations = []
+    # startstations.append(find_best_station(route))
 
 
     while [].__contains__(-1):  # Remove walkonly routes
