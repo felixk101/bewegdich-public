@@ -48,7 +48,31 @@ var App = {
                     AppError.show('request');
                 }
 
-                alert(json);
+                jQuery.each(json.data.routes, function (key, value) {
+                    var id = 'route-' + value.id,
+                        detailId = 'route-detail-' + value.id;
+
+                    jQuery('#route').empty().loadTemplate(jQuery('#template-route'), {
+                        panelId: id,
+                        panelDetailId: detailId,
+                        panelDetailIdHref: '#' + detailId,
+                        originStop: value.origin_stop.name,
+                        destinationStop: value.destination_stop.name
+                    }, {
+                        append: true,
+                        noDivWrapper: true,
+                        success: function () {
+                            jQuery.each(value.path, function (key, value) {
+                                jQuery('#' + detailId).find('ul.stop-path').loadTemplate(jQuery('#template-route-detail'), {
+                                    stopPathName: value.name
+                                }, {
+                                    append: true,
+                                    noDivWrapper: true
+                                });
+                            });
+                        }
+                    });
+                });
             },
             error: function (e) {
                 AppError.show('request');
