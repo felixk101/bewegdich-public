@@ -29,6 +29,10 @@ var App = {
         jQuery(document).on('App.destination.selected', function (event, suggestion) {
             that.getRoute(suggestion.data);
         });
+
+        jQuery('#routes').on('show.bs.collapse', function () {
+            alert("sds");
+        });
     },
     getRoute: function (destination) {
         jQuery.ajax({
@@ -48,16 +52,19 @@ var App = {
                     AppError.show('request');
                 }
 
+                jQuery('#routes').empty();
                 jQuery.each(json.data.routes, function (key, value) {
                     var id = 'route-' + value.id,
                         detailId = 'route-detail-' + value.id;
 
-                    jQuery('#route').empty().loadTemplate(jQuery('#template-route'), {
+                    jQuery('#routes').loadTemplate(jQuery('#template-route'), {
                         panelId: id,
                         panelDetailId: detailId,
-                        panelDetailIdHref: '#' + detailId,
+                        panelDetailTarget: '#' + detailId,
                         originStop: value.origin_stop.name,
-                        destinationStop: value.destination_stop.name
+                        destinationStop: value.destination_stop.name,
+                        duration: value.duration,
+                        line: value.line.join(', ')
                     }, {
                         append: true,
                         noDivWrapper: true,

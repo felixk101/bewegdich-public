@@ -1,9 +1,9 @@
 <script type="text/html" id="template-route">
-    <div class="panel panel-default">
+    <div class="route panel panel-default">
         <div data-template-bind='[
         {"attribute": "data-id", "value": "panelId"},
         {"attribute": "data-parent", "value": "panelDetailId"},
-        {"attribute": "href", "value": "panelDetailIdHref"}]' class="panel-heading" role="button"
+        {"attribute": "data-target", "value": "panelDetailTarget"}]' class="panel-heading" role="button"
              data-toggle="collapse">
             <h4 class="panel-title">
                 <span data-content="originStop"></span> - <span data-content="destinationStop"></span>
@@ -13,6 +13,14 @@
         <div data-template-bind='[{"attribute": "id", "value": "panelDetailId"}]'
              class="panel-collapse collapse" role="tabpanel">
             <div class="panel-body">
+                <ul class="detail">
+                    <li><i class="fa fa-clock-o"></i>
+                        <span>{{ section.route.detail.duration|default:"Duration" }}:</span> <span
+                                data-content="duration"></span></li>
+                    <li><i class="fa fa-subway"></i>
+                        <span>{{ section.route.detail.line|default:"Line" }}:</span> <span
+                                data-content="line"></span></li>
+                </ul>
                 <ul class="stop-path list-group"></ul>
             </div>
         </div>

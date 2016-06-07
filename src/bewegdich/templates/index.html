@@ -13,7 +13,7 @@
                         </button>
                     </span>
                     <input type="text" id="s" class="form-control"
-                           placeholder="{{ section.destination|default:"Destination" }}"/>
+                           placeholder="{{ section.destination|default:"Destination" }}" autocomplete="off"/>
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-secondary">
                             <i class="fa fa-fw fa-search"></i>
@@ -27,5 +27,5 @@
         </div>
     </div>
     <div id="map" class="map" data-snap-ignore="true"></div>
-    <div id="route" class="panel-group" role="tablist"></div>
+    <div id="routes" class="panel-group" role="tablist"></div>
 {% endblock %}
