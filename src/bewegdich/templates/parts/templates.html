@@ -1,11 +1,10 @@
 <script type="text/html" id="template-route">
     <div class="route panel panel-default">
-        <div class="panel-heading" role="tab" data-toggle="collapse" data-parent="#routes" aria-expanded="true"
+        <div class="panel-heading" role="button" data-toggle="collapse" data-parent="#routes" aria-expanded="true"
              data-template-bind='[
-        {"attribute": "data-id", "value": "panelId"},
-        {"attribute": "data-parent", "value": "panelDetailId"},
+        {"attribute": "id", "value": "panelId"},
         {"attribute": "data-target", "value": "panelDetailTarget"},
-        {"attribute": "aria-controls", "value": "panelDetailId"},]'>
+        {"attribute": "aria-controls", "value": "panelDetailId"}]'>
             <h4 class="panel-title">
                 <span data-content="originStop"></span> - <span data-content="destinationStop"></span>
                 <i class="fa fa-info-circle pull-right"></i>
