@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework'
+    'rest_framework',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -88,6 +88,39 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': '1_matthiaskrempel',
+#         'USER': '1_matthiaskrempe',
+#         'PASSWORD': '0lek42WrLHhHGUc,',
+#         'HOST': 'bewegdich.informatik.hs-augsburg.de',
+#         'PORT': '3306',
+#     }
+# }
+
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': '1_felixkampfer',
+#        'USER': '1_felixkampfer',
+#        'PASSWORD': 'yaz++z0V_.kFTSm.',
+#        'HOST': 'bewegdich.informatik.hs-augsburg.de',
+#        'PORT': '3306',
+#    }
+#
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': '1_bewegdich',
+#         'USER': '1_bewegdich',
+#         'PASSWORD': '3TnTvrI,1_UAnOQb',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
