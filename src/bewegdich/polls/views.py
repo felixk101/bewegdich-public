@@ -163,11 +163,11 @@ def get_route(request):
 
     """
     if request.method == 'GET':
-       if "longitude" not in request.GET:
+        if "longitude" not in request.GET:
             return JSONResponse("longitude not found", status=201)
-       if "latitude" not in request.GET:
-           return JSONResponse("latitude not found", status=201)
-       if "stopid" not in request.GET:
+        if "latitude" not in request.GET:
+            return JSONResponse("latitude not found", status=201)
+        if "stopid" not in request.GET:
             return JSONResponse("stopid not found", status=201)
 
         longitude = codecs.encode(request.GET["longitude"], 'utf-8')
