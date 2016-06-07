@@ -355,7 +355,6 @@ def get_stoplist(place):
     :param place: the first few letters of the desired stop
     :return: a list of Stops each containts the stopid and the name
     """
-    place = codecs.encode(place, 'utf-8')
     place = urllib.quote(place)
     url = cityUrl + "XML_STOPFINDER_REQUEST?outputFormat=JSON" \
           "&coordOutputFormat=WGS84[DD.ddddd]&" \

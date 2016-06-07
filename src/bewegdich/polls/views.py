@@ -42,8 +42,8 @@ def login(request):
     logout(request)
     username = password = ''
     if request.POST:
-        username = request.POST['username']
-        password = request.POST['password']
+        username = codecs.encode(request.POST['username'], 'utf-8')
+        password = codecs.encode(request.POST['password'], 'utf-8')
 
         user = authenticate(username=username, password=password)
         if user is not None:
@@ -163,26 +163,21 @@ def get_route(request):
 
     """
     if request.method == 'GET':
-        if "originlat" not in request.GET:
-            return JSONResponse("origin latitude not found", status=201)
-        if "originlng" not in request.GET:
-            return JSONResponse("origin longitude not found", status=201)
-        if "stopid" not in request.GET:
+       if "longitude" not in request.GET:
+            return JSONResponse("longitude not found", status=201)
+       if "latitude" not in request.GET:
+           return JSONResponse("latitude not found", status=201)
+       if "stopid" not in request.GET:
             return JSONResponse("stopid not found", status=201)
 
-        originlat = request.GET["originlat"]
-        originlng = request.GET["originlng"]
-        stopid = request.GET["stopid"]
+        longitude = codecs.encode(request.GET["longitude"], 'utf-8')
+        latitude = codecs.encode(request.GET["latitude"], 'utf-8')
+        stopid = codecs.encode(request.GET["stopid"], 'utf-8')
 
         # Here we do the search for the optimized Route
-        routes = get_optimized_routes([originlng,originlat], stopid)
+        routes = get_optimized_routes([longitude,latitude], stopid)
         if (type(routes) == int):
-            return HttpResponse("Bei suche trat leider Fehler: " + str(routes) + " auf")
-
-        # pkl_file = open('C:/UNI/beweg/testroute.json', 'r')
-        # route = pickle.load(pkl_file)
-        # routes = [route,route]
-        # pkl_file.close()
+            return HttpResponse("There was an error on search: " + str(routes) + " auf")
 
         serializer = RouteListSerializer(RouteList(routes))
         return JSONResponse(serializer.data)
@@ -194,8 +189,6 @@ def get_route(request):
             serializer.save()
             return JSONResponse(serializer.data, status=201)
         return JSONResponse(serializer.errors, status=400)
-
-
 
 class JSONResponse(HttpResponse):
     """
