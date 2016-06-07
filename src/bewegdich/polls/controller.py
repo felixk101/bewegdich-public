@@ -123,7 +123,7 @@ def find_best_station(parameters):
 
         # If there is enough time to walk, save this station
         print("to " + station.name + ": " + (time + station.walkingtime).time().__str__() +
-              " : " + station.depaturetime.__str__())
+              " : " + station.depaturetime.__str__(),"utf8")
 
         # For test only: Reduce walkking time to get better results
         # station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
