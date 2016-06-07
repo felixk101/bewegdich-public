@@ -34,13 +34,13 @@ var App = {
         jQuery.ajax({
             url: '/api/getRoute/',
             data: {
-                /*stopid: destination,
-                 longitude: function () {
-                 return AppLocation.position.longitude;
-                 },
-                 latitude: function () {
-                 return AppLocation.position.latitude;
-                 }*/
+                stopid: destination,
+                longitude: function () {
+                    return AppLocation.position.longitude;
+                },
+                latitude: function () {
+                    return AppLocation.position.latitude;
+                }
             },
             dataType: 'json',
             success: function (json) {

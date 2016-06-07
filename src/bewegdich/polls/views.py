@@ -169,16 +169,16 @@ def get_route(request):
 
     """
     if request.method == 'GET':
+        if "stopid" not in request.GET:
+            return JSONResponse({error: "stopid not found"}, status=400)
         if "longitude" not in request.GET:
             return JSONResponse({error: "longitude not found"}, status=400)
         if "latitude" not in request.GET:
             return JSONResponse({error: "latitude not found"}, status=400)
-        if "stopid" not in request.GET:
-            return JSONResponse({error: "stopid not found"}, status=400)
 
+        stopid = codecs.encode(request.GET["stopid"], 'utf-8')
         longitude = codecs.encode(request.GET["longitude"], 'utf-8')
         latitude = codecs.encode(request.GET["latitude"], 'utf-8')
-        stopid = codecs.encode(request.GET["stopid"], 'utf-8')
 
         # Here we do the search for the optimized Route
         routes = get_optimized_routes([longitude, latitude], stopid)
