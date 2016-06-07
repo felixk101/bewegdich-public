@@ -164,19 +164,20 @@ def find_startstations(start, dest, time=-1):
 
     if type(routes) == int:
         return routes
-    startstations = []
+
     tmplist = []
     for route in routes:
         tmplist.append([route, userpos, time])
 
-    # These Lines to the search paralell. Sometimes there where errors,
+    # These Lines to the search parallel. Sometimes there where errors,
     # but that could be because of the bad internet connection
     pool = Pool()
     startstations = pool.map(find_best_station, tmplist)
 
     # The following lines do the search serial.
     # for route in tmplist:
-    #   startstations.append(find_best_station(route))
+    #startstations = []
+    #startstations.append(find_best_station(route))
 
 
     while [].__contains__(-1):  # Remove walkonly routes
@@ -185,6 +186,7 @@ def find_startstations(start, dest, time=-1):
     for station in startstations:
         if station.walkingtime == -1:
             print("ERROR: Walkingtime shouldnt be -1")
+
     return startstations
 
 
