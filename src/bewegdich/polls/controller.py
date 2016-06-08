@@ -9,6 +9,7 @@ import urllib2 as urllib
 from route import Route, Stop
 from multiprocessing import Pool
 from models import efaStop
+import timeit
 
 
 def distance(lon1, lat1, lon2, lat2):
@@ -114,7 +115,7 @@ def get_optimized_routes(start, dest, time=-1):
     routes = []
     id = 0
 
-    print("Filter best Route")
+    start_time = timeit.default_timer()
     # Do the routesearch again with the new station
     for station in startstations:
 
@@ -149,6 +150,7 @@ def get_optimized_routes(start, dest, time=-1):
             routes.append(route)
 
     routes = sorted(routes, key=lambda route: route.depature_time)
+    print("Find best Station in " + (timeit.default_timer() - start_time).__str__()[:5] + " ms")
     return routes
 
 
@@ -205,7 +207,6 @@ def find_startstations(start, dest, time=-1):
     # Get start and destination positions
     userpos = start
     destpos = dest
-    print("Get Routes")
     routes = get_routes(userpos, destpos, time)
 
     # If no time was set, take the current one
@@ -218,22 +219,21 @@ def find_startstations(start, dest, time=-1):
     tmplist = []
     for route in routes:
         tmplist.append([route, userpos, time])
-
-    print("Find Startstations")
+    start_time = timeit.default_timer()
     # These Lines to the search parallel. Sometimes there where errors,
     # but that could be because of the bad internet connection
-    pool = Pool()
-    startstations = pool.map(find_best_station, tmplist)
+    #pool = Pool()
+    #startstations = pool.map(find_best_station, tmplist)
 
-    # The following lines do the search serial.
-    # for route in tmplist:
-
-    # startstations = []
-    # for route in tmplist:
-    #     startstations.append(find_best_station(route))
+    # The following lines do the search serial. This is safer.
+    startstations = []
+    for route in tmplist:
+        startstations.append(find_best_station(route))
 
     while [].__contains__(-1):  # Remove walkonly routes
         startstations.remove(-1)
+
+    print("Find best Station in " + (timeit.default_timer() - start_time).__str__()[:5] + " ms")
 
     for station in startstations:
         if station.walkingtime == -1:
@@ -251,6 +251,9 @@ def get_routes(start, dest, dtime=-1):
     :param dtime:  the destination time
     :return: a list of routes
     """
+    start_time = timeit.default_timer()
+
+
     lat, lon = start[1], start[0]
 
     origin = urllib.quote((str(lon) + ":" + str(lat) + ":WGS84"))
@@ -291,6 +294,7 @@ def get_routes(start, dest, dtime=-1):
             if not r.isWalkOnly():
                 if r.depature_time > dtime:
                     routes.append(r)
+        print("Get Routes in " + ((timeit.default_timer() - start_time)*1000).__str__()[:4] + " ms")
         return routes
     else:
         return int(code)
