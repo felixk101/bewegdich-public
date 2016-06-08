@@ -227,7 +227,6 @@ def find_startstations(start, dest, time=-1):
     # startstations = []
     # startstations.append(find_best_station(route))
 
-
     while [].__contains__(-1):  # Remove walkonly routes
         startstations.remove(-1)
 
