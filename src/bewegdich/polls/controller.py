@@ -150,7 +150,7 @@ def get_optimized_routes(start, dest, time=-1):
             routes.append(route)
 
     routes = sorted(routes, key=lambda route: route.depature_time)
-    print("Find best Station in " + (timeit.default_timer() - start_time).__str__()[:5] + " ms")
+    print("Find best station in " + (timeit.default_timer() - start_time).__str__()[:5] + " ms")
     return routes
 
 
@@ -256,7 +256,7 @@ def get_routes(start, dest, dtime=-1):
 
     lat, lon = start[1], start[0]
 
-    origin = str(origin[1]) + "," + str(origin[0]) + ":WGS84"
+    origin = (str(lon) + ":" + str(lat) + ":WGS84")
 
     if dtime == -1:
         dtime = datetime.datetime.now()
