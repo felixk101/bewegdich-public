@@ -100,7 +100,7 @@ DATABASES = {
 #     }
 # }
 
-# DATABASES = {
+#DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
 #        'NAME': '1_felixkampfer',
@@ -109,7 +109,7 @@ DATABASES = {
 #        'HOST': 'bewegdich.informatik.hs-augsburg.de',
 #        'PORT': '3306',
 #    }
-#
+#}
 
 #DATABASES = {
 #    'default': {
