@@ -266,7 +266,7 @@ def get_routes(start, dest, dtime=-1):
 
     param = {
         'outputFormat': 'JSON',
-        'locationServerActive': 1,
+        'locationServerActive': 0,
         'coordOutputFormat': 'WGS84[DD.ddddd]',
         'type_origin': typeStart,
         'name_origin': origin,
@@ -380,8 +380,10 @@ def get_stoplist(place, coords):
     """
     param = {
         'outputFormat': 'JSON',
+        'locationServerActive': 0,
         'coordOutputFormat': 'WGS84[DD.ddddd]',
-        'type_sf': 'stop',
+        #'type_sf': 'stop',
+        'type_sf': 'any',
         'name_sf': place
     }
     url = getCityUrl(coords[0], coords[1]) + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
