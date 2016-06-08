@@ -63,7 +63,7 @@ def getCityUrl(longitude, latitude):
     city = closestCity(longitude, latitude)
 
     if (city == 'Augsburg'):
-        return "http://efa.avv-augsburg.de/avv/"
+        return "https://efa.avv-augsburg.de/avv/"
     elif (city == 'Basel'):
         return "http://www.efa-bvb.ch/bvb/"
 
