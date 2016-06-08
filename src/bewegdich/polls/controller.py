@@ -364,68 +364,6 @@ def insert_start_point(start, walktime, route):
     return route
 
 
-def get_nearest_stop(coords):
-    """
-        Finds the nearest station for the given location
-
-    :param coords: [latitude,longitude]
-    :return: the closest stop's name
-    """
-    lat, lon = coords[0], coords[1]
-    origin = urllib.quote(lon + ":" + lat + ":WGS84")
-    type = "coord"
-
-    param = {
-        'type_origin': type,
-        'name_origin': origin
-    }
-    url = getCityUrl(lon, lat) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
-    data = getXML(url)
-
-    stop = data[1][1].find('itdOdvAssignedStops')[0]
-
-    return stop.get('nameWithPlace')  # extract the station's name
-
-
-def get_coords(place, start):
-    """
-
-    Looks up the given name, try to find a place with the same name
-    and returns the coords
-
-    :param place: a string
-    :param start: [latitude,longitude]
-    :return: [latitude,longitude]
-    """
-    param = {
-        'outputFormat': 'JSON',
-        'coordOutputFormat': 'WGS84[DD.ddddd]',
-        'type_origin': 'any',
-        'name_origin': place,
-        'anyObjFilter_origin': 2
-    }
-    url = getCityUrl(start[0], start[1]) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
-    data = get_json(url)
-
-    coords = data["origin"]["points"]["point"]["ref"]["coords"].split(",")
-    return coords
-
-    key = "AIzaSyAV52eNjBjVhoTtaOwdWbd8iQ7Cia6X9c0"
-    optionalSecondKey = "AIzaSyCVP9DkstDfjlTYgj0XlU5YlzU9gI3pqOU"
-
-    param = {
-        'address': place,
-        'key': key
-    }
-    url = "https://maps.googleapis.com/maps/api/geocode/json?" + urllib1.urlencode(param)
-    data = get_json(url)
-
-    lat = data["results"][0]["geometry"]["location"]["lat"]
-    long = data["results"][0]["geometry"]["location"]["lng"]
-
-    return [lat, long]
-
-
 def get_stoplist(place, coords):
     """
         Searches for the closes matching stops with the same name as the given one.
