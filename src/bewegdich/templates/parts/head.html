@@ -1,3 +1,4 @@
+{% load compile_static %}
 {% load static %}
 
 <meta charset="utf-8">
@@ -11,7 +12,8 @@
 <link href="{% static "assets/css/font-awesome.min.css" %}" rel="stylesheet"/>
 <link href="{% static "assets/css/snap.min.css" %}" rel="stylesheet"/>
 <link href="{% static "assets/css/ol.css" %}" rel="stylesheet"/>
-<link href="{% static "assets/css/app.css" %}" rel="stylesheet"/>
+<!--<link href="{% static "assets/css/app.css" %}" rel="stylesheet"/> !-->
+<link href="{% static "assets/less/app.less"|compile %}" rel="stylesheet" />
 <script type="text/javascript" src="{% static "assets/js/jquery.min.js" %}"></script>
 <script type="text/javascript" src="{% static "assets/js/bootstrap.min.js" %}"></script>
 <script type="text/javascript" src="{% static "assets/js/snap.min.js" %}"></script>
