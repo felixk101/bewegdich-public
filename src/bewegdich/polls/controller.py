@@ -256,7 +256,7 @@ def get_routes(start, dest, dtime=-1):
 
     lat, lon = start[1], start[0]
 
-    origin = urllib.quote((str(lon) + ":" + str(lat) + ":WGS84"))
+    origin = str(origin[1]) + "," + str(origin[0]) + ":WGS84"
 
     if dtime == -1:
         dtime = datetime.datetime.now()
