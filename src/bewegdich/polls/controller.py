@@ -113,6 +113,8 @@ def get_optimized_routes(start, dest, time=-1):
 
     routes = []
     id = 0
+
+    print("Filter best Route")
     # Do the routesearch again with the new station
     for station in startstations:
 
@@ -181,7 +183,6 @@ def find_best_station(parameters):
             if best_station == -1 or best_station.walkingtime < station.walkingtime:
                 best_station = station
         else:  # If this Stop cannot be reached via walking, its not likley the next stop can be reached
-            print("### Stop station search")
             break
 
     if best_station != -1:
@@ -200,10 +201,11 @@ def find_startstations(start, dest, time=-1):
     :param dest: the destination
     :return: Stop
     """
+
     # Get start and destination positions
     userpos = start
     destpos = dest
-
+    print("Get Routes")
     routes = get_routes(userpos, destpos, time)
 
     # If no time was set, take the current one
@@ -217,6 +219,7 @@ def find_startstations(start, dest, time=-1):
     for route in routes:
         tmplist.append([route, userpos, time])
 
+    print("Find Startstations")
     # These Lines to the search parallel. Sometimes there where errors,
     # but that could be because of the bad internet connection
     pool = Pool()
@@ -224,8 +227,10 @@ def find_startstations(start, dest, time=-1):
 
     # The following lines do the search serial.
     # for route in tmplist:
+
     # startstations = []
-    # startstations.append(find_best_station(route))
+    # for route in tmplist:
+    #     startstations.append(find_best_station(route))
 
     while [].__contains__(-1):  # Remove walkonly routes
         startstations.remove(-1)
@@ -301,8 +306,8 @@ def get_walking_Route(origin, destination):
     if type(origin) != list or type(destination) != list:
         return -1
 
-    origin = urllib.quote(str(origin[1]) + "," + str(origin[0]))
-    destination = urllib.quote(str(destination[1]) + "," + str(destination[0]))
+    origin = str(origin[1]) + "," + str(origin[0])
+    destination = str(destination[1]) + "," + str(destination[0])
     key = "AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0"
 
     param = {
@@ -313,7 +318,6 @@ def get_walking_Route(origin, destination):
     }
     url = "https://maps.googleapis.com/maps/api/directions/json?" + urllib1.urlencode(param)
     data = get_json(url)
-
     return data
 
 
