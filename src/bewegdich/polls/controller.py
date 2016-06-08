@@ -174,7 +174,7 @@ def find_best_station(parameters):
     best_station = -1
 
     # Step through stations to find a better one
-    for station in station_list[:5] :
+    for station in station_list[:5]:
         # Calculate the time to walk to the given station
         walk_time = get_walking_time(userpos, station.get_coords())
         station.walkingtime = walk_time
@@ -222,8 +222,8 @@ def find_startstations(start, dest, time=-1):
     start_time = timeit.default_timer()
     # These Lines to the search parallel. Sometimes there where errors,
     # but that could be because of the bad internet connection
-    #pool = Pool()
-    #startstations = pool.map(find_best_station, tmplist)
+    # pool = Pool()
+    # startstations = pool.map(find_best_station, tmplist)
 
     # The following lines do the search serial. This is safer.
     startstations = []
@@ -253,33 +253,25 @@ def get_routes(start, dest, dtime=-1):
     """
     start_time = timeit.default_timer()
 
-
     lat, lon = start[1], start[0]
-
-    origin = (str(lon) + ":" + str(lat) + ":WGS84")
 
     if dtime == -1:
         dtime = datetime.datetime.now()
-
-    typeStart = "coord"
-    typeDest = "stopID"
 
     param = {
         'outputFormat': 'JSON',
         'locationServerActive': 0,
         'coordOutputFormat': 'WGS84[DD.ddddd]',
-        'type_origin': typeStart,
-        'name_origin': origin,
-        'type_destination': typeDest,
+        'type_origin': 'coord',
+        'name_origin': (str(lon) + ":" + str(lat) + ":WGS84"),
+        'type_destination': 'stopID',
         'name_destination': dest
     }
 
     if datetime != -1:
-        date = dtime.date().strftime("%Y%m%d")
-        time = dtime.time().strftime("%H:%M")
         param.update({
-            'itdDate': date,
-            'itdTime': time,
+            'itdDate': dtime.date().strftime("%Y%m%d"),
+            'itdTime': dtime.time().strftime("%H:%M"),
             'itdTripDateTimeDepArr': 'dep'
         })
 
@@ -294,7 +286,7 @@ def get_routes(start, dest, dtime=-1):
             if not r.isWalkOnly():
                 if r.depature_time > dtime:
                     routes.append(r)
-        print("Get Routes in " + ((timeit.default_timer() - start_time)*1000).__str__()[:4] + " ms")
+        print("Get Routes in " + ((timeit.default_timer() - start_time) * 1000).__str__()[:4] + " ms")
         return routes
     else:
         return int(code)
@@ -310,18 +302,17 @@ def get_walking_Route(origin, destination):
     if type(origin) != list or type(destination) != list:
         return -1
 
-    origin = str(origin[1]) + "," + str(origin[0])
-    destination = str(destination[1]) + "," + str(destination[0])
     key = "AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0"
 
     param = {
-        'origin': origin,
-        'destination': destination,
+        'origin': str(origin[1]) + "," + str(origin[0]),
+        'destination': str(destination[1]) + "," + str(destination[0]),
         'mode': 'walking',
         'key': key
     }
     url = "https://maps.googleapis.com/maps/api/directions/json?" + urllib1.urlencode(param)
     data = get_json(url)
+
     return data
 
 
@@ -382,8 +373,10 @@ def get_stoplist(place, coords):
         'outputFormat': 'JSON',
         'locationServerActive': 0,
         'coordOutputFormat': 'WGS84[DD.ddddd]',
-        #'type_sf': 'stop',
-        'type_sf': 'any',
+        # 'type_origin': 'coord',
+        # 'name_origin': (str(coords[0]) + ":" + str(coords[1]) + ":WGS84"),
+        'type_sf': 'stop',
+        # 'type_sf': 'any', # May makes sense (Destination is an address)
         'name_sf': place
     }
     url = getCityUrl(coords[0], coords[1]) + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
