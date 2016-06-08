@@ -8,6 +8,8 @@ var App = {
             serviceUrl: '/api/getStopList/',
             dataType: 'json',
             paramName: 'query',
+            appendTo: '#search .search-container',
+            width: jQuery('#search .search-field').outerWidth(),
             params: {
                 longitude: function () {
                     return AppLocation.position.longitude;
