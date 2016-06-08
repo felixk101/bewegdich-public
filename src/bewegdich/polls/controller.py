@@ -174,7 +174,7 @@ def find_best_station(parameters):
     best_station = -1
 
     # Step through stations to find a better one
-    for station in station_list:
+    for station in station_list[:5] :
         # Calculate the time to walk to the given station
         walk_time = get_walking_time(userpos, station.get_coords())
         station.walkingtime = walk_time
