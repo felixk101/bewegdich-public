@@ -105,7 +105,7 @@ def get_optimized_routes(start, dest, time=-1):
         int(dest)
     except ValueError:
         print("Error: Destination was not a stopID")
-        return 8;
+        return 8
 
     startstations = find_startstations(start, dest, time)
     if type(startstations) == int:
@@ -120,7 +120,7 @@ def get_optimized_routes(start, dest, time=-1):
 
         starttime = time + station.walkingtime
 
-        routes_list = get_routes(get_coords(station, start), dest, starttime)
+        routes_list = get_routes(station.get_coords(), dest, starttime)
         if type(routes_list) == int:
             return routes_list
 
@@ -134,17 +134,16 @@ def get_optimized_routes(start, dest, time=-1):
                     duplicate_route = 1
                     break
             if duplicate_route == 1:
-                # print("Found duplicate " + str(route.origin_stop) + " at " + str(route.depature_time))
                 continue
             if station.walkingtime != -1:
                 route.depature_time = route.depature_time - station.walkingtime
 
             insert_start_point(start, station.walkingtime, route)
-            route.walkingPath = get_walking_coords(start, get_coords(route.origin_stop, start))
+            route.walkingPath = get_walking_coords(start, route.origin_stop.get_coords())
 
             route.duration = route.duration + station.walkingtime
             route.id = id
-            id = id + 1
+            id += 1
             routes.append(route)
 
     routes = sorted(routes, key=lambda route: route.depature_time)
@@ -173,21 +172,16 @@ def find_best_station(parameters):
     # Step through stations to find a better one
     for station in station_list:
         # Calculate the time to walk to the given station
-        walk_time = get_walking_time(userpos, get_coords(station, userpos))
+        walk_time = get_walking_time(userpos, station.get_coords())
         station.walkingtime = walk_time
-        print("Walkingtime: " + walk_time.__str__())
 
-        # If there is enough time to walk, save this station
-        print("to " + station.name + ": " + (time + station.walkingtime).time().__str__() +
-              " : " + station.depaturetime.__str__())
-
-        # For test only: Reduce walkking time to get better results
+        # For test only: Reduce walking time to get better results
         # station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
         if type(station.depaturetime) is datetime.datetime and (time + station.walkingtime) < station.depaturetime:
             if best_station == -1 or best_station.walkingtime < station.walkingtime:
                 best_station = station
         else:  # If this Stop cannot be reached via walking, its not likley the next stop can be reached
-            print("### Stop Stationsearch")
+            print("### Stop station search")
             break
 
     if best_station != -1:
@@ -239,7 +233,7 @@ def find_startstations(start, dest, time=-1):
 
     for station in startstations:
         if station.walkingtime == -1:
-            print("ERROR: Walkingtime shouldnt be -1")
+            print("ERROR: Walking time shouldn't be -1")
 
     return startstations
 
@@ -250,6 +244,7 @@ def get_routes(start, dest, dtime=-1):
 
     :param start: the startposition
     :param dest:  the destination
+    :param dtime:  the destination time
     :return: a list of routes
     """
     lat, lon = start[1], start[0]
@@ -282,9 +277,6 @@ def get_routes(start, dest, dtime=-1):
         })
 
     url = getCityUrl(lon, lat) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
-
-    print(url)
-
     data = get_json(url)
 
     code = checkValidJson(data)
@@ -298,28 +290,6 @@ def get_routes(start, dest, dtime=-1):
         return routes
     else:
         return int(code)
-
-
-def checkValidJson(json):
-    """
-        Check the json for common errors like:
-            - No json at all
-            - Origin or destination not found
-
-    :param json:
-    :return: 0= Everything okay; else the spesific errornumber
-    """
-    if "trips" not in json or json["trips"] == None:
-        print("ERR: No timetable recieved")
-        return 5
-    if "message" in json["destination"]:
-        print("Destination unkown")
-        return json["destination"]["message"][0]["value"]
-
-    if "message" in json["origin"]:
-        print("Origin unkown")
-        return json["origin"]["message"][0]["value"]
-    return 0
 
 
 def get_walking_Route(origin, destination):
@@ -343,8 +313,8 @@ def get_walking_Route(origin, destination):
         'key': key
     }
     url = "https://maps.googleapis.com/maps/api/directions/json?" + urllib1.urlencode(param)
-
     data = get_json(url)
+
     return data
 
 
@@ -387,7 +357,7 @@ def insert_start_point(start, walktime, route):
     :param route: the route-object
     :return: the route-object
     """
-    stop = Stop("Ihre Position", start[0], start[1], isWalking=1)
+    stop = Stop("Your Position", start[0], start[1], isWalking=1)
     stop.walkingtime = walktime
 
     route.path.insert(0, stop)
@@ -410,8 +380,8 @@ def get_nearest_stop(coords):
         'name_origin': origin
     }
     url = getCityUrl(lon, lat) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
-
     data = getXML(url)
+
     stop = data[1][1].find('itdOdvAssignedStops')[0]
 
     return stop.get('nameWithPlace')  # extract the station's name
@@ -435,8 +405,8 @@ def get_coords(place, start):
         'anyObjFilter_origin': 2
     }
     url = getCityUrl(start[0], start[1]) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
-
     data = get_json(url)
+
     coords = data["origin"]["points"]["point"]["ref"]["coords"].split(",")
     return coords
 
@@ -448,11 +418,11 @@ def get_coords(place, start):
         'key': key
     }
     url = "https://maps.googleapis.com/maps/api/geocode/json?" + urllib1.urlencode(param)
-
     data = get_json(url)
 
     lat = data["results"][0]["geometry"]["location"]["lat"]
     long = data["results"][0]["geometry"]["location"]["lng"]
+
     return [lat, long]
 
 
@@ -470,7 +440,6 @@ def get_stoplist(place, coords):
         'name_sf': place
     }
     url = getCityUrl(coords[0], coords[1]) + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
-
     data = get_json(url)
 
     stops = []
@@ -478,8 +447,7 @@ def get_stoplist(place, coords):
     city = closestCity(coords[0], coords[1])
     if (city == 'Augsburg'):
         if ('message' in data["stopFinder"] and data["stopFinder"]["message"][1]["value"] == "stop invalid"):
-            print("Warning: No stop suggestions found with name '" + place + "' according to:")
-            print(url)
+            print("No stop suggestions found ")
         elif len(data["stopFinder"]["points"]) == 1:  # One Result only must be handled differently, because of JSON
             point = data["stopFinder"]["points"]["point"]
             stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
@@ -488,18 +456,40 @@ def get_stoplist(place, coords):
                 stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
     elif (city == 'Basel'):
         if ('message' in data and data['message'][1]["value"] == "stop invalid"):
-            print("Warning: No stop suggestions found with name '" + place + "' according to:")
-            print(url)
+            print("No stop suggestions found ")
         elif len(data["stopFinder"]) == 1:
             point = data["stopFinder"]["point"]
             stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
         else:
             for point in data["stopFinder"]:
                 stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
-                print(point["ref"]["id"])
 
     stops = sorted(stops, reverse=True, key=lambda efaStop: efaStop.quality)
     return stops
+
+
+def checkValidJson(json):
+    """
+        Check the json for common errors like:
+            - No json at all
+            - Origin or destination not found
+
+    :param json:
+    :return: 0= Everything okay; else the spesific errornumber
+    """
+    if "trips" not in json or json["trips"] == None:
+        print("ERR: No timetable received")
+        return 5
+
+    if "message" in json["destination"]:
+        print("Destination unknown")
+        return json["destination"]["message"][0]["value"]
+
+    if "message" in json["origin"]:
+        print("Origin unknown")
+        return json["origin"]["message"][0]["value"]
+
+    return 0
 
 
 def get_json(url):
