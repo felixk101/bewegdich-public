@@ -9,8 +9,12 @@ import urllib2 as urllib
 from route import Route, Stop
 from multiprocessing import Pool
 from models import efaStop
-import timeit
+import time as t
+import Queue as Q
+from worker import SeachWorker
 
+from timer import Timer
+TIMER = Timer()
 
 def distance(lon1, lat1, lon2, lat2):
     """
@@ -98,6 +102,7 @@ def get_optimized_routes(start, dest, time=-1):
     :param time: the time when the user wants to start
     :return: the optimized routes as a list
     """
+    TIMER.start("Whole search")
     # If no time was set, take the current one
     if time == -1:
         time = datetime.datetime.now()
@@ -115,12 +120,11 @@ def get_optimized_routes(start, dest, time=-1):
     routes = []
     id = 0
 
-    start_time = timeit.default_timer()
+    TIMER.start("Find best routes")
     # Do the routesearch again with the new station
     for station in startstations:
 
         # The User has to walk to the first station
-
         starttime = time + station.walkingtime
 
         routes_list = get_routes(station.get_coords(), dest, starttime)
@@ -142,15 +146,14 @@ def get_optimized_routes(start, dest, time=-1):
                 route.depature_time = route.depature_time - station.walkingtime
 
             insert_start_point(start, station.walkingtime, route)
-            route.walkingPath = get_walking_coords(start, route.origin_stop.get_coords())
-
             route.duration = route.duration + station.walkingtime
             route.id = id
             id += 1
             routes.append(route)
 
     routes = sorted(routes, key=lambda route: route.depature_time)
-    print("Find best station in " + (timeit.default_timer() - start_time).__str__()[:5] + " ms")
+    TIMER.printTimer("Find best routes")
+    TIMER.printTimer("Whole search")
     return routes
 
 
@@ -177,6 +180,7 @@ def find_best_station(parameters):
     for station in station_list[:5]:
         # Calculate the time to walk to the given station
         walk_time = get_walking_time(userpos, station.get_coords())
+
         station.walkingtime = walk_time
 
         # For test only: Reduce walking time to get better results
@@ -203,7 +207,7 @@ def find_startstations(start, dest, time=-1):
     :param dest: the destination
     :return: Stop
     """
-
+    TIMER.start("Find startstations")
     # Get start and destination positions
     userpos = start
     destpos = dest
@@ -219,26 +223,31 @@ def find_startstations(start, dest, time=-1):
     tmplist = []
     for route in routes:
         tmplist.append([route, userpos, time])
-    start_time = timeit.default_timer()
-    # These Lines to the search parallel. Sometimes there where errors,
-    # but that could be because of the bad internet connection
-    # pool = Pool()
-    # startstations = pool.map(find_best_station, tmplist)
 
-    # The following lines do the search serial. This is safer.
+    queue = Q.Queue()
+    resultlist = []
+
+    # Create worker threads
+    for x in range(8):
+        worker = SeachWorker(queue, resultlist)
+        # Setting daemon to True will let the main thread exit even though the workers are blocking
+        worker.daemon = True
+        worker.start()
+
+    for tmproute in tmplist:
+        queue.put((tmproute))
+
+    queue.join()
+
     startstations = []
-    for route in tmplist:
-        startstations.append(find_best_station(route))
-
-    while [].__contains__(-1):  # Remove walkonly routes
-        startstations.remove(-1)
-
-    print("Find best Station in " + (timeit.default_timer() - start_time).__str__()[:5] + " ms")
+    for result in resultlist:
+        if result != -1: # Remove walkonly routes
+            startstations.append(result)
 
     for station in startstations:
         if station.walkingtime == -1:
             print("ERROR: Walking time shouldn't be -1")
-
+    TIMER.printTimer("Find startstations")
     return startstations
 
 
@@ -251,7 +260,6 @@ def get_routes(start, dest, dtime=-1):
     :param dtime:  the destination time
     :return: a list of routes
     """
-    start_time = timeit.default_timer()
 
     lat, lon = start[1], start[0]
 
@@ -286,7 +294,6 @@ def get_routes(start, dest, dtime=-1):
             if not r.isWalkOnly():
                 if r.depature_time > dtime:
                     routes.append(r)
-        print("Get Routes in " + ((timeit.default_timer() - start_time) * 1000).__str__()[:4] + " ms")
         return routes
     else:
         return int(code)
@@ -441,14 +448,3 @@ def get_json(url):
     response = urllib.urlopen(url, timeout=10)
     return json.loads(response.read())
 
-
-def getXML(url):
-    """
-    Downloads the XML from the given URL and converts it into an ElementTree
-    :param url: the url
-    :return: ElementTree root Element
-    """
-    response = urllib.urlopen(url, timeout=2)
-    response_string = response.read()
-    xmldoc = ElementTree.fromstring(response_string)
-    return xmldoc
