@@ -11,7 +11,7 @@ from multiprocessing import Pool
 from models import efaStop
 import time as t
 import Queue as Q
-from worker import SeachWorker
+from worker import SeachWorker, RoutesWorker
 
 from timer import Timer
 TIMER = Timer()
@@ -121,13 +121,34 @@ def get_optimized_routes(start, dest, time=-1):
     id = 0
 
     TIMER.start("Find best routes")
-    # Do the routesearch again with the new station
-    for station in startstations:
 
+    # Do the routesearch again with the new station
+    listi = []
+
+    tmplist = []
+    for station in startstations:
         # The User has to walk to the first station
         starttime = time + station.walkingtime
+        tmplist.append([station, dest, starttime])
 
-        routes_list = get_routes(station.get_coords(), dest, starttime)
+    queue = Q.Queue()
+    resultlist = []
+
+    # Create worker threads
+    for x in range(8):
+        worker = RoutesWorker(queue, resultlist)
+        # Setting daemon to True will let the main thread exit even though the workers are blocking
+        worker.daemon = True
+        worker.start()
+
+    for tmpparameter in tmplist:
+        queue.put((tmpparameter))
+
+    queue.join()
+    TIMER.printTimer("Find best routes")
+    for arr in resultlist:
+        station = arr[0]
+        routes_list = arr[1]
         if type(routes_list) == int:
             return routes_list
 
@@ -152,7 +173,6 @@ def get_optimized_routes(start, dest, time=-1):
             routes.append(route)
 
     routes = sorted(routes, key=lambda route: route.depature_time)
-    TIMER.printTimer("Find best routes")
     TIMER.printTimer("Whole search")
     return routes
 
@@ -207,11 +227,14 @@ def find_startstations(start, dest, time=-1):
     :param dest: the destination
     :return: Stop
     """
-    TIMER.start("Find startstations")
+
     # Get start and destination positions
     userpos = start
     destpos = dest
+    TIMER.start("find_startstations")
     routes = get_routes(userpos, destpos, time)
+
+
 
     # If no time was set, take the current one
     if (time == -1):
@@ -226,7 +249,6 @@ def find_startstations(start, dest, time=-1):
 
     queue = Q.Queue()
     resultlist = []
-
     # Create worker threads
     for x in range(8):
         worker = SeachWorker(queue, resultlist)
@@ -247,7 +269,7 @@ def find_startstations(start, dest, time=-1):
     for station in startstations:
         if station.walkingtime == -1:
             print("ERROR: Walking time shouldn't be -1")
-    TIMER.printTimer("Find startstations")
+    TIMER.printTimer("find_startstations")
     return startstations
 
 
@@ -262,7 +284,6 @@ def get_routes(start, dest, dtime=-1):
     """
 
     lat, lon = start[1], start[0]
-
     if dtime == -1:
         dtime = datetime.datetime.now()
 
@@ -285,7 +306,6 @@ def get_routes(start, dest, dtime=-1):
 
     url = getCityUrl(lon, lat) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
     data = get_json(url)
-
     code = checkValidJson(data)
     if code == 0:
         routes = []

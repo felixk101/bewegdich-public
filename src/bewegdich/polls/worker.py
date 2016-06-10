@@ -1,6 +1,5 @@
 from threading import Thread
 import controller
-import time
 
 class SeachWorker(Thread):
    def __init__(self, queue, resultqueue):
@@ -16,4 +15,23 @@ class SeachWorker(Thread):
            if type(result) == int:
                print("ERROR")
            self.resultqueue.append(result)
+           self.queue.task_done()
+
+class RoutesWorker(Thread):
+   def __init__(self, queue, resultqueue):
+       Thread.__init__(self)
+       self.queue = queue
+       self.resultqueue = resultqueue
+
+   def run(self):
+       while True:
+           # Get the work from the queue and expand the tuple
+           parameters = self.queue.get()
+           station = parameters[0]
+           dest = parameters[1]
+           starttime = parameters[2]
+           result = controller.get_routes(station.get_coords(), dest, starttime)
+           if type(result) == int:
+               print("ERROR")
+           self.resultqueue.append([station,result])
            self.queue.task_done()
