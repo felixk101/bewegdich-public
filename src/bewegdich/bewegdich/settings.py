@@ -12,10 +12,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -27,7 +25,6 @@ SECRET_KEY = '1)3!xjb#k(v1_s-s8yh2_a!28^%d17o3c#73!@ck5u0zit4j48'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -75,7 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bewegdich.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
@@ -100,7 +96,7 @@ DATABASES = {
 #     }
 # }
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
 #        'NAME': '1_felixkampfer',
@@ -109,9 +105,9 @@ DATABASES = {
 #        'HOST': 'bewegdich.informatik.hs-augsburg.de',
 #        'PORT': '3306',
 #    }
-#}
+# }
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
 #        'NAME': '1_viktorwerlitz',
@@ -120,7 +116,7 @@ DATABASES = {
 #        'HOST': 'bewegdich.informatik.hs-augsburg.de',
 #        'PORT': '3306',
 #    }
-#}
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -140,7 +136,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -153,7 +148,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -168,19 +162,19 @@ STATICFILES_DIRS = [
 
 STATIC_PRECOMPILER_ROOT = os.path.abspath(os.path.join(os.path.split(__file__)[0], '..', '..', 'static'))
 
-
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],'DEFAULT_RENDERER_CLASSES': (
+    ], 'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-    ),'DEFAULT_PARSER_CLASSES': (
-    'rest_framework.parsers.JSONParser'),
+    ), 'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser'),
     'UNICODE_JSON': False
 }
 
 import django
+
 django.setup()
