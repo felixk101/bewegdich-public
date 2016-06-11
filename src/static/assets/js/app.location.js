@@ -10,6 +10,7 @@ var AppLocation = {
     init: function () {
         var that = this;
 
+        that.get();
         window.setInterval(function () {
             that.get();
         }, 5000);
@@ -27,7 +28,7 @@ var AppLocation = {
         AppLocation.position.longitude = position.coords.longitude;
         AppLocation.position.latitude = position.coords.latitude;
 
-        jQuery(document).trigger('AppLocation.after.PositionSet');
+        jQuery(document).trigger('AppLocation.after.PositionSet', [AppLocation.position]);
     },
     error: function (e) {
         switch (e.code) {

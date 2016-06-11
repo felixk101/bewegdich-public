@@ -54,10 +54,17 @@ var App = {
                     AppError.show('request');
                 }
 
+                jQuery(document).trigger('App.before.routes');
+
                 jQuery('#routes').empty();
                 jQuery.each(json.data.routes, function (key, value) {
                     var id = 'route-' + value.id,
                         detailId = 'route-detail-' + value.id;
+
+                    jQuery(document).trigger('App.routes.stop', [{
+                        longitude: value.origin_stop.lng,
+                        latitude: value.origin_stop.lat
+                    }]);
 
                     jQuery('#routes').loadTemplate(jQuery('#template-route'), {
                         panelId: id,
@@ -66,8 +73,7 @@ var App = {
                         originStop: value.origin_stop.name,
                         destinationStop: value.destination_stop.name,
                         duration: value.duration,
-                        line: value.line.join(', '),
-                        walkingPath: JSON.stringify(value.walkingPath)
+                        line: value.line.join(', ')
                     }, {
                         append: true,
                         noDivWrapper: true,
@@ -77,7 +83,10 @@ var App = {
                                     stopPathName: value.name
                                 }, {
                                     append: true,
-                                    noDivWrapper: true
+                                    noDivWrapper: true,
+                                    success: function() {
+                                        jQuery(document).trigger('App.after.routes');
+                                    }
                                 });
                             });
                         }
