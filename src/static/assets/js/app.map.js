@@ -4,22 +4,18 @@ jQuery(document).ready(function () {
 
 var AppMap = {
     map: null,
-    icons: [],
+    markers: [],
     init: function () {
         var that = this;
 
-        this.map = new ol.Map({
-            target: jQuery('#map')[0],
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.MapQuest({layer: 'osm'})
-                })
-            ],
-            view: new ol.View({
-                center: ol.proj.fromLonLat([AppLocation.position.longitude, AppLocation.position.latitude]),
-                zoom: 16
-            })
+        this.map = L.map('map', {
+            center: L.latLng(AppLocation.position.latitude, AppLocation.position.longitude),
+            zoom: 18,
+            attributionControl: false,
+            zoomControl: false
         });
+        L.Icon.Default.imagePath = '/static/assets/images';
+        L.tileLayer.provider('OpenStreetMap.Mapnik').addTo(that.map);
 
         this.hooks();
     },
@@ -32,14 +28,18 @@ var AppMap = {
     },
     setPosition: function () {
         var that = this,
-            position = ol.proj.fromLonLat([AppLocation.position.longitude, AppLocation.position.latitude]);
+            position = L.latLng(AppLocation.position.latitude, AppLocation.position.longitude);
 
-        that.map.getView().setCenter(position, 16);
+        that.map.setView(position, 18);
         that.setIcon(position, 'location');
     },
     setIcon: function (position, type) {
         var that = this;
 
-        
+        if (that.markers[type] != undefined) {
+            that.markers[type].setLatLng(position);
+        } else {
+            that.markers[type] = L.marker(position).addTo(that.map);
+        }
     }
 };

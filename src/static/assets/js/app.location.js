@@ -8,7 +8,11 @@ var AppLocation = {
         latitude: 0
     },
     init: function () {
-        this.get();
+        var that = this;
+
+        window.setInterval(function () {
+            that.get();
+        }, 5000);
     },
     get: function (options) {
         if (navigator.geolocation) {
