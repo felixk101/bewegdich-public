@@ -56,7 +56,7 @@ ROOT_URLCONF = 'bewegdich.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.abspath(os.path.join(os.path.split(__file__)[0], '..', '..', 'templates'))]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
