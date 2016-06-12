@@ -322,8 +322,8 @@ def get_routes(start, dest, dtime=-1):
 def get_walking_Route(origin, destination):
     """
     Searches for a route to walk from A to B
-    :param origin: startposition
-    :param destination: destination
+    :param origin: startposition [lng,lat]
+    :param destination: destination [lng,lat]
     :return: a json
     """
     if type(origin) != list or type(destination) != list:

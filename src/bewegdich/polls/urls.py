@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^login/$', views.login, name='login'),
     url(r'^api/getRoute/$', views.get_route, name='getroute'),
     url(r'^api/getStopList/$', views.get_stoplist, name='getstoplist'),
+    url(r'^api/getWalkingPath/$', views.get_walkingpath, name='getWalkingPath'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
