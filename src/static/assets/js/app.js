@@ -77,7 +77,8 @@ var App = {
                         originStop: value.origin_stop.name,
                         destinationStop: value.destination_stop.name,
                         duration: value.duration,
-                        line: value.line.join(', ')
+                        line: value.line.join(', '),
+                        walkingPath: JSON.stringify(value.walkingPath)
                     }, {
                         append: true,
                         noDivWrapper: true,
