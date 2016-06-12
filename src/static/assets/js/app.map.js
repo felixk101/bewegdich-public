@@ -8,6 +8,7 @@ var AppMap = {
     markers: {
         "stops": []
     },
+    polylines: null,
     destination: null,
     init: function () {
         this.initMap();
@@ -125,5 +126,20 @@ var AppMap = {
         } else {
             that.markers[type] = L.marker(position, {icon: that.icons[type]}).addTo(that.map);
         }
+    },
+    setRoute: function (waypoints) {
+        var that = this,
+            route = [];
+
+        if (that.polylines) {
+            that.map.removeLayer(that.polylines);
+        }
+
+        jQuery.each(waypoints, function (key, value) {
+            route.push(L.latLng(value.latitude, value.longitude));
+        });
+
+        that.polylines = L.polyline(route).addTo(that.map);
+        that.map.fitBounds(that.polylines.getBounds());
     }
 };

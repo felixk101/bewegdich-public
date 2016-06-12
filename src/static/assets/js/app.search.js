@@ -41,8 +41,11 @@ var AppSearch = {
             that.getRoute(suggestion.data);
         });
 
-        jQuery('#routes').on('show.bs.collapse', function () {
-            //alert("sds");
+        jQuery('#routes').on('show.bs.collapse', function (event) {
+            var element = jQuery(event.target).closest('.route'),
+                walkingpath = jQuery(element).data('walkingpath');
+
+            AppMap.setRoute(walkingpath);
         });
     },
     getRoute: function (destination) {
