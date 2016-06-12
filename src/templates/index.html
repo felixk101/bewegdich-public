@@ -5,22 +5,23 @@
 {% block content %}
     <div id="search">
         <div class="search-container container-fluid">
-            <div class="search-field input-group">
-                <span class="input-group-btn">
-                    <button type="button" class="snap-open-left btn btn-secondary">
-                        <i class="fa fa-fw fa-bars"></i>
-                    </button>
-                </span>
-                <input type="text" id="s" class="form-control"
-                       placeholder="{{ section.destination|default:"Destination" }}" autocomplete="off"/>
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-secondary">
-                        <i class="fa fa-fw fa-search"></i>
-                    </button>
-                    <button type="button" class="snap-open-right btn btn-secondary">
-                        <i class="fa fa-fw fa-wrench"></i>
-                    </button>
-                </span>
+            <div class="search-field form-group has-feedback">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="snap-open-left btn btn-secondary">
+                            <i class="fa fa-fw fa-bars"></i>
+                        </button>
+                    </span>
+                    <input type="text" id="s" class="form-control"
+                           placeholder="{{ section.destination|default:"Destination" }}" autocomplete="off"/>
+                    <i class="fa fa-search form-control-feedback status-default"></i>
+                    <i class="fa fa-spinner fa-pulse form-control-feedback status-loading"></i>
+                    <span class="input-group-btn">
+                        <button type="button" class="snap-open-right btn btn-secondary">
+                            <i class="fa fa-fw fa-wrench"></i>
+                        </button>
+                    </span>
+                </div>
             </div>
         </div>
     </div>

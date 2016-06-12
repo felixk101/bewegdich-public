@@ -1,9 +1,14 @@
 jQuery(document).ready(function () {
-    App.init();
+    AppSearch.init();
 });
 
-var App = {
+var AppSearch = {
+    element: {
+        field: '#search .search-field'
+    },
     init: function () {
+        var that = this;
+
         jQuery('#search #s').autocomplete({
             serviceUrl: '/api/getStopList/',
             dataType: 'json',
@@ -22,6 +27,7 @@ var App = {
                 }
             },
             onSelect: function (suggestion) {
+                that.statusLoading();
                 jQuery(document).trigger('App.destination.selected', [suggestion]);
             }
         });
@@ -40,6 +46,8 @@ var App = {
         });
     },
     getRoute: function (destination) {
+        var that = this;
+
         jQuery.ajax({
             url: '/api/getRoute/',
             xhr: AppAjax.progress,
@@ -54,6 +62,8 @@ var App = {
             },
             dataType: 'json',
             success: function (json) {
+                that.statusDefault();
+
                 if (json.error) {
                     AppError.show('request');
                 }
@@ -99,8 +109,18 @@ var App = {
                 });
             },
             error: function (e) {
+                that.statusDefault();
+
                 AppError.show('request');
             }
         });
+    },
+    statusLoading: function () {
+        jQuery(this.element.field).addClass('loading');
+        jQuery(this.element.field).find('input').prop('disabled', true);
+    },
+    statusDefault: function () {
+        jQuery(this.element.field).removeClass('loading');
+        jQuery(this.element.field).find('input').prop('disabled', false);
     }
 };
