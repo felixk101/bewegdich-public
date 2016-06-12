@@ -8,6 +8,9 @@ var App = {
             serviceUrl: '/api/getStopList/',
             dataType: 'json',
             paramName: 'query',
+            ajaxSettings: {
+                xhr: AppAjax.progress
+            },
             appendTo: '#search .search-container',
             width: jQuery('#search .search-field').outerWidth(),
             params: {
@@ -39,6 +42,7 @@ var App = {
     getRoute: function (destination) {
         jQuery.ajax({
             url: '/api/getRoute/',
+            xhr: AppAjax.progress,
             data: {
                 stopid: destination,
                 longitude: function () {
@@ -84,7 +88,7 @@ var App = {
                                 }, {
                                     append: true,
                                     noDivWrapper: true,
-                                    success: function() {
+                                    success: function () {
                                         jQuery(document).trigger('App.after.routes');
                                     }
                                 });
