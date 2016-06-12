@@ -351,6 +351,17 @@ def get_walking_Route(origin, destination):
     data["routes"][0]["legs"][0]["duration"]["value"] = secondsOnly
     data["routes"][0]["legs"][0]["duration"]["text"] = text
 
+    secondsOnly = data["routes"][0]["legs"][0]["duration"]["value"]
+    # secondsOnly = secondsOnly * get_session['speed']
+
+    minutes = secondsOnly / 60
+    seconds = secondsOnly % 60
+
+    text = minutes + ":" + seconds
+
+    data["routes"][0]["legs"][0]["duration"]["value"] = secondsOnly
+    data["routes"][0]["legs"][0]["duration"]["text"] = text
+
     return data
 
 
