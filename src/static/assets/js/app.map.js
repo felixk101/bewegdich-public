@@ -9,10 +9,12 @@ var AppMap = {
         "stops": []
     },
     polylines: null,
+    bounds: null,
     destination: null,
     init: function () {
         this.initMap();
         this.initIcons();
+
         this.hooks();
     },
     initMap: function () {
@@ -47,6 +49,14 @@ var AppMap = {
     hooks: function () {
         var that = this;
 
+        jQuery(document).on('AppLayout.after.MapSet', function (event, position) {
+            that.map.invalidateSize();
+
+            if (that.bounds) {
+                that.map.fitBounds(that.bounds);
+            }
+        });
+
         jQuery(document).on('AppLocation.after.PositionSet', function (event, position) {
             that.setMarker(position, 'person');
 
@@ -55,7 +65,7 @@ var AppMap = {
             }
         });
 
-        jQuery(document).on('App.before.routes', function () {
+        jQuery(document).on('AppSearch.before.routes', function () {
             jQuery.each(that.markers['stops'], function (index, value) {
                 that.map.removeLayer(value);
             });
@@ -63,7 +73,7 @@ var AppMap = {
             that.markers['stops'] = [];
         });
 
-        jQuery(document).on('App.after.routes', function () {
+        jQuery(document).on('AppSearch.after.routes', function () {
             var positions = [];
 
             positions.push({
@@ -81,8 +91,12 @@ var AppMap = {
             that.setPosition(positions);
         });
 
-        jQuery(document).on('App.routes.stop', function (event, position) {
+        jQuery(document).on('AppSearch.routes.stop', function (event, position) {
             that.setMarker(position, 'stop');
+        });
+
+        jQuery(document).on('AppSearch.routes.path', function (event, walkingpath) {
+            that.setRoute(walkingpath);
         });
     },
     setPosition: function (position) {
@@ -107,10 +121,12 @@ var AppMap = {
                 latitude: position.latitude / positions.length
             };
 
-            that.map.fitBounds(bounds);
+            that.bounds = bounds;
+            that.map.fitBounds(that.bounds);
         } else {
             position = L.latLng(position.latitude, position.longitude);
 
+            that.bounds = null;
             that.map.setView(position, 18);
         }
     },
@@ -140,6 +156,7 @@ var AppMap = {
         });
 
         that.polylines = L.polyline(route).addTo(that.map);
-        that.map.fitBounds(that.polylines.getBounds());
+        that.bounds = that.polylines.getBounds();
+        that.map.fitBounds(that.bounds);
     }
 };

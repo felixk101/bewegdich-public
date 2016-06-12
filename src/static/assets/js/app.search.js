@@ -45,7 +45,7 @@ var AppSearch = {
             var element = jQuery(event.target).closest('.route'),
                 walkingpath = jQuery(element).data('walkingpath');
 
-            AppMap.setRoute(walkingpath);
+            jQuery(document).trigger('AppSearch.routes.path', [walkingpath]);
         });
     },
     getRoute: function (destination) {
@@ -71,14 +71,14 @@ var AppSearch = {
                     AppError.show('request');
                 }
 
-                jQuery(document).trigger('App.before.routes');
+                jQuery(document).trigger('AppSearch.before.routes');
 
                 jQuery('#routes').empty();
                 jQuery.each(json.data.routes, function (key, value) {
                     var id = 'route-' + value.id,
                         detailId = 'route-detail-' + value.id;
 
-                    jQuery(document).trigger('App.routes.stop', [{
+                    jQuery(document).trigger('AppSearch.routes.stop', [{
                         longitude: value.origin_stop.lng,
                         latitude: value.origin_stop.lat
                     }]);
@@ -103,7 +103,7 @@ var AppSearch = {
                                     append: true,
                                     noDivWrapper: true,
                                     success: function () {
-                                        jQuery(document).trigger('App.after.routes');
+                                        jQuery(document).trigger('AppSearch.after.routes');
                                     }
                                 });
                             });
