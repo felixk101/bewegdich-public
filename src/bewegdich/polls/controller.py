@@ -167,6 +167,7 @@ def get_optimized_routes(start, dest, time=-1):
             if station.walkingtime != -1:
                 route.depature_time = route.depature_time - station.walkingtime
 
+            route.walkingPath = get_walking_coords(start, route.origin_stop.get_coords())
             insert_start_point(start, station.walkingtime, route)
             route.duration = route.duration + station.walkingtime
             route.id = id
@@ -346,18 +347,7 @@ def get_walking_Route(origin, destination):
     minutes = secondsOnly / 60
     seconds = secondsOnly % 60
 
-    text = minutes + ":" + seconds
-
-    data["routes"][0]["legs"][0]["duration"]["value"] = secondsOnly
-    data["routes"][0]["legs"][0]["duration"]["text"] = text
-
-    secondsOnly = data["routes"][0]["legs"][0]["duration"]["value"]
-    # secondsOnly = secondsOnly * get_session['speed']
-
-    minutes = secondsOnly / 60
-    seconds = secondsOnly % 60
-
-    text = minutes + ":" + seconds
+    text = str(minutes) + ":" + str(seconds)
 
     data["routes"][0]["legs"][0]["duration"]["value"] = secondsOnly
     data["routes"][0]["legs"][0]["duration"]["text"] = text
