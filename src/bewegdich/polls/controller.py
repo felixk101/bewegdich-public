@@ -12,6 +12,7 @@ from models import efaStop
 import time as t
 import Queue as Q
 from worker import SeachWorker, RoutesWorker
+from views import *
 
 from timer import Timer
 TIMER = Timer()
@@ -339,6 +340,16 @@ def get_walking_Route(origin, destination):
     }
     url = "https://maps.googleapis.com/maps/api/directions/json?" + urllib1.urlencode(param)
     data = get_json(url)
+    secondsOnly = data["routes"][0]["legs"][0]["duration"]["value"]
+    #secondsOnly = secondsOnly * get_session['speed']
+
+    minutes = secondsOnly / 60
+    seconds = secondsOnly % 60
+
+    text = minutes + ":" + seconds
+
+    data["routes"][0]["legs"][0]["duration"]["value"] = secondsOnly
+    data["routes"][0]["legs"][0]["duration"]["text"] = text
 
     return data
 
