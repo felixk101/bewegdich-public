@@ -75,16 +75,16 @@ WSGI_APPLICATION = 'bewegdich.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': '1_bewegdich',
-#         'USER': '1_bewegdich',
-#         'PASSWORD': '3TnTvrI,1_UAnOQb',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '1_bewegdich',
+        'USER': '1_bewegdich',
+        'PASSWORD': '3TnTvrI,1_UAnOQb',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
 
 # DATABASES = {
 #     'default': {
@@ -97,16 +97,16 @@ WSGI_APPLICATION = 'bewegdich.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.mysql',
-       'NAME': '1_felixkampfer',
-       'USER': '1_felixkampfer',
-       'PASSWORD': 'yaz++z0V_.kFTSm.',
-       'HOST': 'bewegdich.informatik.hs-augsburg.de',
-       'PORT': '3306',
-   }
-}
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': '1_felixkampfer',
+#        'USER': '1_felixkampfer',
+#        'PASSWORD': 'yaz++z0V_.kFTSm.',
+#        'HOST': 'bewegdich.informatik.hs-augsburg.de',
+#        'PORT': '3306',
+#    }
+# }
 
 # DATABASES = {
 #    'default': {
