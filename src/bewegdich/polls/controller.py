@@ -142,7 +142,7 @@ class Controller(object):
 
         # Create worker threads
         for x in range(8):
-            worker = RoutesWorker(queue, resultlist)
+            worker = RoutesWorker(queue, resultlist,self)
             # Setting daemon to True will let the main thread exit even though the workers are blocking
             worker.daemon = True
             worker.start()
@@ -258,7 +258,7 @@ class Controller(object):
         resultlist = []
         # Create worker threads
         for x in range(8):
-            worker = SeachWorker(queue, resultlist)
+            worker = SeachWorker(queue, resultlist,self)
             # Setting daemon to True will let the main thread exit even though the workers are blocking
             worker.daemon = True
             worker.start()
@@ -348,8 +348,8 @@ class Controller(object):
         data = self.get_json(url)
 
         secondsOnly = data["routes"][0]["legs"][0]["duration"]["value"]
-        print("###" + self.session["speed"])
-        #secondsOnly = secondsOnly * get_session['speed']
+
+        secondsOnly = secondsOnly * float(self.session["speed"])
 
         minutes = secondsOnly / 60
         seconds = secondsOnly % 60

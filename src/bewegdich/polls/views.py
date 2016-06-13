@@ -51,7 +51,11 @@ def get_stoplist(request):
 
         query = codecs.encode(request.GET["query"], 'utf-8')
         longitude = codecs.encode(request.GET["longitude"], 'utf-8')
+        if float(longitude) < 0:
+            longitude = str(360 + float(longitude))
         latitude = codecs.encode(request.GET["latitude"], 'utf-8')
+        if float(latitude) < 0:
+            latitude = str(360 + float(latitude))
         c = Controller(request.session)
         stoplist = c.get_stoplist(query, [longitude, latitude])
 
@@ -86,6 +90,11 @@ def get_route(request):
         stopid = codecs.encode(request.GET["stopid"], 'utf-8')
         longitude = codecs.encode(request.GET["longitude"], 'utf-8')
         latitude = codecs.encode(request.GET["latitude"], 'utf-8')
+
+        if float(longitude) < 0:
+            longitude = str(360 + float(longitude))
+        if float(latitude) < 0:
+            latitude = str(360 + float(latitude))
 
         c = Controller(request.session)
         # Here we do the search for the optimized Route
