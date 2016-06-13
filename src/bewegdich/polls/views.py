@@ -5,8 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from controller import get_optimized_routes,get_walking_coords
-from controller import get_stoplist as getStopList
+from controller import Controller
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
@@ -53,7 +52,8 @@ def get_stoplist(request):
         query = codecs.encode(request.GET["query"], 'utf-8')
         longitude = codecs.encode(request.GET["longitude"], 'utf-8')
         latitude = codecs.encode(request.GET["latitude"], 'utf-8')
-        stoplist = getStopList(query, [longitude, latitude])
+        c = Controller(request.session)
+        stoplist = c.get_stoplist(query, [longitude, latitude])
 
         if (type(stoplist) == int):
             return JSONResponse({'error': "There was an error on search: " + str(stoplist)}, status=400)
@@ -87,8 +87,9 @@ def get_route(request):
         longitude = codecs.encode(request.GET["longitude"], 'utf-8')
         latitude = codecs.encode(request.GET["latitude"], 'utf-8')
 
+        c = Controller(request.session)
         # Here we do the search for the optimized Route
-        routes = get_optimized_routes([longitude, latitude], stopid)
+        routes = c.get_optimized_routes([longitude, latitude], stopid)
         if (type(routes) == int):
             return JSONResponse({'error': "There was an error on search: " + str(routes)}, status=400)
 
