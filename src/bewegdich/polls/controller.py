@@ -137,7 +137,6 @@ class Controller(object):
         TIMER.start("Find best routes")
 
         # Do the routesearch again with the new station
-        listi = []
 
         tmplist = []
         for station in startstations:

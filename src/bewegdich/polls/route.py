@@ -65,7 +65,7 @@ class Route(object):
     def __str__(self):
         return self.origin_stop.__str__() + " -> " + self.destination_stop.__str__()
 
-    def get_next_stops(self, number_of_stops=5):
+    def get_next_stops(self):
         """
         Searches for the next stops in the route excluding the originstop
 
