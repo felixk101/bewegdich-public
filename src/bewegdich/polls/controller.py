@@ -20,7 +20,11 @@ TIMER = Timer()
 class Controller(object):
 
     def __init__(self,session):
+        # Saves the session object of one user
         self.session = session
+
+        # Stores all calculated walking routes into this dic, so it doesn't need to be calculated again
+        self.walking_routes = {}
 
     def distance(self, lon1, lat1, lon2, lat2):
         """
@@ -122,6 +126,10 @@ class Controller(object):
         startstations = self.find_startstations(start, dest, time)
         if type(startstations) == int:
             return startstations
+        self.walking_routes = {}
+        for station in startstations:
+            self.walking_routes[station.stopid] = station.walk_route
+
 
         routes = []
         id = 0
@@ -171,8 +179,11 @@ class Controller(object):
                     continue
                 if station.walkingtime != -1:
                     route.depature_time = route.depature_time - station.walkingtime
-
-                route.walkingPath = self.get_walking_coords(start, route.origin_stop.get_coords())
+                if route.origin_stop.stopid in self.walking_routes:
+                    route.walkingPath = self.get_walking_coords(self.walking_routes[ route.origin_stop.stopid])
+                else:
+                    walking_route = self.get_walking_Route(start, route.origin_stop.get_coords())
+                    route.walkingPath = self.get_walking_coords(walking_route)
                 self.insert_start_point(start, station.walkingtime, route)
                 route.duration = route.duration + station.walkingtime
                 route.id = id
@@ -206,8 +217,10 @@ class Controller(object):
         # Step through stations to find a better one
         for station in station_list[:5]:
             # Calculate the time to walk to the given station
-            walk_time = self.get_walking_time(userpos, station.get_coords())
 
+            walk_route = self.get_walking_Route(userpos, station.get_coords())
+            walk_time = self.get_walking_time(walk_route)
+            station.walk_route = walk_route
             station.walkingtime = walk_time
 
             # For test only: Reduce walking time to get better results
@@ -222,6 +235,11 @@ class Controller(object):
             return best_station
         else:
             # No station is in range to walk to
+            # Do the walking search for the origin stop, when no better station was found
+            walk_route = self.get_walking_Route(userpos, route.origin_stop.get_coords())
+            walk_time = self.get_walking_time(walk_route)
+            route.origin_stop.walk_route = walk_route
+            route.origin_stop.walkingtime = walk_time
             return route.origin_stop
 
 
@@ -359,32 +377,30 @@ class Controller(object):
         data["routes"][0]["legs"][0]["duration"]["value"] = secondsOnly
         data["routes"][0]["legs"][0]["duration"]["text"] = text
 
-        return data
+        return data["routes"][0]["legs"][0]
 
 
-    def get_walking_time(self,origin, destination):
+    def get_walking_time(self,walking_route):
         """
-        Searches for a walking route and returns the time
-        :param origin: startposition
-        :param destination: destination
+        Searches for the walkingtime in the walking_route JSON and returns it
+        :param walking_route: the JSON returned by get_walking_Route
         :return: the walkingtime
         """
-        data = self.get_walking_Route(origin, destination)
-        seconds = data["routes"][0]["legs"][0]["duration"]["value"]
+
+
+        seconds = walking_route["duration"]["value"]
         return datetime.timedelta(0, seconds)  # days, seconds, then other fields.
 
 
-    def get_walking_coords(self,origin, destination):
+    def get_walking_coords(self,walking_route):
         """
         Searches for a walking route and returns the coordinates on this route from start to destination
-        :param origin: startposition
-        :param destination: destination
+        :param walking_route: the JSON returned by get_walking_Route
         :return: list of coords
         """
-        data = self.get_walking_Route(origin, destination)
 
         coords = []
-        for waypoint in data["routes"][0]["legs"][0]["steps"]:
+        for waypoint in walking_route["steps"]:
             from models import Coord
             coord = Coord(waypoint["start_location"]["lat"], waypoint["start_location"]["lng"])
             coords.append(coord)
