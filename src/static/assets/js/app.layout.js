@@ -25,6 +25,8 @@ var AppLayout = {
         });
 
         jQuery(document).on('AppSearch.after.routes', function () {
+            that.setMap();
+
             jQuery(that.element.routes).resize(function () {
                 that.setMap();
             });
