@@ -9,7 +9,7 @@ var AppError = {
         displayTime: 5000
     },
     add: function (message, displayTime) {
-        displayTime = typeof target !== 'undefined' ? displpay : this.duration.displayTime;
+        displayTime = typeof target !== 'undefined' ? display : this.duration.displayTime;
 
         jQuery(this.element.errors).find(this.element.error).find('span').text(message);
         jQuery(this.element.errors).find(this.element.error).fadeIn(this.duration.show);
@@ -19,7 +19,7 @@ var AppError = {
         }
     },
     show: function (id, displayTime) {
-        displayTime = typeof target !== 'undefined' ? displpay : this.duration.displayTime;
+        displayTime = typeof target !== 'undefined' ? display : this.duration.displayTime;
 
         jQuery(this.element.errors).find('.error').fadeOut(this.duration.hide);
         jQuery(this.element.errors).find('#error-' + id).fadeIn(this.duration.show);
