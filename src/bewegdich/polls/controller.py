@@ -15,6 +15,8 @@ from worker import SeachWorker, RoutesWorker
 from views import *
 from timer import Timer
 from variables import SPEED
+import xml.etree.ElementTree as ET
+from models import Coord
 TIMER = Timer()
 
 class Controller(object):
@@ -178,9 +180,9 @@ class Controller(object):
                     continue
                 if station.walkingtime != -1:
                     route.depature_time = route.depature_time - station.walkingtime
-                if route.origin_stop.stopid in self.walking_routes:
-                    route.walkingPath = self.get_walking_coords(self.walking_routes[ route.origin_stop.stopid])
-                else:
+                if route.origin_stop.stopid in self.walking_routes:  # if the walk was already calculated
+                    route.walkingPath = self.get_walking_coords(self.walking_routes[route.origin_stop.stopid])
+                else:  # else the walk has to be calculated
                     walking_route = self.get_walking_Route(start, route.origin_stop.get_coords())
                     route.walkingPath = self.get_walking_coords(walking_route)
                 self.insert_start_point(start, station.walkingtime, route)
@@ -218,6 +220,10 @@ class Controller(object):
             # Calculate the time to walk to the given station
 
             walk_route = self.get_walking_Route(userpos, station.get_coords())
+            duration = walk_route[1][0][0][0].text
+            if "M" not in duration:
+                print("BLUB")
+                pass
             walk_time = self.get_walking_time(walk_route)
             station.walk_route = walk_route
             station.walkingtime = walk_time
@@ -234,11 +240,15 @@ class Controller(object):
             return best_station
         else:
             # No station is in range to walk to
-            # Do the walking search for the origin stop, when no better station was found
-            walk_route = self.get_walking_Route(userpos, route.origin_stop.get_coords())
-            walk_time = self.get_walking_time(walk_route)
-            route.origin_stop.walk_route = walk_route
-            route.origin_stop.walkingtime = walk_time
+            if userpos == route.origin_stop.get_coords(): # User is right at the station
+                route.origin_stop.walk_route = []
+                route.origin_stop.walkingtime = datetime.timedelta(0, 0)
+            else:
+                # Do the walking search for the origin stop, when no better station was found
+                walk_route = self.get_walking_Route(userpos, route.origin_stop.get_coords())
+                walk_time = self.get_walking_time(walk_route)
+                route.origin_stop.walk_route = walk_route
+                route.origin_stop.walkingtime = walk_time
             return route.origin_stop
 
 
@@ -343,68 +353,63 @@ class Controller(object):
         else:
             return int(code)
 
-
-    def get_walking_Route(self,origin, destination):
+    def get_walking_Route(self, origin, destination):
         """
         Searches for a route to walk from A to B
         :param origin: startposition [lng,lat]
         :param destination: destination [lng,lat]
-        :return: a json
+        :return: a xml treeobject
         """
         if type(origin) != list or type(destination) != list:
             return -1
 
-        key = "AIzaSyBjJpvBA_6NUhTuWs9lAIZpaMUKdmkH4T0"
-
         param = {
-            'origin': str(origin[1]) + "," + str(origin[0]),
-            'destination': str(destination[1]) + "," + str(destination[0]),
-            'mode': 'walking',
-            'key': key
+            'start': str(origin[0]) + "," + str(origin[1]),
+            'end': str(destination[0]) + "," + str(destination[1]),
         }
-        url = "https://maps.googleapis.com/maps/api/directions/json?" + urllib1.urlencode(param)
-        data = self.get_json(url)
-
-        secondsOnly = data["routes"][0]["legs"][0]["duration"]["value"]
-
-        secondsOnly = secondsOnly * float(self.session[SPEED])
-
-        minutes = secondsOnly / 60
-        seconds = secondsOnly % 60
-
-        text = str(minutes) + ":" + str(seconds)
-
-        data["routes"][0]["legs"][0]["duration"]["value"] = secondsOnly
-        data["routes"][0]["legs"][0]["duration"]["text"] = text
-
-        return data["routes"][0]["legs"][0]
+        url = "http://www.openrouteservice.org/route?" \
+              + urllib1.urlencode(param) + "" \
+              "&via=&lang=de&distunit=KM&routepref=Pedestrian&weighting=Shortest&avoidAreas=&useTMC=false" \
+              "&noMotorways=false&noTollways=false&noUnpavedroads=false&noSteps=false&noFerries=false" \
+              "&instructions=false"
+        data = self.get_xml(url)
+        return data
 
 
     def get_walking_time(self,walking_route):
         """
-        Searches for the walkingtime in the walking_route JSON and returns it
-        :param walking_route: the JSON returned by get_walking_Route
+        Searches for the walkingtime in the walking_route XML and returns it
+        :param walking_route: the XML returned by get_walking_Route
         :return: the walkingtime
         """
+        duration = walking_route[1][0][0][0].text
+        if "M" not in duration:
+            print("ERROR: Time should not be zer o")
+            return datetime.timedelta(0, 0)
+        times = duration.split("M")
+        minutes = times[0][times[0].index("T")+1:]
+        seconds = times[1][:times[1].index("S")]
+        secondsonly = int(seconds + minutes) * 60
 
+        modified_secondsonly = secondsonly * float(self.session[SPEED])
 
-        seconds = walking_route["duration"]["value"]
-        return datetime.timedelta(0, seconds)  # days, seconds, then other fields.
+        return datetime.timedelta(0, modified_secondsonly)  # days, seconds, then other fields.
 
 
     def get_walking_coords(self,walking_route):
         """
         Searches for a walking route and returns the coordinates on this route from start to destination
-        :param walking_route: the JSON returned by get_walking_Route
+        :param walking_route: the XML returned by get_walking_Route
         :return: list of coords
         """
+        if walking_route == []:
+            return []
 
         coords = []
-        for waypoint in walking_route["steps"]:
-            from models import Coord
-            coord = Coord(waypoint["start_location"]["lat"], waypoint["start_location"]["lng"])
-            coords.append(coord)
 
+        for waypoint in walking_route[1][0][1][0]:
+            arr = waypoint.text.split(" ")
+            coords.append(Coord(arr[1],arr[0]))
         return coords
 
 
@@ -502,4 +507,14 @@ class Controller(object):
         """
         response = urllib.urlopen(url, timeout=10)
         return json.loads(response.read())
+
+    def get_xml(self,url):
+        """
+        Downloads the XML from the given URL and converts it into a tree object
+        :param url: the url
+        :return: a treeobject
+        """
+        response = urllib1.urlopen(url)
+        string = response.read()
+        return ET.fromstring(string)
 
