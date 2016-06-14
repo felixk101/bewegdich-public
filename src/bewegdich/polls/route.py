@@ -53,7 +53,7 @@ class Route(object):
         self.duration = datetime.timedelta(hours=int(arr[0]), minutes=int(arr[1]))
 
         # If its only one long walk don't list this route
-        if(len(self.path) == 0):
+        if len(self.path) == 0:
             return
 
         self.origin_stop = self.path[0]
@@ -81,7 +81,7 @@ class Route(object):
 
 
         #when No stations inbetween start and destination found
-        if(linelist.__len__()<3):
+        if linelist.__len__()<3:
             return []
 
         # Remove first and last item because its the originstop and destination stop
@@ -156,7 +156,7 @@ class Stop(object):
         return [self.lng,self.lat]
 
     def __str__(self):
-        if(self.depaturetime == 0): # If its the destination there is no depaturetime
+        if self.depaturetime == 0: # If its the destination there is no depaturetime
             return self.name
         else:
             return self.name + " " + self.depaturetime.time().__str__()
@@ -176,6 +176,6 @@ def formatDateTime(departuretime):
     else:
         time = datetime.datetime.strptime(departuretime, '%Y%m%d %H:%M')
 
-    if (type(time) == int):
+    if type(time) == int:
         print("ERROR: Timeconversion gone wrong")
     return time

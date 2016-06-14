@@ -21,7 +21,6 @@ def index(request):
 @csrf_exempt
 def login(request):
     logout(request)
-    username = password = ''
     if request.POST:
         username = codecs.encode(request.POST['username'], 'utf-8')
         password = codecs.encode(request.POST['password'], 'utf-8')
@@ -61,7 +60,7 @@ def stoplist(request):
         c = Controller(request.session)
         stoplist = c.get_stoplist(query, [longitude, latitude])
 
-        if (type(stoplist) == int):
+        if type(stoplist) == int:
             return JSONResponse({'error': "There was an error on search: " + str(stoplist)}, status=400)
 
         serializer = Efa_stop_list_serializer(stoplist)
@@ -105,7 +104,7 @@ def route(request):
         c = Controller(request.session)
         # Here we do the search for the optimized Route
         routes = c.get_optimized_routes([longitude, latitude], stopid)
-        if (type(routes) == int):
+        if type(routes) == int:
             return JSONResponse({'error': "There was an error on search: " + str(routes)}, status=400)
 
         serializer = RouteListSerializer(RouteList(routes))

@@ -55,7 +55,7 @@ class Usermeta(models.Model):
 #    route = models.ForeignKey(Route)
 
 @python_2_unicode_compatible  # only if you need to support Python 2
-class efaStop():
+class efaStop:
     data = ""
     value = -1
     quality = -1
@@ -68,7 +68,7 @@ class efaStop():
     def __str__(self):
         return self.value + " " + self.data
 
-class Coord():
+class Coord:
     latitude = 0
     longitude = 0
 

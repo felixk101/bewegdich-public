@@ -60,7 +60,7 @@ class Controller(object):
         min_radius = 15000  # 15 km
         for city in cities:
             dist = self.distance(city.long, city.lat, float(longitude), float(latitude))
-            if (dist < min_radius):
+            if dist < min_radius:
                 return city.cityname
         # throw error here
         return ''
@@ -77,9 +77,9 @@ class Controller(object):
         """
         city = self.closestCity(longitude, latitude)
 
-        if (city == 'Augsburg'):
+        if city == 'Augsburg':
             return "https://efa.avv-augsburg.de/avv/"
-        elif (city == 'Basel'):
+        elif city == 'Basel':
             return "http://www.efa-bvb.ch/bvb/"
 
         return ''
@@ -156,7 +156,7 @@ class Controller(object):
             worker.start()
 
         for tmpparameter in tmplist:
-            queue.put((tmpparameter))
+            queue.put(tmpparameter)
 
         queue.join()
         TIMER.printTimer("Find best routes")
@@ -250,6 +250,7 @@ class Controller(object):
 
         :param start: the startposition
         :param dest: the destination
+        :param time: -1 before setting
         :return: Stop
         """
 
@@ -262,7 +263,7 @@ class Controller(object):
 
 
         # If no time was set, take the current one
-        if (time == -1):
+        if time == -1:
             time = datetime.datetime.now()
 
         if type(routes) == int:
@@ -282,7 +283,7 @@ class Controller(object):
             worker.start()
 
         for tmproute in tmplist:
-            queue.put((tmproute))
+            queue.put(tmproute)
 
         queue.join()
 
@@ -413,6 +414,7 @@ class Controller(object):
         """
 
         Inserts the given point of the user into the path(List) variable of the given route as first stop
+        :param walktime: walking time from stop object
         :param start: in coordinates [lat,lng]
         :param route: the route-object
         :return: the route-object
@@ -446,8 +448,8 @@ class Controller(object):
         stops = []
 
         city = self.closestCity(coords[0], coords[1])
-        if (city == 'Augsburg'):
-            if ('message' in data["stopFinder"] and data["stopFinder"]["message"][1]["value"] == "stop invalid"):
+        if city == 'Augsburg':
+            if 'message' in data["stopFinder"] and data["stopFinder"]["message"][1]["value"] == "stop invalid":
                 print("No stop suggestions found ")
             elif len(data["stopFinder"]["points"]) == 1:  # One Result only must be handled differently, because of JSON
                 point = data["stopFinder"]["points"]["point"]
@@ -455,8 +457,8 @@ class Controller(object):
             else:
                 for point in data["stopFinder"]["points"]:
                     stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
-        elif (city == 'Basel'):
-            if ('message' in data and data['message'][1]["value"] == "stop invalid"):
+        elif city == 'Basel':
+            if 'message' in data and data['message'][1]["value"] == "stop invalid":
                 print("No stop suggestions found ")
             elif len(data["stopFinder"]) == 1:
                 point = data["stopFinder"]["point"]
@@ -478,7 +480,7 @@ class Controller(object):
         :param json:
         :return: 0= Everything okay; else the spesific errornumber
         """
-        if "trips" not in json or json["trips"] == None:
+        if "trips" not in json or json["trips"] is None:
             print("ERR: No timetable received")
             return 5
 

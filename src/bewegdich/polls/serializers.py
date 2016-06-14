@@ -82,7 +82,7 @@ class RouteSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class RouteList():
+class RouteList:
     """
         This Object is only needed to convert a list of routes into a JSON-Array
     """
