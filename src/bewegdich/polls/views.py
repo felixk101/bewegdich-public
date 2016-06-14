@@ -11,6 +11,8 @@ from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
 from serializers import StopSerializer, RouteListSerializer, RouteList
 
+SPEED = "speed"
+
 
 @csrf_exempt
 def index(request):
@@ -41,6 +43,7 @@ def stoplist(request):
     :param request:
     :return: a json
     """
+    initSession(request)
     if request.method == 'GET':
         if "query" not in request.GET:
             return JSONResponse({'error': "qurey not found"}, status=400)
@@ -82,6 +85,7 @@ def route(request):
     Example: http://127.0.0.1:8000/api/route/?latitude=48.35882&longitude=10.90529&stopid=2000100
 
     """
+    initSession(request)
     if request.method == 'GET':
         if "stopid" not in request.GET:
             return JSONResponse({'error': "stopid not found"}, status=400)
@@ -120,24 +124,32 @@ def route(request):
 @csrf_exempt
 def settings_speed(request):
     """
-    Searches for the best Routes including walking and returns it as json
-
-    Example: http://127.0.0.1:8000/api/route/?latitude=48.35882&longitude=10.90529&stopid=2000100
+    Sets or gets the current walkingspeed of the usersession
+    Example: http://127.0.0.1:8000/api/settings/speed/?value=1.5
 
     """
     if request.method == 'GET':
         return JSONResponse({
-            'value': 1,
+            'value': request.session[SPEED],
         })
 
     elif request.method == 'POST':
         if "value" not in request.POST:
             return JSONResponse({'error': "value not found"}, status=400)
 
+        request.session["speed"] = request.POST["value"]
         return JSONResponse({
-            'value': 1,
+            'value': request.session[SPEED],
         })
 
+def initSession(request):
+    """
+    If the user visits this page the first time, the walkingspeed will be set to 1.0
+    :param request:
+    :return:
+    """
+    if SPEED not in request.Session:
+        request.Session[SPEED] = 1.0
 
 class JSONResponse(HttpResponse):
     """

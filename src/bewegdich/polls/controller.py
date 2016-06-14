@@ -13,7 +13,7 @@ import time as t
 import Queue as Q
 from worker import SeachWorker, RoutesWorker
 from views import *
-
+from views import SPEED
 from timer import Timer
 TIMER = Timer()
 
@@ -349,7 +349,7 @@ class Controller(object):
 
         secondsOnly = data["routes"][0]["legs"][0]["duration"]["value"]
 
-        secondsOnly = secondsOnly * float(self.session["speed"])
+        secondsOnly = secondsOnly * float(self.session[SPEED])
 
         minutes = secondsOnly / 60
         seconds = secondsOnly % 60
@@ -427,7 +427,6 @@ class Controller(object):
         }
         url = self.getCityUrl(coords[0], coords[1]) + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
         data = self.get_json(url)
-        self.session["speed"] = 1.1
         stops = []
 
         city = self.closestCity(coords[0], coords[1])
