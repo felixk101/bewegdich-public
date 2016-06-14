@@ -357,16 +357,19 @@ class Controller(object):
         param = {
             'start': str(origin[0]) + "," + str(origin[1]),
             'end': str(destination[0]) + "," + str(destination[1]),
+            'via': '',
+            'lang': 'de',
             'distunit': 'KM',
             'routepref': 'Pedestrian',
             'weighting': 'Shortest',
+            'avoidAreas': '',
             'useTMC': 'false',
             'noMotorways': 'false',
             'noTollways': 'false',
             'noUnpavedroads': 'false',
             'noSteps': 'false',
-            'noFerries': 'false'
-
+            'noFerries': 'false',
+            'instructions': 'false'
         }
         url = "http://www.openrouteservice.org/route?" + urllib1.urlencode(param)
         data = self.get_xml(url)
