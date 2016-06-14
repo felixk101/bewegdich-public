@@ -10,7 +10,7 @@ var AppSearch = {
         var that = this;
 
         jQuery('#search #s').autocomplete({
-            serviceUrl: '/api/getStopList/',
+            serviceUrl: '/api/stoplist/',
             dataType: 'json',
             paramName: 'query',
             ajaxSettings: {
@@ -52,7 +52,7 @@ var AppSearch = {
         var that = this;
 
         jQuery.ajax({
-            url: '/api/getRoute/',
+            url: '/api/route/',
             xhr: AppAjax.progress,
             data: {
                 stopid: destination,
@@ -113,6 +113,10 @@ var AppSearch = {
             },
             error: function (e) {
                 that.statusDefault();
+
+                if (e.statusText == 'abort') {
+                    return;
+                }
 
                 AppError.show('request');
             }

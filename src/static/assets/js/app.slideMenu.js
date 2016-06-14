@@ -22,5 +22,9 @@ var AppSlideMenu = {
         jQuery('.snap-open-right').on('click', function () {
             that.snap.open('right');
         });
+
+        jQuery('.snap-close').on('click', function () {
+            that.snap.close();
+        });
     }
 };

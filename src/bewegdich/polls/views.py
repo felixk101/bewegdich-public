@@ -34,10 +34,10 @@ def login(request):
 
 
 @csrf_exempt
-def get_stoplist(request):
+def stoplist(request):
     """
      Returns a List of possible Stops which fit to the given name
-     e.g. http://127.0.0.1:8000/api/getStopList/?query=hauptbahnhof
+     e.g. http://127.0.0.1:8000/api/stopList/?query=hauptbahnhof
     :param request:
     :return: a json
     """
@@ -70,13 +70,16 @@ def get_stoplist(request):
         }
         return JSONResponse(json)
 
+    elif request.method == 'POST':
+        return JSONResponse({'error': "only get request supported"}, status=400)
+
 
 @csrf_exempt
-def get_route(request):
+def route(request):
     """
     Searches for the best Routes including walking and returns it as json
 
-    Example: http://127.0.0.1:8000/api/getRoute/?latitude=48.35882&longitude=10.90529&stopid=2000100
+    Example: http://127.0.0.1:8000/api/route/?latitude=48.35882&longitude=10.90529&stopid=2000100
 
     """
     if request.method == 'GET':
@@ -111,12 +114,29 @@ def get_route(request):
         })
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = StopSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JSONResponse(serializer.data, status=201)
-        return JSONResponse(serializer.errors, status=400)
+        return JSONResponse({'error': "only get request supported"}, status=400)
+
+
+@csrf_exempt
+def settings_speed(request):
+    """
+    Searches for the best Routes including walking and returns it as json
+
+    Example: http://127.0.0.1:8000/api/route/?latitude=48.35882&longitude=10.90529&stopid=2000100
+
+    """
+    if request.method == 'GET':
+        return JSONResponse({
+            'value': 1,
+        })
+
+    elif request.method == 'POST':
+        if "value" not in request.POST:
+            return JSONResponse({'error': "value not found"}, status=400)
+
+        return JSONResponse({
+            'value': 1,
+        })
 
 
 class JSONResponse(HttpResponse):

@@ -1,10 +1,11 @@
-<span>{{ section.menu.settings.title|default:"Settings" }}</span>
-
-<h4>Schrittgeschwindigkeit</h4>
-<form>
-  <input type="radio" name="speed" value="2"> Langsam (2 kmh)<br>
-  <input type="radio" name="speed" value="5" checked> Normal (5 kmh)<br>
-  <input type="radio" name="speed" value="8"> Schnell (8 kmh)<br>
-  <input type="submit" value="Anwenden">
-
-</form>
+<div class="col-xs-12">
+    <h3>{{ section.menu.settings.title|default:"Settings" }}<i class="snap-close fa fa-times pull-right"></i></h3>
+    <div class="form-group">
+        <label for="exampleInputEmail1">{{ section.menu.settings.speed.title|default:"Walking speed" }}</label>
+        <input id="setting-speed" type="text" name="speed"
+               data-slider-min="{{ section.menu.settings.speed.min|default:"0.1" }}"
+               data-slider-max="{{ section.menu.settings.speed.max|default:"2" }}"
+               data-slider-step="{{ section.menu.settings.speed.step|default:"0.1" }}"
+               data-slider-value="{{ section.menu.settings.speed.value|default:"1" }}"/>
+    </div>
+</div>
