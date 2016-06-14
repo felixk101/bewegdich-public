@@ -13,8 +13,8 @@ import time as t
 import Queue as Q
 from worker import SeachWorker, RoutesWorker
 from views import *
-from views import SPEED
 from timer import Timer
+from constants import SPEED
 TIMER = Timer()
 
 class Controller(object):
