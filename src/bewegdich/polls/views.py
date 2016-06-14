@@ -10,7 +10,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
 from serializers import StopSerializer, RouteListSerializer, RouteList
-from constants import SPEED
+from variables import SPEED
 
 
 @csrf_exempt
