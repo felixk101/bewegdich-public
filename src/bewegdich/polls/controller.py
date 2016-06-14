@@ -17,11 +17,12 @@ from timer import Timer
 from variables import SPEED
 import xml.etree.ElementTree as ET
 from models import Coord
+
 TIMER = Timer()
 
-class Controller(object):
 
-    def __init__(self,session):
+class Controller(object):
+    def __init__(self, session):
         # Saves the session object of one user
         self.session = session
 
@@ -42,7 +43,6 @@ class Controller(object):
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
         d = r * c
         return d * 1000  # meters
-
 
     def closestCity(self, longitude, latitude):
         """
@@ -67,7 +67,6 @@ class Controller(object):
         # throw error here
         return ''
 
-
     def getCityUrl(self, longitude, latitude):
         """
         Returns the city url
@@ -86,7 +85,6 @@ class Controller(object):
 
         return ''
 
-
     """
      get user position
      get destination position
@@ -102,7 +100,6 @@ class Controller(object):
 
     # Returns the best Route
     """
-
 
     def get_optimized_routes(self, start, dest, time=-1):
         """
@@ -132,7 +129,6 @@ class Controller(object):
         for station in startstations:
             self.walking_routes[station.stopid] = station.walk_route
 
-
         routes = []
         id = 0
 
@@ -151,7 +147,7 @@ class Controller(object):
 
         # Create worker threads
         for x in range(8):
-            worker = RoutesWorker(queue, resultlist,self)
+            worker = RoutesWorker(queue, resultlist, self)
             # Setting daemon to True will let the main thread exit even though the workers are blocking
             worker.daemon = True
             worker.start()
@@ -194,7 +190,6 @@ class Controller(object):
         routes = sorted(routes, key=lambda route: route.depature_time)
         TIMER.printTimer("Whole search")
         return routes
-
 
     def find_best_station(self, parameters):
         """
@@ -240,7 +235,7 @@ class Controller(object):
             return best_station
         else:
             # No station is in range to walk to
-            if userpos == route.origin_stop.get_coords(): # User is right at the station
+            if userpos == route.origin_stop.get_coords():  # User is right at the station
                 route.origin_stop.walk_route = []
                 route.origin_stop.walkingtime = datetime.timedelta(0, 0)
             else:
@@ -250,7 +245,6 @@ class Controller(object):
                 route.origin_stop.walk_route = walk_route
                 route.origin_stop.walkingtime = walk_time
             return route.origin_stop
-
 
     def find_startstations(self, start, dest, time=-1):
         """
@@ -269,8 +263,6 @@ class Controller(object):
         TIMER.start("find_startstations")
         routes = self.get_routes(userpos, destpos, time)
 
-
-
         # If no time was set, take the current one
         if time == -1:
             time = datetime.datetime.now()
@@ -286,7 +278,7 @@ class Controller(object):
         resultlist = []
         # Create worker threads
         for x in range(8):
-            worker = SeachWorker(queue, resultlist,self)
+            worker = SeachWorker(queue, resultlist, self)
             # Setting daemon to True will let the main thread exit even though the workers are blocking
             worker.daemon = True
             worker.start()
@@ -298,7 +290,7 @@ class Controller(object):
 
         startstations = []
         for result in resultlist:
-            if result != -1: # Remove walkonly routes
+            if result != -1:  # Remove walkonly routes
                 startstations.append(result)
 
         for station in startstations:
@@ -306,7 +298,6 @@ class Controller(object):
                 print("ERROR: Walking time shouldn't be -1")
         TIMER.printTimer("find_startstations")
         return startstations
-
 
     def get_routes(self, start, dest, dtime=-1):
         """
@@ -366,17 +357,22 @@ class Controller(object):
         param = {
             'start': str(origin[0]) + "," + str(origin[1]),
             'end': str(destination[0]) + "," + str(destination[1]),
+            'distunit': 'KM',
+            'routepref': 'Pedestrian',
+            'weighting': 'Shortest',
+            'useTMC': 'false',
+            'noMotorways': 'false',
+            'noTollways': 'false',
+            'noUnpavedroads': 'false',
+            'noSteps': 'false',
+            'noFerries': 'false'
+
         }
-        url = "http://www.openrouteservice.org/route?" \
-              + urllib1.urlencode(param) + "" \
-              "&via=&lang=de&distunit=KM&routepref=Pedestrian&weighting=Shortest&avoidAreas=&useTMC=false" \
-              "&noMotorways=false&noTollways=false&noUnpavedroads=false&noSteps=false&noFerries=false" \
-              "&instructions=false"
+        url = "http://www.openrouteservice.org/route?" + urllib1.urlencode(param)
         data = self.get_xml(url)
         return data
 
-
-    def get_walking_time(self,walking_route):
+    def get_walking_time(self, walking_route):
         """
         Searches for the walkingtime in the walking_route XML and returns it
         :param walking_route: the XML returned by get_walking_Route
@@ -387,7 +383,7 @@ class Controller(object):
             print("ERROR: Time should not be zer o")
             return datetime.timedelta(0, 0)
         times = duration.split("M")
-        minutes = times[0][times[0].index("T")+1:]
+        minutes = times[0][times[0].index("T") + 1:]
         seconds = times[1][:times[1].index("S")]
         secondsonly = int(seconds + minutes) * 60
 
@@ -395,8 +391,7 @@ class Controller(object):
 
         return datetime.timedelta(0, modified_secondsonly)  # days, seconds, then other fields.
 
-
-    def get_walking_coords(self,walking_route):
+    def get_walking_coords(self, walking_route):
         """
         Searches for a walking route and returns the coordinates on this route from start to destination
         :param walking_route: the XML returned by get_walking_Route
@@ -409,12 +404,11 @@ class Controller(object):
 
         for waypoint in walking_route[1][0][1][0]:
             arr = waypoint.text.split(" ")
-            coords.append(Coord(arr[1],arr[0]))
+            coords.append(Coord(arr[1], arr[0]))
         return coords
 
-
     # Insert a new startpoint where the route should begin
-    def insert_start_point(self,start, walktime, route):
+    def insert_start_point(self, start, walktime, route):
         """
 
         Inserts the given point of the user into the path(List) variable of the given route as first stop
@@ -429,8 +423,7 @@ class Controller(object):
         route.path.insert(0, stop)
         return route
 
-
-    def get_stoplist(self,place, coords):
+    def get_stoplist(self, place, coords):
         """
             Searches for the closes matching stops with the same name as the given one.
         :param place: the first few letters of the desired stop
@@ -474,8 +467,7 @@ class Controller(object):
         stops = sorted(stops, reverse=True, key=lambda efaStop: efaStop.quality)
         return stops
 
-
-    def checkValidJson(self,json):
+    def checkValidJson(self, json):
         """
             Check the json for common errors like:
                 - No json at all
@@ -498,8 +490,7 @@ class Controller(object):
 
         return 0
 
-
-    def get_json(self,url):
+    def get_json(self, url):
         """
         Downloads the json from the given URL and converts it into a json object
         :param url: the url
@@ -508,7 +499,7 @@ class Controller(object):
         response = urllib.urlopen(url, timeout=10)
         return json.loads(response.read())
 
-    def get_xml(self,url):
+    def get_xml(self, url):
         """
         Downloads the XML from the given URL and converts it into a tree object
         :param url: the url
@@ -517,4 +508,3 @@ class Controller(object):
         response = urllib1.urlopen(url)
         string = response.read()
         return ET.fromstring(string)
-
