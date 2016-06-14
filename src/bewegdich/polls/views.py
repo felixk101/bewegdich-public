@@ -147,8 +147,8 @@ def initSession(request):
     :param request:
     :return:
     """
-    if SPEED not in request.Session:
-        request.Session[SPEED] = 1.0
+    if SPEED not in request.session:
+        request.session[SPEED] = 1.0
 
 class JSONResponse(HttpResponse):
     """

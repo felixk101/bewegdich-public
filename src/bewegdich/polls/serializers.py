@@ -9,6 +9,7 @@ class StopSerializer(serializers.Serializer):
     lng = serializers.CharField(required=True, allow_blank=False, max_length=10)
     depaturetime = serializers.DateTimeField(required=False)
     walkingtime = serializers.DurationField(required=False)
+    stopid = serializers.CharField(required=True, allow_blank=False, max_length=10)
 
     def create(self, validated_data):
         """
@@ -25,6 +26,8 @@ class StopSerializer(serializers.Serializer):
         instance.lng = validated_data.get('lng', instance.lng)
         instance.depaturetime = validated_data.get('depaturetime', instance.depaturetime)
         instance.walkingtime = validated_data.get('walkingtime', instance.walkingtime)
+        instance.stopid = validated_data.get('stopid', instance.stopid)
+
         instance.save()
         return instance
 

@@ -110,6 +110,7 @@ class Stop(object):
     depaturetime = 0 #Defines the time the spesific Vehicle(Bus/Train) leaves this stop; 0 when walk
     walkingtime = datetime.timedelta(0,0) #Defines the walking time from this Stop to the next one
     isWalking = 0
+    stopid = -1
 
     def __init__(self, name, lat, lng, isWalking=0):
         """
@@ -143,6 +144,7 @@ class Stop(object):
         lng = coords[0]
         stop = Stop(name, lat, lng)
         stop.data = data
+        stop.stopid = json["ref"]["id"]
 
         if "dateTime" in json:
             stop.depaturetime = formatDateTime(json["dateTime"])
