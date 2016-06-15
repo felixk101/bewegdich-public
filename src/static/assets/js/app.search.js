@@ -10,6 +10,7 @@ var AppSearch = {
         loading: 'loading',
         disabled: 'disabled'
     },
+    statusCurrent: null,
     init: function () {
         var that = this;
 
@@ -42,7 +43,15 @@ var AppSearch = {
         var that = this;
 
         jQuery(document).on('AppLocation.after.error', function (event, e) {
+            that.statusCurrent = 'disabled';
             that.statusDisabled();
+        });
+
+        jQuery(document).on('AppLocation.after.PositionSet', function (event, position) {
+            if (that.statusCurrent == 'disabled') {
+                that.statusCurrent = null;
+                that.statusDefault();
+            }
         });
 
         jQuery(document).on('App.destination.selected', function (event, suggestion) {
