@@ -103,7 +103,7 @@ class Controller(object):
 
     def get_optimized_routes(self, start, dest, time=-1):
         """
-        Finds the perfect Route with walking opmimazation included
+        Finds the perfect Route with walking optimization included
 
         :rtype: Route
         :param start: (Coordinates) the startposition where the user currently is
@@ -194,7 +194,7 @@ class Controller(object):
     def find_best_station(self, parameters):
         """
             Optimized for parallel running
-            This functions searches in the given route for that farest station to walk to and still catch the same bus
+            This functions searches in the given route for the furthest station to walk to and still catch the same bus
 
         :param parameters: a list with the parameters route userpos time
         :return: the best station
