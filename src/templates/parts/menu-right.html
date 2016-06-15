@@ -1,7 +1,7 @@
 <div class="col-xs-12">
-    <h3>{{ section.menu.settings.title|default:"Settings" }}<i class="snap-close fa fa-times pull-right"></i></h3>
+    <h3>{% trans "Settings" %}<i class="snap-close fa fa-times pull-right"></i></h3>
     <div class="form-group">
-        <label for="exampleInputEmail1">{{ section.menu.settings.speed.title|default:"Walking speed" }}</label>
+        <label for="exampleInputEmail1">{% trans "Walking speed" %}</label>
         <input id="setting-speed" type="text" name="speed"
                data-slider-min="{{ section.menu.settings.speed.min|default:"0.1" }}"
                data-slider-max="{{ section.menu.settings.speed.max|default:"2" }}"
