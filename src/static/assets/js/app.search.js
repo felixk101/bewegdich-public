@@ -6,6 +6,10 @@ var AppSearch = {
     element: {
         field: '#search .search-field'
     },
+    status: {
+        loading: 'loading',
+        disabled: 'disabled'
+    },
     init: function () {
         var that = this;
 
@@ -36,6 +40,10 @@ var AppSearch = {
     },
     hooks: function () {
         var that = this;
+
+        jQuery(document).on('AppLocation.after.error', function (event, e) {
+            that.statusDisabled();
+        });
 
         jQuery(document).on('App.destination.selected', function (event, suggestion) {
             that.getRoute(suggestion.data);
@@ -122,12 +130,24 @@ var AppSearch = {
             }
         });
     },
-    statusLoading: function () {
-        jQuery(this.element.field).addClass('loading');
-        jQuery(this.element.field).find('input').prop('disabled', true);
+    getStatuses: function () {
+        var statuses = [];
+        jQuery.each(this.status, function (key, value) {
+            statuses.push(value);
+        });
+
+        return statuses;
     },
     statusDefault: function () {
-        jQuery(this.element.field).removeClass('loading');
+        jQuery(this.element.field).removeClass(this.getStatuses().join(' '));
         jQuery(this.element.field).find('input').prop('disabled', false);
+    },
+    statusLoading: function () {
+        jQuery(this.element.field).removeClass(this.getStatuses().join(' ')).addClass(this.status.loading);
+        jQuery(this.element.field).find('input').prop('disabled', true);
+    },
+    statusDisabled: function () {
+        jQuery(this.element.field).removeClass(this.getStatuses().join(' ')).addClass(this.status.disabled);
+        jQuery(this.element.field).find('input').prop('disabled', true);
     }
 };

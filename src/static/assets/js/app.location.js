@@ -31,6 +31,8 @@ var AppLocation = {
         jQuery(document).trigger('AppLocation.after.PositionSet', [AppLocation.position]);
     },
     error: function (e) {
+        jQuery(document).trigger('AppLocation.before.error', [e]);
+
         switch (e.code) {
             case e.PERMISSION_DENIED:
                 AppError.show('location-denied', 0);
@@ -49,5 +51,6 @@ var AppLocation = {
                 break;
         }
 
+        jQuery(document).trigger('AppLocation.after.error', [e]);
     }
 };

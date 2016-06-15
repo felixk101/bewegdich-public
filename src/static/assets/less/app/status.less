@@ -1,5 +1,8 @@
-.status-loading {
-  display: none;
+.status- {
+  &loading,
+  &disabled {
+    display: none;
+  }
 }
 
 .loading {
@@ -8,6 +11,16 @@
   }
 
   .status-loading {
+    display: inline-block;
+  }
+}
+
+.disabled {
+  .status-default {
+    display: none;
+  }
+
+  .status-disabled {
     display: inline-block;
   }
 }
