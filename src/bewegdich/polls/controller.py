@@ -22,6 +22,22 @@ TIMER = Timer()
 
 
 class Controller(object):
+    """
+        get user position
+        get destination position
+        calculate fastest route from start to destination
+        filter start station, final stop (direction) and departure times of route
+        get next (e.g. 5) stops in driving direction
+        get departure times for these stops
+        calculate walking time between user position and these stops
+        compare walking time and departure times
+        go over these stops:
+            if current time + walking time < departure time
+               set this stop as starting point
+
+       # Returns the best Route
+    """
+
     def __init__(self, session):
         # Saves the session object of one user
         self.session = session
@@ -85,25 +101,16 @@ class Controller(object):
 
         return ''
 
-    """
-     get user position
-     get destination position
-     calculate fastest route from start to destination
-     filter start station, final stop (direction) and departure times of route
-     get next (e.g. 5) stops in driving direction
-     get departure times for these stops
-     calculate walking time between user position and these stops
-     compare walking time and departure times
-     go over these stops:
-         if current time + walking time < departure time
-            set this stop as starting point
-
-    # Returns the best Route
-    """
-
     def get_optimized_routes(self, start, dest, time=-1):
         """
-        Finds the perfect Route with walking optimization included
+        The main function of the Controller.
+        At first it will ask the EFA-API for their routes. These routes are optimized to
+        contain a minimum of walking time.
+        Each station in every route will now be analysed. Depending on the time the user would have
+        to walk to this specific station, the best stations will be saved. Each route has its own best station.
+        At worst this is the startstation the EFA-API already returned on the first place.
+        Finally these best stations will each be given to the EFA-API again to get a list of routes which
+        contains a better amount of walking. These routes will be filtered(e.g. same Line) and returned
 
         :rtype: Route
         :param start: (Coordinates) the startposition where the user currently is

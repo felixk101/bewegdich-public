@@ -161,6 +161,14 @@ class Stop(object):
         else:
             return self.name + " " + self.depaturetime.time().__str__()
 
+    def __eq__(self, other):
+        return (isinstance(other, self.__class__) and self.lng == other.lng
+                and self.lat == other.lat
+                and self.isWalking == other.isWalking
+                and self.lng == other.lng
+                and self.name == other.name
+                )
+
 
 def formatDateTime(departuretime):
     """
