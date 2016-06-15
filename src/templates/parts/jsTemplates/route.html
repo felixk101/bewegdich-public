@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <script type="text/html" id="template-route">
     <div class="route panel panel-default" data-template-bind='[
         {"attribute": "id", "value": "panelId"},
@@ -18,10 +20,10 @@
             <div class="panel-body">
                 <ul class="detail">
                     <li><i class="fa fa-clock-o"></i>
-                        <span>{% trans "Duration" %}:</span> <span
+                        <span>{% trans "Duration:" %}</span> <span
                                 data-content="duration"></span></li>
                     <li><i class="fa fa-subway"></i>
-                        <span>{% trans "Line" %}:</span> <span
+                        <span>{% trans "Line:" %}</span> <span
                                 data-content="line"></span></li>
                 </ul>
                 <ul class="stop-path list-group"></ul>
