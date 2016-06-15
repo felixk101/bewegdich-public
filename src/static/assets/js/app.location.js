@@ -28,6 +28,9 @@ var AppLocation = {
         AppLocation.position.longitude = position.coords.longitude;
         AppLocation.position.latitude = position.coords.latitude;
 
+        AppError.hide('location-denied');
+        AppError.hide('location-unavailable');
+
         jQuery(document).trigger('AppLocation.after.PositionSet', [AppLocation.position]);
     },
     error: function (e) {
