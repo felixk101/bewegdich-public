@@ -19,9 +19,9 @@ var AppError = {
         }
     },
     show: function (id, displayTime) {
-        displayTime = typeof target !== 'undefined' ? display : this.duration.displayTime;
+        displayTime = typeof displayTime !== 'undefined' ? displayTime : this.duration.displayTime;
 
-        jQuery(this.element.errors).find('.error').fadeOut(this.duration.hide);
+        jQuery(this.element.errors).find('.error').not('#error-' + id).fadeOut(this.duration.hide);
         jQuery(this.element.errors).find('#error-' + id).fadeIn(this.duration.show);
 
         if (displayTime > 0) {
