@@ -151,6 +151,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = [
+    os.path.abspath(os.path.join(os.path.split(__file__)[0], '..', '..', 'languages'))
+]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
