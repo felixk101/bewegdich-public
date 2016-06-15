@@ -18,14 +18,14 @@
             <div class="panel-body">
                 <ul class="detail">
                     <li><i class="fa fa-clock-o"></i>
-                        <span>{{ section.route.detail.duration|default:"Duration" }}:</span> <span
+                        <span>{% trans "Duration" %}:</span> <span
                                 data-content="duration"></span></li>
                     <li><i class="fa fa-subway"></i>
-                        <span>{{ section.route.detail.line|default:"Line" }}:</span> <span
+                        <span>{% trans "Line" %}:</span> <span
                                 data-content="line"></span></li>
                 </ul>
                 <ul class="stop-path list-group"></ul>
-                <button class="route-select btn btn-primary">{{ section.route.detail.select|default:"Select" }}</button>
+                <button class="route-select btn btn-primary">{% trans "Select" %}</button>
             </div>
         </div>
     </div>
