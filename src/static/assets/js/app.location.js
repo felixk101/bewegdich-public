@@ -23,7 +23,7 @@ var AppLocation = {
         }
     },
     set: function (position) {
-        jQuery(document).trigger('AppLocation.before.PositionSet');
+        jQuery(document).trigger('AppLocation.before.PositionSet', [AppLocation.position]);
 
         AppLocation.position.longitude = position.coords.longitude;
         AppLocation.position.latitude = position.coords.latitude;
