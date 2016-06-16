@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from controller import Controller
+from location import Location
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
@@ -16,12 +17,11 @@ from models import Coord
 
 @csrf_exempt
 def index(request):
-    if LOCATION not in request.session:
-        ip = request.META["REMOTE_ADDR"]
-        c = Controller(request.session)
-        coord = c.get_ip_location(ip)
-        request.session[LOCATION] = coord
-    return render(request, 'index.html')
+    return render(request, 'index.html', {
+        'section': {
+            'location': get_location()
+        }
+    })
 
 
 @csrf_exempt
