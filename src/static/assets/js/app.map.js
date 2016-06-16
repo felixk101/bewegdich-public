@@ -95,6 +95,10 @@ var AppMap = {
             that.setMarker(position, 'stop');
         });
 
+        jQuery(document).on('App.destination.selected', function () {
+            that.resetRoute();
+        });
+
         jQuery(document).on('AppSearch.routes.path', function (event, walkingpath) {
             that.setRoute(walkingpath);
         });
@@ -158,5 +162,14 @@ var AppMap = {
         that.polylines = L.polyline(route).addTo(that.map);
         that.bounds = that.polylines.getBounds();
         that.map.fitBounds(that.bounds);
+    },
+    resetRoute: function () {
+        var that = this;
+
+        if (that.polylines) {
+            that.map.removeLayer(that.polylines);
+        }
+
+        that.bounds = null;
     }
 };
