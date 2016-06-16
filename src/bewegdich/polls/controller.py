@@ -500,6 +500,21 @@ class Controller(object):
 
         return 0
 
+    def get_ip_location(self,ip):
+        """
+        Looks up the location of the given IP-adress and returns the coords
+        :param ip: as string
+        :return: Coord-object
+        """
+        if ip.count(".") != 3:
+            print("Error: Not a valid IP-Adress (" +ip +")")
+
+        xml = self.get_xml("http://freegeoip.net/xml/" + ip)
+        if len(xml) <9:
+            print("Error: IP-Location could not be found (" + ip + ")")
+            return Coord(0,0)
+        return Coord(xml[8].text,xml[9].text)
+
     def get_json(self, url):
         """
         Downloads the json from the given URL and converts it into a json object
@@ -518,3 +533,4 @@ class Controller(object):
         response = urllib1.urlopen(url)
         string = response.read()
         return ET.fromstring(string)
+

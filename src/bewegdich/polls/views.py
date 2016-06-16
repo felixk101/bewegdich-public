@@ -10,11 +10,17 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
 from serializers import StopSerializer, RouteListSerializer, RouteList
-from variables import SPEED
+from variables import SPEED, LOCATION
+from models import Coord
 
 
 @csrf_exempt
 def index(request):
+    if LOCATION not in request.session:
+        ip = request.META["REMOTE_ADDR"]
+        c = Controller(request.session)
+        coord = c.get_ip_location(ip)
+        request.session[LOCATION] = coord
     return render(request, 'index.html')
 
 
@@ -58,6 +64,9 @@ def stoplist(request):
         if float(latitude) < 0:
             latitude = str(360 + float(latitude))
         c = Controller(request.session)
+        # Sets the location of the user for further requests
+        request.session[LOCATION] = Coord(latitude, longitude)
+
         stoplist = c.get_stoplist(query, [longitude, latitude])
 
         if type(stoplist) == int:
@@ -100,7 +109,7 @@ def route(request):
             longitude = str(360 + float(longitude))
         if float(latitude) < 0:
             latitude = str(360 + float(latitude))
-
+        request.session[LOCATION] = Coord(latitude, longitude)
         c = Controller(request.session)
         # Here we do the search for the optimized Route
         routes = c.get_optimized_routes([longitude, latitude], stopid)

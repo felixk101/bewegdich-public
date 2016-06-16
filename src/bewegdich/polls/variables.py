@@ -3,4 +3,7 @@ This file contains all variables and constants which are the same for every user
 
 """
 
-SPEED = "speed"
+#Keys for the usersession object
+
+SPEED = "speed" #  The wakling speed of the user
+LOCATION = "ip_location" #  The coordinates of the user
