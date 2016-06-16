@@ -4,8 +4,8 @@ jQuery(document).ready(function () {
 
 var AppLocation = {
     position: {
-        longitude: 0,
-        latitude: 0
+        longitude: jQuery('body').data('longitude'),
+        latitude: jQuery('body').data('latitude'),
     },
     init: function () {
         var that = this;

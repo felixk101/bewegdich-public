@@ -3,7 +3,8 @@
 <head>
     {% include "parts/head.html" %}
 </head>
-<body>
+<body data-longitude="{{ section.location.longitude|default:"0" }}"
+      data-latitude="{{ section.location.latitude|default:"0" }}">
 <div class="snap-drawers">
     <div class="snap-drawer snap-drawer-left">
         {% include "parts/menu-left.html" %}
