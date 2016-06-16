@@ -6,13 +6,14 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from controller import Controller
-from location import Location
+import location as loc
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
 from serializers import StopSerializer, RouteListSerializer, RouteList
 from variables import SPEED, LOCATION
 from models import Coord
+from location import get_location,set_location
 
 
 @csrf_exempt
@@ -20,7 +21,7 @@ def index(request):
     return render(request, 'index.html', {
         'section': {
             'title': 'Beweg Dich',
-            'location': get_location(),
+            'location': loc.get_location(request),
             'settings': {
                 'speed': {
                     'min': 0.1,
@@ -31,22 +32,6 @@ def index(request):
             }
         }
     })
-
-
-@csrf_exempt
-def login(request):
-    logout(request)
-    if request.POST:
-        username = codecs.encode(request.POST['username'], 'utf-8')
-        password = codecs.encode(request.POST['password'], 'utf-8')
-
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect('/form/')
-    return render_to_response('login.html', context_instance=RequestContext(request))
-
 
 @csrf_exempt
 def stoplist(request):
@@ -74,7 +59,7 @@ def stoplist(request):
             latitude = str(360 + float(latitude))
         c = Controller(request.session)
         # Sets the location of the user for further requests
-        request.session[LOCATION] = Coord(latitude, longitude)
+        loc.set_location(request,Coord(latitude, longitude))
 
         stoplist = c.get_stoplist(query, [longitude, latitude])
 
@@ -118,7 +103,7 @@ def route(request):
             longitude = str(360 + float(longitude))
         if float(latitude) < 0:
             latitude = str(360 + float(latitude))
-        request.session[LOCATION] = Coord(latitude, longitude)
+        loc.set_location(request, Coord(latitude, longitude))
         c = Controller(request.session)
         # Here we do the search for the optimized Route
         routes = c.get_optimized_routes([longitude, latitude], stopid)

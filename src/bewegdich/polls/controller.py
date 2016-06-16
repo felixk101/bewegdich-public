@@ -338,7 +338,7 @@ class Controller(object):
             })
 
         url = self.getCityUrl(lon, lat) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
-        data = self.get_json(url)
+        data = get_json(url)
         code = self.checkValidJson(data)
         if code == 0:
             routes = []
@@ -379,7 +379,7 @@ class Controller(object):
             'instructions': 'false'
         }
         url = "http://www.openrouteservice.org/route?" + urllib1.urlencode(param)
-        data = self.get_xml(url)
+        data = get_xml(url)
         return data
 
     def get_walking_time(self, walking_route):
@@ -451,7 +451,7 @@ class Controller(object):
             'name_sf': place
         }
         url = self.getCityUrl(coords[0], coords[1]) + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
-        data = self.get_json(url)
+        data = get_json(url)
         stops = []
 
         city = self.closestCity(coords[0], coords[1])
@@ -500,22 +500,22 @@ class Controller(object):
 
         return 0
 
-    def get_json(self, url):
-        """
-        Downloads the json from the given URL and converts it into a json object
-        :param url: the url
-        :return: a json
-        """
-        response = urllib.urlopen(url, timeout=10)
-        return json.loads(response.read())
+def get_json(url):
+    """
+    Downloads the json from the given URL and converts it into a json object
+    :param url: the url
+    :return: a json
+    """
+    response = urllib.urlopen(url, timeout=10)
+    return json.loads(response.read())
 
-    def get_xml(self, url):
-        """
-        Downloads the XML from the given URL and converts it into a tree object
-        :param url: the url
-        :return: a treeobject
-        """
-        response = urllib1.urlopen(url)
-        string = response.read()
-        return ET.fromstring(string)
+def get_xml(url):
+    """
+    Downloads the XML from the given URL and converts it into a tree object
+    :param url: the url
+    :return: a treeobject
+    """
+    response = urllib1.urlopen(url)
+    string = response.read()
+    return ET.fromstring(string)
 
