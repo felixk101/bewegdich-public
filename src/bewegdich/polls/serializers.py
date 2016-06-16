@@ -38,7 +38,6 @@ class CoordSerializer(serializers.Serializer):
     latitude = serializers.CharField(required=True, allow_blank=False, max_length=10)
     longitude = serializers.CharField(required=True, allow_blank=False, max_length=10)
 
-
     def create(self, validated_data):
         """
         Create and return a new `Snippet` instance, given the validated data.
