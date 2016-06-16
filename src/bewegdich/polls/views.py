@@ -19,7 +19,16 @@ from models import Coord
 def index(request):
     return render(request, 'index.html', {
         'section': {
-            'location': get_location()
+            'title': 'Beweg Dich',
+            'location': get_location(),
+            'settings': {
+                'speed': {
+                    'min': 0.1,
+                    'max': 2,
+                    'step': 0.1,
+                    'value': 1
+                }
+            }
         }
     })
 
@@ -149,6 +158,7 @@ def settings_speed(request):
             'value': request.session[SPEED],
         })
 
+
 def initSession(request):
     """
     If the user visits this page the first time, the walkingspeed will be set to 1.0
@@ -157,6 +167,7 @@ def initSession(request):
     """
     if SPEED not in request.session:
         request.session[SPEED] = 1.0
+
 
 class JSONResponse(HttpResponse):
     """
