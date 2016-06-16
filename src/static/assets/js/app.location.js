@@ -4,11 +4,16 @@ jQuery(document).ready(function () {
 
 var AppLocation = {
     position: {
-        longitude: jQuery('body').data('longitude'),
-        latitude: jQuery('body').data('latitude'),
+        longitude: 0,
+        latitude: 0,
     },
     init: function () {
         var that = this;
+
+        that.position = {
+            longitude: jQuery('body').data('longitude'),
+            latitude: jQuery('body').data('latitude')
+        };
 
         that.get();
         window.setInterval(function () {
