@@ -133,3 +133,7 @@ class Efa_stop_serializer(serializers.Serializer):
 
 class Efa_stop_list_serializer(serializers.ListSerializer):
     child = Efa_stop_serializer()
+
+
+class Walkingpath_serializer(serializers.ListSerializer):
+    child = CoordSerializer()
