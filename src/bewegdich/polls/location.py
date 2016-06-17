@@ -13,10 +13,12 @@ def get_location(request):
             position = get_ip_location(request.META["REMOTE_ADDR"])
             set_location(request,position)
 
-    return request.session[LOCATION]
+    # return request.session[LOCATION]
+    return Coord(48,11)
 
 def set_location(request, position):
-    request.session[LOCATION] = position
+    #
+    request.session[LOCATION] = [position.latitude,position.longitude]
 
 def get_ip_location(ip):
     """
