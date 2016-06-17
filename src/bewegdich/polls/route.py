@@ -112,7 +112,7 @@ class Stop(object):
     isWalking = 0
     stopid = -1
 
-    def __init__(self, name, lat, lng, isWalking=0):
+    def __init__(self, name, lat, lng, stopid=-1, depaturetime=0, walkingtime=datetime.timedelta(0,0),isWalking=0):
         """
 
         :param name: the name of the stop
@@ -125,6 +125,9 @@ class Stop(object):
         self.lat = lat
         self.lng = lng
         self.isWalking = isWalking
+        self.stopid = stopid
+        self.walkingtime = walkingtime
+        self.depaturetime = depaturetime
 
 
 

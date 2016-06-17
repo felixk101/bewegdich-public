@@ -68,6 +68,9 @@ class efaStop:
     def __str__(self):
         return self.value + " " + self.data
 
+    def __repr__(self):
+        return self.__str__()
+
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
                 and self.data == other.data
@@ -83,7 +86,10 @@ class Coord:
         self.longitude = lng
 
     def __str__(self):
-        print self.latitude + ","+ self.longitude
+        print str(self.latitude) + ","+ str(self.longitude)
+
+    def __repr__(self):
+        return "Coord: " + self.latitude + ", " + self.longitude
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
