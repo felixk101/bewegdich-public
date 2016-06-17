@@ -277,14 +277,23 @@ class Controller(object):
         if "M" not in duration:
             print("ERROR: Time should not be zer o")
             return datetime.timedelta(0, 0)
-        times = duration.split("M")
-        minutes = times[0][times[0].index("T") + 1:]
-        seconds = times[1][:times[1].index("S")]
-        secondsonly = int(seconds + minutes) * 60
+        try:
+            times = duration.split("M")
+            secondsonly = 0
+            if times[0] != '':
+                minutes = times[0][times[0].index("T") + 1:]
+                secondsonly += int(minutes) * 60
+            if times[1] != '':
+                seconds = times[1][:times[1].index("S")]
+                secondsonly += int(seconds)
 
-        modified_secondsonly = secondsonly * float(self.session[SPEED])
+            modified_secondsonly = secondsonly / float(self.session[SPEED])
 
-        return datetime.timedelta(0, modified_secondsonly)  # days, seconds, then other fields.
+            return datetime.timedelta(0, int(modified_secondsonly))  # days, seconds, then other fields.
+        except:
+            print("Error: time could not be converted: " + duration)
+
+
 
     def get_walking_coords(self, walking_route):
         """
@@ -373,5 +382,3 @@ class Controller(object):
             return json["origin"]["message"][0]["value"]
 
         return 0
-
-
