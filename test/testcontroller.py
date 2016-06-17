@@ -1,5 +1,6 @@
 import unittest
-
+import sys
+sys.path.append("src/bewegdich")
 from bewegdich import settings
 from polls.controller import Controller
 import datetime
@@ -115,3 +116,5 @@ class TestController(unittest.TestCase):
         self.assertEqual(result[1].value, "hauptbahnhof")
         self.assertEqual(result[1].data, "21000101")
 
+if __name__ == '__main__':
+    unittest.main()
