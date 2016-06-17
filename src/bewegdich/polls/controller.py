@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-
-import math
-import json
-import datetime
-from collections import namedtuple
-from xml.etree import ElementTree
-import urllib as urllib1
-import urllib2 as urllib
-from route import Route, Stop
-from multiprocessing import Pool
-from models import efaStop
-import time as t
 import Queue as Q
-from worker import SeachWorker, RoutesWorker
+import datetime
+import urllib as urllib1
+
+from models import Coord
+from models import efaStop
+from polls.API import get_walking_Route, get_matching_stations, get_efa_routes, closestCity
+from route import Route, Stop
 from timer import Timer
 from variables import SPEED
-import xml.etree.ElementTree as ET
-from models import Coord
+from worker import SeachWorker, RoutesWorker
 
 TIMER = Timer()
 
@@ -44,62 +38,7 @@ class Controller(object):
         # Stores all calculated walking routes into this dic, so it doesn't need to be calculated again
         self.walking_routes = {}
 
-    def distance(self, lon1, lat1, lon2, lat2):
-        """
-           Determines the distance for two sets of lon and lat
-           :return: distance in meters
-           """
-        r = 6378.137  # Radius of earth in km
-        dLat = (lat2 - lat1) * math.pi / 180
-        dLon = (lon2 - lon1) * math.pi / 180
-        a = math.sin(dLat / 2) * math.sin(dLat / 2) + \
-            + math.cos(lat1 * math.pi / 180) * math.cos(lat2 * math.pi / 180) \
-            * math.sin(dLon / 2) * math.sin(dLon / 2)
-        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-        d = r * c
-        return d * 1000  # meters
 
-    def closestCity(self, longitude, latitude):
-        """
-
-        Determines the closest city for a given latitude and longitude
-        using a list of the supported cities
-
-        :return: the city as a string
-        """
-        ##longitude, latitude
-        City = namedtuple('blubb', ['cityname', 'long', 'lat'])
-        cities = [
-            City('Augsburg', 10.890779, 48.3705449),
-            City('Basel', 7.58769, 47.55814)
-        ]
-
-        min_radius = 15000  # 15 km
-        for city in cities:
-            dist = self.distance(city.long, city.lat, float(longitude), float(latitude))
-            if dist < min_radius:
-                return city.cityname
-        print "Error: no city was found in reach"
-        # throw error here
-        return ''
-
-    def getCityUrl(self, longitude, latitude):
-        """
-        Returns the city url
-
-        :rtype: Route
-        :param longitude: Longitude
-        :param latitude: Latitude
-        :return: City url
-        """
-        city = self.closestCity(longitude, latitude)
-
-        if city == 'Augsburg':
-            return "https://efa.avv-augsburg.de/avv/"
-        elif city == 'Basel':
-            return "http://www.efa-bvb.ch/bvb/"
-
-        return ''
 
     def get_optimized_routes(self, start, dest, time=-1):
         """
@@ -186,7 +125,7 @@ class Controller(object):
                 if route.origin_stop.stopid in self.walking_routes:  # if the walk was already calculated
                     route.walkingPath = self.get_walking_coords(self.walking_routes[route.origin_stop.stopid])
                 else:  # else the walk has to be calculated
-                    walking_route = self.get_walking_Route(start, route.origin_stop.get_coords())
+                    walking_route = get_walking_Route(start, route.origin_stop.get_coords())
                     route.walkingPath = self.get_walking_coords(walking_route)
                 self.insert_start_point(start, station.walkingtime, route)
                 route.duration = route.duration + station.walkingtime
@@ -221,7 +160,7 @@ class Controller(object):
         for station in station_list[:5]:
             # Calculate the time to walk to the given station
 
-            walk_route = self.get_walking_Route(userpos, station.get_coords())
+            walk_route = get_walking_Route(userpos, station.get_coords())
             duration = walk_route[1][0][0][0].text
             if "M" not in duration:
                 print("BLUB")
@@ -247,7 +186,7 @@ class Controller(object):
                 route.origin_stop.walkingtime = datetime.timedelta(0, 0)
             else:
                 # Do the walking search for the origin stop, when no better station was found
-                walk_route = self.get_walking_Route(userpos, route.origin_stop.get_coords())
+                walk_route = get_walking_Route(userpos, route.origin_stop.get_coords())
                 walk_time = self.get_walking_time(walk_route)
                 route.origin_stop.walk_route = walk_route
                 route.origin_stop.walkingtime = walk_time
@@ -315,30 +254,7 @@ class Controller(object):
         :param dtime:  the destination time
         :return: a list of routes
         """
-
-        lat, lon = start[1], start[0]
-        if dtime == -1:
-            dtime = datetime.datetime.now()
-
-        param = {
-            'outputFormat': 'JSON',
-            'locationServerActive': 0,
-            'coordOutputFormat': 'WGS84[DD.ddddd]',
-            'type_origin': 'coord',
-            'name_origin': (str(lon) + ":" + str(lat) + ":WGS84"),
-            'type_destination': 'stopID',
-            'name_destination': dest
-        }
-
-        if datetime != -1:
-            param.update({
-                'itdDate': dtime.date().strftime("%Y%m%d"),
-                'itdTime': dtime.time().strftime("%H:%M"),
-                'itdTripDateTimeDepArr': 'dep'
-            })
-
-        url = self.getCityUrl(lon, lat) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
-        data = get_json(url)
+        data = get_efa_routes(start,dest,dtime)
         code = self.checkValidJson(data)
         if code == 0:
             routes = []
@@ -350,37 +266,6 @@ class Controller(object):
             return routes
         else:
             return int(code)
-
-    def get_walking_Route(self, origin, destination):
-        """
-        Searches for a route to walk from A to B
-        :param origin: startposition [lng,lat]
-        :param destination: destination [lng,lat]
-        :return: a xml treeobject
-        """
-        if type(origin) != list or type(destination) != list:
-            return -1
-
-        param = {
-            'start': str(origin[0]) + "," + str(origin[1]),
-            'end': str(destination[0]) + "," + str(destination[1]),
-            'via': '',
-            'lang': 'de',
-            'distunit': 'KM',
-            'routepref': 'Pedestrian',
-            'weighting': 'Shortest',
-            'avoidAreas': '',
-            'useTMC': 'false',
-            'noMotorways': 'false',
-            'noTollways': 'false',
-            'noUnpavedroads': 'false',
-            'noSteps': 'false',
-            'noFerries': 'false',
-            'instructions': 'false'
-        }
-        url = "http://www.openrouteservice.org/route?" + urllib1.urlencode(param)
-        data = get_xml(url)
-        return data
 
     def get_walking_time(self, walking_route):
         """
@@ -440,24 +325,10 @@ class Controller(object):
         :param coords: [longitude,latitude]
         :return: a list of Stops each containts the stopid and the name
         """
-        param = {
-            'outputFormat': 'JSON',
-            'locationServerActive': 0,
-            'coordOutputFormat': 'WGS84[DD.ddddd]',
-            # 'type_origin': 'coord',
-            # 'name_origin': (str(coords[0]) + ":" + str(coords[1]) + ":WGS84"),
-            'type_sf': 'stop',
-            # 'type_sf': 'any', # May makes sense (Destination is an address)
-            'name_sf': place
-        }
-        cityurl = self.getCityUrl(coords[0], coords[1])
-        if cityurl is '':
-            return []
-        url = cityurl + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
-        data = get_json(url)
-        stops = []
+        data = get_matching_stations(place, coords)
 
-        city = self.closestCity(coords[0], coords[1])
+        stops = []
+        city = closestCity(coords[0], coords[1])
         if city == 'Augsburg':
             if 'message' in data["stopFinder"] and data["stopFinder"]["message"][1]["value"] == "stop invalid":
                 print("No stop suggestions found ")
@@ -503,22 +374,4 @@ class Controller(object):
 
         return 0
 
-def get_json(url):
-    """
-    Downloads the json from the given URL and converts it into a json object
-    :param url: the url
-    :return: a json
-    """
-    response = urllib.urlopen(url, timeout=10)
-    return json.loads(response.read())
-
-def get_xml(url):
-    """
-    Downloads the XML from the given URL and converts it into a tree object
-    :param url: the url
-    :return: a treeobject
-    """
-    response = urllib1.urlopen(url)
-    string = response.read()
-    return ET.fromstring(string)
 

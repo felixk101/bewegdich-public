@@ -2,7 +2,7 @@
 from views import *
 from models import Coord
 from variables import LOCATION
-from controller import get_xml
+from polls.API import get_xml
 
 
 def get_location(request):
