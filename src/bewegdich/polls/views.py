@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
 import codecs
-from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from controller import Controller
 import location as loc
 from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
 from serializers import Efa_stop_list_serializer
-from serializers import StopSerializer, RouteListSerializer, RouteList, Walkingpath_serializer
-from variables import SPEED, LOCATION
+from serializers import RouteListSerializer, RouteList, Walkingpath_serializer
+from variables import SPEED
 from models import Coord
 from location import get_location,set_location
 

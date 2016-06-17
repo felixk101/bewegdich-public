@@ -6,7 +6,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
                   url(r'^$', views.index, name='index'),
-                  url(r'^login/$', views.login, name='login'),
                   url(r'^api/route/$', views.route, name='route'),
                   url(r'^api/stoplist/$', views.stoplist, name='stoplist'),
                   url(r'^api/getWalkingPath/$', views.get_walkingpath, name='getWalkingPath'),

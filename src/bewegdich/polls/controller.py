@@ -12,7 +12,6 @@ from models import efaStop
 import time as t
 import Queue as Q
 from worker import SeachWorker, RoutesWorker
-from views import *
 from timer import Timer
 from variables import SPEED
 import xml.etree.ElementTree as ET
@@ -80,6 +79,7 @@ class Controller(object):
             dist = self.distance(city.long, city.lat, float(longitude), float(latitude))
             if dist < min_radius:
                 return city.cityname
+        print "Error: no city was found in reach"
         # throw error here
         return ''
 
@@ -437,7 +437,7 @@ class Controller(object):
         """
             Searches for the closes matching stops with the same name as the given one.
         :param place: the first few letters of the desired stop
-        :param coords: [latitude,longitude]
+        :param coords: [longitude,latitude]
         :return: a list of Stops each containts the stopid and the name
         """
         param = {
@@ -450,7 +450,10 @@ class Controller(object):
             # 'type_sf': 'any', # May makes sense (Destination is an address)
             'name_sf': place
         }
-        url = self.getCityUrl(coords[0], coords[1]) + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
+        cityurl = self.getCityUrl(coords[0], coords[1])
+        if cityurl is '':
+            return []
+        url = cityurl + "XML_STOPFINDER_REQUEST?" + urllib1.urlencode(param)
         data = get_json(url)
         stops = []
 
