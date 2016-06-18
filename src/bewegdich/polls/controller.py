@@ -5,7 +5,7 @@ import urllib as urllib1
 
 from models import Coord
 from models import efaStop
-from polls.API import get_walking_Route, get_matching_stations, get_efa_routes, closestCity
+from API import get_walking_Route, get_matching_stations, get_efa_routes, closestCity
 from route import Route, Stop
 from timer import Timer
 from variables import SPEED

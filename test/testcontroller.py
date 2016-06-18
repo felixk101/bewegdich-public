@@ -2,17 +2,17 @@
 import unittest
 import sys
 
-from polls.API import get_walking_Route
-from polls.variables import SPEED
-
-sys.path.append("src/bewegdich")
-from bewegdich import settings
-from polls.controller import Controller
+from bewegdich.polls.API import get_walking_Route
+from bewegdich.polls.variables import SPEED
+from bewegdich.bewegdich import settings
+from bewegdich.polls.controller import Controller
 from datetime import datetime as dt
 from datetime import timedelta as td
-from polls.route import Stop
-from polls.models import Coord,efaStop
+from bewegdich.polls.route import Stop
+from bewegdich.polls.models import Coord,efaStop
 import os
+
+sys.path.append("src/bewegdich/")
 
 #Set the Testdatabase
 settings.DATABASES ={
@@ -171,4 +171,8 @@ class TestController(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    import django
+
+    django.setup()
+
     unittest.main()
