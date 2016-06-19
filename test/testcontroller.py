@@ -2,15 +2,18 @@
 import unittest
 import sys
 
-from bewegdich.polls.API import get_walking_Route
-from bewegdich.polls.variables import SPEED
-from bewegdich.bewegdich import settings
-from bewegdich.polls.controller import Controller
+
+from polls.API import get_walking_Route
+from polls.variables import SPEED
+from bewegdich import settings
+from polls.controller import Controller
 from datetime import datetime as dt
 from datetime import timedelta as td
-from bewegdich.polls.route import Stop
-from bewegdich.polls.models import Coord,efaStop
+from polls.route import Stop
+from polls.models import Coord,efaStop
+from django.test import Client
 import os
+
 
 sys.path.append("src/bewegdich/")
 
@@ -24,17 +27,15 @@ settings.DATABASES ={
 #  A dic with the name of the station and the stopid fo easier testing
 stops = {"hbf":2000100,"fh":2000768, "Brandweg":2000531}
 
+
 class TestController(unittest.TestCase):
     """
         Testclass for Controllerfunctions
 
-        ######################################
-        The values are not correct right now!
-        ######################################
-
     """
 
     def test_find_best_startstations(self):
+        print("test_find_best_startstations")
         c = Controller({SPEED: 1.0})
 
         dtime = dt(2016, 7, 14, 12, 30)
@@ -58,19 +59,20 @@ class TestController(unittest.TestCase):
         result = c.find_startstations([10.81516, 48.313476], stops["Brandweg"], dtime)
         print(result)
 
-        # self.assertEqual(result[0],
-        #                  Stop(u'Bergheim Baggersee', u'48.32372', u'10.83283', stopid=u'2000005',
-        #                       walkingtime=td(minutes=24), depaturetime=dt(2016, 07, 14, 13, 35), isWalking=0))
-        #
-        # self.assertEqual(result[1],
-        #                  Stop(u'Bergheim Baggersee', u'48.32372', u'10.83283', stopid=u'2000005',
-        #                       walkingtime=td(minutes=24), depaturetime=dt(2016, 07, 14, 13, 5), isWalking=0))
-        #
-        # self.assertEqual(result[2],
-        #                  Stop(u'Bergheim Baggersee', u'48.32372', u'10.83283', stopid=u'2000005',
-        #                       walkingtime=td(minutes=24), depaturetime=dt(2016, 07, 14, 14, 5), isWalking=0))
+        self.assertEqual(result[0],
+                         Stop(u'Bergheim Baggersee', u'48.32372', u'10.83283', stopid=u'2000005',
+                              walkingtime=td(minutes=12), depaturetime=dt(2016, 07, 14, 13, 35), isWalking=0))
+
+        self.assertEqual(result[1],
+                         Stop(u'Bergheim Baggersee', u'48.32372', u'10.83283', stopid=u'2000005',
+                              walkingtime=td(minutes=12), depaturetime=dt(2016, 07, 14, 13, 5), isWalking=0))
+
+        self.assertEqual(result[2],
+                         Stop(u'Bergheim Baggersee', u'48.32372', u'10.83283', stopid=u'2000005',
+                              walkingtime=td(minutes=12), depaturetime=dt(2016, 07, 14, 14, 5), isWalking=0))
 
     def test_get_routes(self):
+        print("test_get_routes")
         c = Controller({})
         dtime = dt(2016, 7, 14, 12, 30)
 
@@ -92,6 +94,7 @@ class TestController(unittest.TestCase):
         self.assertEqual(len(routes[3].path),2)
 
     def test_get_walking_Route(self):
+        print("test_get_walking_Route")
         c = Controller({SPEED:1.0})
         walkingroute = get_walking_Route([10.81516, 48.313476], [10.821083,48.317614])
 
@@ -171,8 +174,5 @@ class TestController(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    import django
-
-    django.setup()
 
     unittest.main()

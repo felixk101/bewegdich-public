@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from controller import Controller
 import location as loc
 from rest_framework.renderers import JSONRenderer
+
+from polls.API import get_walking_Route
 from serializers import Efa_stop_list_serializer
 from serializers import RouteListSerializer, RouteList, Walkingpath_serializer
 from variables import SPEED
@@ -173,7 +175,7 @@ def get_walkingpath(request):
         destlat = codecs.encode(request.GET["destlat"], 'utf-8')
         destlng = codecs.encode(request.GET["destlng"], 'utf-8')
         c = Controller(request.session)
-        route = c.get_walking_Route([originlng, originlat],[destlng,destlat])
+        route = get_walking_Route([originlng, originlat],[destlng,destlat])
         path = c.get_walking_coords(route)
 
         if (type(path) == int):
