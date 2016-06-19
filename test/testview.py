@@ -54,7 +54,7 @@ class TestController(unittest.TestCase):
         self.assertEqual(data["suggestions"][0]["data"],u'2000100')
 
 
-    def test_API_stoplist(self):
+    def test_API_getWalkingPath(self):
         c = Client()
         response = c.get('/api/getWalkingPath/?originlat=48.1234&originlng=11.2034&destlat=48.4532&destlng=11.4563')
         self.assertEqual(response.status_code, 200)
@@ -63,6 +63,17 @@ class TestController(unittest.TestCase):
         self.assertTrue("path" in data)
         self.assertTrue(len(data), 5)
         self.assertTrue(len(data["path"]), 886)
+
+    def test_API_getRoute(self):
+        c = Client()
+        response = c.get('/api/route/?latitude=48.35882&longitude=10.90529&stopid=2000100')
+        self.assertEqual(response.status_code, 200)
+        self.assertRaises(Exception, json.loads(response.content))
+        data = json.loads(response.content)
+        self.assertTrue("data" in data)
+        self.assertTrue(len(data), 4)
+        self.assertEqual(data["data"]["routes"],9)
+
 
 
 
