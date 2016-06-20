@@ -99,7 +99,7 @@ class TestController(unittest.TestCase):
         walkingroute = get_walking_Route([10.81516, 48.313476], [10.821083,48.317614])
 
         self.assertEqual(c.get_walking_time(walkingroute),td(0, 537))
-        path = c.get_walking_coords(walkingroute)
+        path = walkingroute["coords"]
         self.assertEqual(len(path),24)
         self.assertEqual(path[0],Coord('48.3135654','10.8151087'))
         self.assertEqual(path[1],Coord('48.3138378','10.8161701'))
@@ -110,12 +110,22 @@ class TestController(unittest.TestCase):
         walkingroute = get_walking_Route([10.81516, 48.313476], [10.821083, 48.317614])
 
         self.assertEqual(c.get_walking_time(walkingroute), td(0, 268))
-        path = c.get_walking_coords(walkingroute)
+        path = walkingroute["coords"]
         self.assertEqual(len(path), 24)
         self.assertEqual(path[0], Coord('48.3135654', '10.8151087'))
         self.assertEqual(path[1], Coord('48.3138378', '10.8161701'))
         self.assertEqual(path[10], Coord('48.3148491', '10.8190032'))
         self.assertEqual(path[20], Coord('48.3170408', '10.8204259'))
+
+        c = Controller({SPEED: 0.5})
+
+        #TODO: Test if the coordinates are FH-Station and FH
+        walkingroute = get_walking_Route([ 10.905839,  48.359151], [10.891231, 48.37123])
+        # self.assertEqual(path[0], Coord('48.3135654', '10.8151087'))
+        # self.assertEqual(path[1], Coord('48.3138378', '10.8161701'))
+        # self.assertEqual(path[10], Coord('48.3148491', '10.8190032'))
+        # self.assertEqual(path[20], Coord('48.3170408', '10.8204259'))
+        # self.assertEqual(c.get_walking_time(walkingroute), td(0, 1000))
 
         # walkingroute = c.get_walking_Route([11.23424, 41.12345], [11.31111, 41.23445])
         # self.assertEqual(c.get_walking_time(walkingroute), datetime.timedelta(0, 1000))

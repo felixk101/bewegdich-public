@@ -12,7 +12,6 @@ from serializers import Efa_stop_list_serializer
 from serializers import RouteListSerializer, RouteList, Walkingpath_serializer
 from variables import SPEED
 from models import Coord
-from location import get_location,set_location
 
 
 @csrf_exempt
@@ -175,8 +174,8 @@ def get_walkingpath(request):
         destlat = codecs.encode(request.GET["destlat"], 'utf-8')
         destlng = codecs.encode(request.GET["destlng"], 'utf-8')
         c = Controller(request.session)
-        route = get_walking_Route([originlng, originlat],[destlng,destlat])
-        path = c.get_walking_coords(route)
+        walking_route = get_walking_Route([originlng, originlat],[destlng,destlat])
+        path = walking_route["coords"]
 
         if (type(path) == int):
             return JSONResponse({'error': "There was an error on search: " + str(path)}, status=400)

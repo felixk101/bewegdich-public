@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import Queue as Q
 import datetime
-import urllib as urllib1
 
+from API import get_walking_Route, get_matching_stations, get_efa_routes, closestCity
 from models import Coord
 from models import efaStop
-from API import get_walking_Route, get_matching_stations, get_efa_routes, closestCity
+from polls.API import replace_coordlist
 from route import Route, Stop
 from timer import Timer
-from variables import SPEED
+from variables import SPEED, FH_LONGWAY1, FH_LONGWAY2
 from worker import SeachWorker, RoutesWorker
 
 TIMER = Timer()
@@ -61,6 +61,8 @@ class Controller(object):
         # If no time was set, take the current one
         if time == -1:
             time = datetime.datetime.now()
+            self.session[SPEED] = 0.2
+            time = datetime.datetime(2016,06,20,10,2)
 
         try:  # Check if the dest is really a stopID
             int(dest)
@@ -123,10 +125,13 @@ class Controller(object):
                 if station.walkingtime != -1:
                     route.depature_time = route.depature_time - station.walkingtime
                 if route.origin_stop.stopid in self.walking_routes:  # if the walk was already calculated
-                    route.walkingPath = self.get_walking_coords(self.walking_routes[route.origin_stop.stopid])
+                    stoproute = self.walking_routes[route.origin_stop.stopid]
+                    if "coords" in stoproute:
+                        route.walkingPath = stoproute["coords"]
                 else:  # else the walk has to be calculated
                     walking_route = get_walking_Route(start, route.origin_stop.get_coords())
-                    route.walkingPath = self.get_walking_coords(walking_route)
+
+                    route.walkingPath = walking_route["coords"]
                 self.insert_start_point(start, station.walkingtime, route)
                 route.duration = route.duration + station.walkingtime
                 route.id = id
@@ -161,12 +166,9 @@ class Controller(object):
             # Calculate the time to walk to the given station
 
             walk_route = get_walking_Route(userpos, station.get_coords())
-            duration = walk_route[1][0][0][0].text
-            if "M" not in duration:
-                print("BLUB")
-                pass
+
             walk_time = self.get_walking_time(walk_route)
-            station.walk_route = walk_route
+            station.walk_route = walk_route["coords"]
             station.walkingtime = walk_time
 
             # For test only: Reduce walking time to get better results
@@ -269,29 +271,13 @@ class Controller(object):
 
     def get_walking_time(self, walking_route):
         """
-        Searches for the walkingtime in the walking_route XML and returns it
-        :param walking_route: the XML returned by get_walking_Route
+        Returns the walkingtime of the walkroute, which may be modified by a different walkingspeed
+        :param walking_route: the dic returned by get_walking_Route
         :return: the walkingtime
         """
-        duration = walking_route[1][0][0][0].text
-        if "M" not in duration:
-            print("ERROR: Time should not be zer o")
-            return datetime.timedelta(0, 0)
-        try:
-            times = duration.split("M")
-            secondsonly = 0
-            if times[0] != '':
-                minutes = times[0][times[0].index("T") + 1:]
-                secondsonly += int(minutes) * 60
-            if times[1] != '':
-                seconds = times[1][:times[1].index("S")]
-                secondsonly += int(seconds)
+        modified_secondsonly = walking_route["walkingtime"] / float(self.session[SPEED])
 
-            modified_secondsonly = secondsonly / float(self.session[SPEED])
-
-            return datetime.timedelta(0, int(modified_secondsonly))  # days, seconds, then other fields.
-        except:
-            print("Error: time could not be converted: " + duration)
+        return datetime.timedelta(0, int(modified_secondsonly))  # days, seconds, then other fields.
 
 
 
@@ -309,7 +295,9 @@ class Controller(object):
         for waypoint in walking_route[1][0][1][0]:
             arr = waypoint.text.split(" ")
             coords.append(Coord(arr[1], arr[0]))
-        return coords
+        shortcut = []
+        coords = replace_coordlist(coords, FH_LONGWAY1, [])
+        return replace_coordlist(coords, FH_LONGWAY2, shortcut)
 
     # Insert a new startpoint where the route should begin
     def insert_start_point(self, start, walktime, route):
@@ -382,3 +370,5 @@ class Controller(object):
             return json["origin"]["message"][0]["value"]
 
         return 0
+
+

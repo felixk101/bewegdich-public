@@ -2,14 +2,7 @@
 import unittest
 import sys
 import json
-from polls.API import get_walking_Route
-from polls.variables import SPEED
 from bewegdich import settings
-from polls.controller import Controller
-from datetime import datetime as dt
-from datetime import timedelta as td
-from polls.route import Stop
-from polls.models import Coord,efaStop
 from django.test import Client
 import os
 
@@ -72,7 +65,7 @@ class TestController(unittest.TestCase):
         data = json.loads(response.content)
         self.assertTrue("data" in data)
         self.assertTrue(len(data), 4)
-        self.assertEqual(data["data"]["routes"],9)
+        self.assertEqual(len(data["data"]["routes"]),3)
 
 
 

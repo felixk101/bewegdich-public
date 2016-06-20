@@ -6,6 +6,8 @@ from collections import namedtuple
 from xml.etree import ElementTree as ET
 import datetime
 
+from polls.models import Coord
+from polls.variables import FH_LONGWAY1, FH_LONGWAY2
 
 
 def get_json(url):
@@ -58,7 +60,42 @@ def get_walking_Route(origin, destination):
     }
     url = "http://www.openrouteservice.org/route?" + urllib1.urlencode(param)
     data = get_xml(url)
-    return data
+
+    # Get the coords out of the xml
+    coords = []
+    for waypoint in data[1][0][1][0]:
+        arr = waypoint.text.split(" ")
+        coords.append(Coord(arr[1], arr[0]))
+    shortcut = []
+    coords = replace_coordlist(coords, FH_LONGWAY1, [])
+    coords = replace_coordlist(coords, FH_LONGWAY2, shortcut)
+
+    #Get the time out of the xml
+    duration = data[1][0][0][0].text
+    time = -1
+    if "M" not in duration:
+        print("ERROR: Time should not be zer o")
+        secondsonly = datetime.timedelta(0, 0)
+    else:
+        try:
+            times = duration.split("M")
+            secondsonly = 0
+            if times[0] != '':
+                minutes = times[0][times[0].index("T") + 1:]
+                secondsonly += int(minutes) * 60
+            if times[1] != '':
+                seconds = times[1][:times[1].index("S")]
+                secondsonly += int(seconds)
+        except:
+            print("Error: time could not be converted: " + duration)
+            secondsonly = datetime.timedelta(0, 0)
+
+    if find_sublist(coords,FH_LONGWAY1)>=0:
+        secondsonly -= 100
+    if find_sublist(coords,FH_LONGWAY2)>=0:
+        secondsonly -= 150
+    dic = {"walkingtime":secondsonly,"coords":coords}
+    return dic
 
 
 def get_matching_stations(place, coords):
@@ -178,3 +215,41 @@ def get_efa_routes(start, dest, dtime=-1):
 
     url = getCityUrl(lon, lat) + "XML_TRIP_REQUEST2?" + urllib1.urlencode(param)
     return get_json(url)
+
+
+def replace_coordlist(list, sublist, replacelist):
+    """
+        It searches for a given sublist in the list and if found replaces it with the replacelist
+    :param list: a list of coords-objects
+    :param sublist:  the sublist which should be in the list
+    :param replacelist: the replacement of the sublist
+    :return: the new list
+    """
+    index = find_sublist(list,sublist)
+
+    if index >= 0:
+        return list[0:index - 1] + replacelist + list[index + len(sublist):]
+    else:
+        return list
+
+
+def find_sublist(list,sublist):
+    """
+    Searches for a sublist in a list and resturns the index where sublist starts in the list
+
+    :param list:
+    :param sublist:
+    :return: index if the list was found or -1 if not
+    """
+    for i in range(0, len(list) - len(sublist)):
+        for j in range(0, len(sublist)):
+            if not sublist[j].__eq__(list[i]):
+                break;
+            else:
+                if j == 0:
+                    startindex = i
+                i = i + 1
+                if j + 1 == len(sublist):
+                    found = True
+                    return startindex
+    return -1
