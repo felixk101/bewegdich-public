@@ -36,10 +36,11 @@ class Coord:
         self.longitude = lng
 
     def __str__(self):
-        print str(self.latitude) + ","+ str(self.longitude)
+        return str(self.latitude) + ","+ str(self.longitude)
 
     def __repr__(self):
-        return "Coord: " + self.latitude + ", " + self.longitude
+
+        return "Coord: " + str(self.latitude) + ", " + str(self.longitude)
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
