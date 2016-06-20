@@ -73,19 +73,22 @@ def get_walking_Route(origin, destination):
     #Get the time out of the xml
     duration = data[1][0][0][0].text
     time = -1
+    secondsonly = 0
     if "M" not in duration:
         print("ERROR: Time should not be zer o")
         secondsonly = datetime.timedelta(0, 0)
     else:
         try:
-            times = duration.split("M")
-            secondsonly = 0
-            if times[0] != '':
-                minutes = times[0][times[0].index("T") + 1:]
-                secondsonly += int(minutes) * 60
-            if times[1] != '':
-                seconds = times[1][:times[1].index("S")]
-                secondsonly += int(seconds)
+            #e.g. PT    15M
+            #     PT    37M 49S
+            #     PT 9H 43M 57S
+            dic = {"S":1, "M":60, "H":3600}
+            index = getNumberUntilChar(duration)
+            while duration[-1] is not "T":
+                secondsonly += int(duration[index:-1]) * dic[duration[-1]]
+                duration = duration[:index]
+                index = getNumberUntilChar(duration)
+
         except:
             print("Error: time could not be converted: " + duration)
             secondsonly = datetime.timedelta(0, 0)
@@ -97,6 +100,31 @@ def get_walking_Route(origin, destination):
     dic = {"walkingtime":secondsonly,"coords":coords}
     return dic
 
+def getNumberUntilChar(text):
+    """
+        Seaches for a numberchars until a non-numberchar will be found.
+        Then the index of the numbe after the char will be returned.
+
+    :param text: to search through
+    :return: the index of the beginning of the number
+    """
+    index = len(text)-2
+    while True:
+        test = text[index]
+        if not is_number(test):
+            break
+        else:
+            index -= 1
+    return index+1
+
+
+def is_number(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        pass
+    return False
 
 def get_matching_stations(place, coords):
     """
