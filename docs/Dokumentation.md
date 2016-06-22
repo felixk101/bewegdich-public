@@ -4,8 +4,10 @@
 
 ## Sommersemester 2016
 
-![](media/image02.png){width="3.040625546806649in"
-height="3.040625546806649in"}
+
+
+![BewegDich Logo](graphics/icon/icon.png)
+
 
 > Beweg' Dich! -
 >
