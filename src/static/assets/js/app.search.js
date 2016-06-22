@@ -92,8 +92,7 @@ var AppSearch = {
 
                 jQuery('#routes').empty();
                 jQuery.each(json.data.routes, function (key, value) {
-                    var id = 'route-' + value.id,
-                        detailId = 'route-detail-' + value.id;
+                    var id = 'route-' + value.id;
 
                     jQuery(document).trigger('AppSearch.routes.stop', [{
                         longitude: value.origin_stop.lng,
@@ -106,7 +105,10 @@ var AppSearch = {
                         destinationStop: value.destination_stop.name,
                         duration: value.duration,
                         line: value.line.join(', '),
-                        walkingDestination: JSON.stringify(value.walkingPath)
+                        walkingDestination: JSON.stringify({
+                            longitude: value.origin_stop.lng,
+                            latitude: value.origin_stop.lat
+                        })
                     }, {
                         append: true,
                         noDivWrapper: true,
