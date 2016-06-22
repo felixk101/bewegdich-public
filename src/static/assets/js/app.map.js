@@ -70,7 +70,7 @@ var AppMap = {
             }
         });
 
-        jQuery(document).on('AppSearch.before.routes', function () {
+        jQuery(document).on('AppRoute.before.routes', function () {
             jQuery.each(that.markers['stops'], function (index, value) {
                 that.map.removeLayer(value);
             });
@@ -78,7 +78,7 @@ var AppMap = {
             that.markers['stops'] = [];
         });
 
-        jQuery(document).on('AppSearch.after.routes', function () {
+        jQuery(document).on('AppRoute.after.routes', function () {
             var positions = [];
 
             positions.push({
@@ -96,15 +96,15 @@ var AppMap = {
             that.setPosition(positions);
         });
 
-        jQuery(document).on('AppSearch.routes.stop', function (event, position) {
+        jQuery(document).on('AppRoute.routes.stop', function (event, position) {
             that.setMarker(position, 'stop');
         });
 
         jQuery(document).on('App.destination.selected', function () {
             that.resetRoute();
         });
-
-        jQuery(document).on('AppSearch.routes.path', function (event, walkingpath) {
+// TODO
+        jQuery(document).on('AppRoute.select', function (event, walkingpath) {
             that.setRoute(walkingpath);
         });
     },
