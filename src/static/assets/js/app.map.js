@@ -11,28 +11,15 @@ var AppMap = {
     polylines: null,
     bounds: null,
     destination: null,
+    default: {
+        zoom: 16,
+        minZoom: 10
+    },
     init: function () {
         this.initIcons();
         this.initMap();
 
         this.hooks();
-    },
-    initMap: function () {
-        var that = this;
-
-        that.map = L.map('map', {
-            center: L.latLng(AppLocation.position.latitude, AppLocation.position.longitude),
-            zoom: 18,
-            minZoom: 10,
-            attributionControl: false,
-            zoomControl: false
-        });
-        L.tileLayer.provider('OpenStreetMap.Mapnik').addTo(that.map);
-
-        that.setMarker({
-            longitude: AppLocation.position.longitude,
-            latitude: AppLocation.position.latitude
-        }, 'person');
     },
     initIcons: function () {
         L.Icon.Default.imagePath = '/static/assets/images/map';
@@ -50,6 +37,23 @@ var AppMap = {
             iconAnchor: [12, 45],
             popupAnchor: [0, -47]
         });
+    },
+    initMap: function () {
+        var that = this;
+
+        that.map = L.map('map', {
+            center: L.latLng(AppLocation.position.latitude, AppLocation.position.longitude),
+            zoom: that.default.zoom,
+            minZoom: that.default.minZoom,
+            attributionControl: false,
+            zoomControl: false
+        });
+        L.tileLayer.provider('OpenStreetMap.Mapnik').addTo(that.map);
+
+        that.setMarker({
+            longitude: AppLocation.position.longitude,
+            latitude: AppLocation.position.latitude
+        }, 'person');
     },
     hooks: function () {
         var that = this;
@@ -100,11 +104,11 @@ var AppMap = {
             that.setMarker(position, 'stop');
         });
 
-        jQuery(document).on('App.destination.selected', function () {
+        jQuery(document).on('AppSearch.destination.selected AppSearch.destination.error', function () {
             that.resetRoute();
         });
 // TODO
-        jQuery(document).on('AppRoute.select', function (event, walkingpath) {
+        jQuery(document).on('AppRoute.route.selected', function (event, walkingpath) {
             that.setRoute(walkingpath);
         });
     },
@@ -136,7 +140,7 @@ var AppMap = {
             position = L.latLng(position.latitude, position.longitude);
 
             that.bounds = null;
-            that.map.setView(position, 18);
+            that.map.setView(position, that.default.zoom);
         }
     },
     setMarker: function (position, type) {

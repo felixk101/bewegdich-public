@@ -6,7 +6,8 @@
         {"attribute": "data-walking-destination", "value": "walkingDestination"}]'>
         <div class="panel-heading">
             <h3 class="panel-title">
-                <i class="fa fa-info-circle pull-right" data-toggle="modal" data-target="#modal-routes-detail"></i>
+                <i class="info-button fa fa-info-circle pull-right" data-toggle="modal"
+                   data-target="#modal-route-details"></i>
                 <span>{% trans "Walking destination:" %}</span> <span data-content="originStop"></span>
             </h3>
         </div>
@@ -21,7 +22,7 @@
                     <span>{% trans "Final destination:" %}</span> <span data-content="destinationStop"></span>
                 </li>
             </ul>
-            <button class="route-select btn btn-primary">{% trans "Navigate" %}</button>
+            <button class="route-select btn btn-primary"><i class="fa fa-compass"></i> {% trans "Navigate" %}</button>
         </div>
     </div>
 </script>

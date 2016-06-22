@@ -28,6 +28,7 @@ var AppSettings = {
                     value: jQuery(this).val()
                 },
                 dataType: 'json',
+                timeout: 30000,
                 success: function (json) {
                     if (json.error) {
                         AppError.show('request');

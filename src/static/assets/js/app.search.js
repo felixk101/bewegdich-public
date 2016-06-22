@@ -19,7 +19,8 @@ var AppSearch = {
             dataType: 'json',
             paramName: 'query',
             ajaxSettings: {
-                xhr: AppAjax.progress
+                xhr: AppAjax.progress,
+                timeout: 30000,
             },
             appendTo: '#search .search-container',
             width: jQuery('#search .search-field').outerWidth(),
@@ -33,7 +34,17 @@ var AppSearch = {
             },
             onSelect: function (suggestion) {
                 that.statusLoading();
+
                 jQuery(document).trigger('AppSearch.destination.selected', [suggestion]);
+            },
+            onSearchError: function (query, jqXHR, textStatus, errorThrown) {
+                if (errorThrown == 'abort') {
+                    return;
+                }
+
+                jQuery(document).trigger('AppSearch.destination.error');
+
+                AppError.show('request');
             }
         });
 
@@ -54,7 +65,7 @@ var AppSearch = {
             }
         });
 
-        jQuery(document).on('AppRoute.set.before AppRoute.set.error', function (event, suggestion) {
+        jQuery(document).on('AppRoute.setRoute.before AppRoute.setRoute.error', function (event, suggestion) {
             that.statusDefault();
         });
     },

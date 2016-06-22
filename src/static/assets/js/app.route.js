@@ -3,87 +3,101 @@ jQuery(document).ready(function () {
 });
 
 var AppRoute = {
-    init: function () {
-        this.hooks();
-    },
-    hooks: function () {
-        var that = this;
+        element: {
+            routes: '#routes',
+            route: '.route',
+            templateRoute: '#template-route',
+            templateRouteDetail: '#template-route-detail',
+            modalRouteDetails: '#modal-route-details'
+        },
+        init: function () {
+            this.hooks();
+        },
+        hooks: function () {
+            var that = this;
 
-        jQuery(document).on('AppSearch.destination.selected', function (event, suggestion) {
-            that.set(suggestion.data);
-        });
-    },
-    set: function (destination) {
-        var that = this;
+            jQuery(document).on('AppSearch.destination.selected', function (event, suggestion) {
+                that.setRoute(suggestion.data);
+            });
 
-        jQuery.ajax({
-            url: '/api/route/',
-            xhr: AppAjax.progress,
-            data: {
-                stopid: destination,
-                longitude: function () {
-                    return AppLocation.position.longitude;
+            jQuery('.route-select').on('click', 'button', function () {
+                alert("sds");
+                jQuery(document).trigger('AppRoute.route.selected');
+            });
+        },
+        setRoute: function (destination) {
+            var that = this;
+
+            jQuery.ajax({
+                url: '/api/route/',
+                xhr: AppAjax.progress,
+                data: {
+                    stopid: destination,
+                    longitude: function () {
+                        return AppLocation.position.longitude;
+                    },
+                    latitude: function () {
+                        return AppLocation.position.latitude;
+                    }
                 },
-                latitude: function () {
-                    return AppLocation.position.latitude;
-                }
-            },
-            dataType: 'json',
-            success: function (json) {
-                jQuery(document).trigger('AppRoute.set.before');
+                dataType: 'json',
+                timeout: 30000,
+                success: function (json) {
+                    if (json.error) {
+                        jQuery(document).trigger('AppRoute.setRoute.error');
 
-                if (json.error) {
-                    AppError.show('request');
-                }
+                        AppError.show('request');
+                    }
 
-                jQuery('#routes').empty();
-                jQuery.each(json.data.routes, function (key, value) {
-                    var id = 'route-' + value.id;
+                    jQuery(document).trigger('AppRoute.setRoute.before');
 
-                    jQuery(document).trigger('AppRoute.routes.stop', [{
-                        longitude: value.origin_stop.lng,
-                        latitude: value.origin_stop.lat
-                    }]);
-
-                    jQuery('#routes').loadTemplate(jQuery('#template-route'), {
-                        routeId: id,
-                        originStop: value.origin_stop.name,
-                        destinationStop: value.destination_stop.name,
-                        duration: value.duration,
-                        line: value.line.join(', '),
-                        walkingDestination: JSON.stringify({
+                    jQuery(that.element.routes).empty();
+                    jQuery.each(json.data.routes, function (key, value) {
+                        jQuery(document).trigger('AppRoute.routes.stop', [{
                             longitude: value.origin_stop.lng,
                             latitude: value.origin_stop.lat
-                        })
-                    }, {
-                        append: true,
-                        noDivWrapper: true,
-                        success: function () {
-                            jQuery('#modal-routes-detail ul.stop-path').empty();
-                            jQuery.each(value.path, function (key, value) {
-                                jQuery('#modal-routes-detail').find('ul.stop-path').loadTemplate(jQuery('#template-route-detail'), {
-                                    stopPathName: value.name
-                                }, {
-                                    append: true,
-                                    noDivWrapper: true,
-                                    success: function () {
-                                        jQuery(document).trigger('AppRoute.set.after');
-                                    }
+                        }]);
+
+                        jQuery(that.element.routes).loadTemplate(jQuery(that.element.templateRoute), {
+                            routeId: 'route-' + value.id,
+                            originStop: value.origin_stop.name,
+                            destinationStop: value.destination_stop.name,
+                            duration: value.duration,
+                            line: value.line.join(', '),
+                            walkingDestination: JSON.stringify({
+                                longitude: value.origin_stop.lng,
+                                latitude: value.origin_stop.lat
+                            })
+                        }, {
+                            append: true,
+                            noDivWrapper: true,
+                            success: function () {
+                                jQuery(that.element.modalRouteDetails).find('ul.stop-path').empty();
+                                jQuery.each(value.path, function (key, value) {
+                                    jQuery(that.element.modalRouteDetails).find('ul.stop-path').loadTemplate(jQuery(that.element.templateRouteDetail), {
+                                        stopPathName: value.name
+                                    }, {
+                                        append: true,
+                                        noDivWrapper: true,
+                                        success: function () {
+                                            jQuery(document).trigger('AppRoute.setRoute.after');
+                                        }
+                                    });
                                 });
-                            });
-                        }
+                            }
+                        });
                     });
-                });
-            },
-            error: function (e) {
-                jQuery(document).trigger('AppRoute.set.error');
+                },
+                error: function (e) {
+                    jQuery(document).trigger('AppRoute.setRoute.error');
 
-                if (e.statusText == 'abort') {
-                    return;
+                    if (e.statusText == 'abort') {
+                        return;
+                    }
+
+                    AppError.show('request');
                 }
-
-                AppError.show('request');
-            }
-        });
+            });
+        }
     }
-};
+    ;
