@@ -1,8 +1,8 @@
-#Projektarbeit
+# Projektarbeit
 
-##Im Studiengang Informatik
+## Im Studiengang Informatik
 
-##Sommersemester 2016
+## Sommersemester 2016
 
 ![](media/image02.png){width="3.040625546806649in"
 height="3.040625546806649in"}
@@ -11,7 +11,7 @@ height="3.040625546806649in"}
 >
 > Kann ich noch zur nächsten Haltestelle laufen, bevor der Bus kommt ?
 
-##Projekt-Team:
+## Projekt-Team:
 
 Ego, Ninos
 
