@@ -28,6 +28,11 @@ var AppMap = {
             zoomControl: false
         });
         L.tileLayer.provider('OpenStreetMap.Mapnik').addTo(that.map);
+
+        that.setMarker({
+            latitude: AppLocation.position.latitude,
+            longitude: AppLocation.position.longitude
+        }, 'person');
     },
     initIcons: function () {
         L.Icon.Default.imagePath = '/static/assets/images/map';

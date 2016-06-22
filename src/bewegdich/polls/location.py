@@ -8,17 +8,17 @@ from polls.API import get_xml
 def get_location(request):
     if LOCATION not in request.session:
         if "127.0.0.1" == request.META["REMOTE_ADDR"]:
-            set_location(request,Coord(48,11))
+            set_location(request, Coord(48, 11))
         else:
             position = get_ip_location(request.META["REMOTE_ADDR"])
-            set_location(request,position)
+            set_location(request, position)
 
     # return request.session[LOCATION]
-    return Coord(48,11)
+    return Coord(request.session[LOCATION][0], request.session[LOCATION][1])
 
 def set_location(request, position):
     #
-    request.session[LOCATION] = [position.latitude,position.longitude]
+    request.session[LOCATION] = [position.latitude, position.longitude]
 
 def get_ip_location(ip):
     """
@@ -33,4 +33,5 @@ def get_ip_location(ip):
     if len(xml) < 9:
         print("Error: IP-Location could not be found (" + ip + ")")
         return Coord(0, 0)
+
     return Coord(xml[8].text, xml[9].text)
