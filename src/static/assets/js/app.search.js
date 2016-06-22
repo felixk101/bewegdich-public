@@ -101,20 +101,19 @@ var AppSearch = {
                     }]);
 
                     jQuery('#routes').loadTemplate(jQuery('#template-route'), {
-                        panelId: id,
-                        panelDetailId: detailId,
-                        panelDetailTarget: '#' + detailId,
+                        routeId: id,
                         originStop: value.origin_stop.name,
                         destinationStop: value.destination_stop.name,
                         duration: value.duration,
                         line: value.line.join(', '),
-                        walkingPath: JSON.stringify(value.walkingPath)
+                        walkingDestination: JSON.stringify(value.walkingPath)
                     }, {
                         append: true,
                         noDivWrapper: true,
                         success: function () {
+                            jQuery('#modal-routes-detail ul.stop-path').empty();
                             jQuery.each(value.path, function (key, value) {
-                                jQuery('#' + detailId).find('ul.stop-path').loadTemplate(jQuery('#template-route-detail'), {
+                                jQuery('#modal-routes-detail').find('ul.stop-path').loadTemplate(jQuery('#template-route-detail'), {
                                     stopPathName: value.name
                                 }, {
                                     append: true,

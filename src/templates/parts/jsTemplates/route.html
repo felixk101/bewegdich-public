@@ -2,12 +2,11 @@
 
 <script type="text/html" id="template-route">
     <div class="route panel panel-default" data-template-bind='[
-        {"attribute": "id", "value": "panelId"},
+        {"attribute": "id", "value": "routeId"},
         {"attribute": "data-walkingDestination", "value": "walkingDestination"}]'>
         <div class="panel-heading">
             <h3 class="panel-title">
-                <i class="fa fa-info-circle pull-right" data-toggle="modal" data-template-bind='[
-                    {"attribute": "data-target", "value": "panelDetailTarget"}]'></i>
+                <i class="fa fa-info-circle pull-right" data-toggle="modal" data-target="#modal-routes-detail"></i>
                 <span>{% trans "Walking destination:" %}</span> <span data-content="originStop"></span>
             </h3>
         </div>
@@ -23,24 +22,6 @@
                 </li>
             </ul>
             <button class="route-select btn btn-primary">{% trans "Navigate" %}</button>
-        </div>
-    </div>
-    <div class="route-detail-container modal fade" data-backdrop="false" tabindex="-1" role="dialog"
-         data-template-bind='[{"attribute": "id", "value": "panelDetailId"}]'>
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="{% trans "Close" %}"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">{% trans "Details" %}</h4>
-                </div>
-                <div class="modal-body">
-                    <ul class="stop-path list-group"></ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-                </div>
-            </div>
         </div>
     </div>
 </script>
