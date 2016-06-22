@@ -12,8 +12,8 @@ var AppMap = {
     bounds: null,
     destination: null,
     init: function () {
-        this.initMap();
         this.initIcons();
+        this.initMap();
 
         this.hooks();
     },
