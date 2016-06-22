@@ -43,3 +43,21 @@ msgstr ""
 
 msgid "Select"
 msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Walking destination:"
+msgstr ""
+
+msgid "Final destination:"
+msgstr ""
+
+msgid "Departure:"
+msgstr ""
+
+msgid "Navigate"
+msgstr ""
