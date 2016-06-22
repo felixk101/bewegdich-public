@@ -43,11 +43,11 @@ var AppLayout = {
 
         var newHeight = jQuery(window).height();
 
-        if (jQuery(that.element.navigation).length) {
+        if (jQuery(that.element.navigation).length && jQuery(that.element.navigation).is(':visible')) {
             newHeight -= jQuery(that.element.navigation).outerHeight();
         }
 
-        if (jQuery(that.element.routes).length) {
+        if (jQuery(that.element.routes).length && jQuery(that.element.routes).is(':visible')) {
             newHeight -= jQuery(that.element.routes).outerHeight();
         }
 
