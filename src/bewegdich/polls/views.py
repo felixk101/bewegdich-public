@@ -22,10 +22,10 @@ def index(request):
             'location': loc.get_location(request),
             'settings': {
                 'speed': {
-                    'min': 0.1,
-                    'max': 2,
-                    'step': 0.1,
-                    'value': 1
+                    'min': '0.1',
+                    'max': '2',
+                    'step': '0.1',
+                    'value': '1'
                 }
             }
         }
