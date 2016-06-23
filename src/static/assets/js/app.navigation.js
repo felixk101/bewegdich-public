@@ -7,6 +7,10 @@ var AppNavigation = {
         navigation: '#navigation',
         templateNavigation: '#template-navigation'
     },
+    duration: {
+        show: 500,
+        hide: 250
+    },
     interval: {
         path: null
     },
@@ -16,10 +20,6 @@ var AppNavigation = {
     },
     ajax: {
         path: null
-    },
-    duration: {
-        show: 500,
-        hide: 250
     },
     init: function () {
         this.hooks();

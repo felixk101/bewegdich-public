@@ -3,6 +3,9 @@ jQuery(document).ready(function () {
 });
 
 var AppLocation = {
+    element: {
+        location: 'body'
+    },
     interval: {
         location: null
     },
@@ -17,8 +20,8 @@ var AppLocation = {
         var that = this;
 
         that.position = {
-            longitude: jQuery('body').data('longitude'),
-            latitude: jQuery('body').data('latitude')
+            longitude: jQuery(that.element.location).data('longitude'),
+            latitude: jQuery(that.element.location).data('latitude')
         };
 
         if (that.interval.location) {

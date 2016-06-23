@@ -20,8 +20,12 @@ var AppLayout = {
             that.setMap();
         });
 
-        jQuery(that.element.navigation).resize(function () {
+        jQuery(document).on('AppNavigation.after.start', function () {
             that.setMap();
+
+            jQuery(that.element.navigation).resize(function () {
+                that.setMap();
+            });
         });
 
         jQuery(document).on('AppRoute.after.routes', function () {

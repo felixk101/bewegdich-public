@@ -4,7 +4,12 @@ jQuery(document).ready(function () {
 
 var AppSearch = {
     element: {
+        search: '#search',
         field: '#search .search-field'
+    },
+    duration: {
+        show: 500,
+        hide: 250
     },
     status: {
         loading: 'loading',
@@ -65,8 +70,16 @@ var AppSearch = {
             }
         });
 
-        jQuery(document).on('AppRoute.setRoute.before AppRoute.setRoute.error', function (event, suggestion) {
+        jQuery(document).on('AppRoute.set.before AppRoute.set.error', function (event, suggestion) {
             that.statusDefault();
+        });
+
+        jQuery(document).on('AppNavigation.after.start', function () {
+            that.hide();
+        });
+
+        jQuery(document).on('AppNavigation.after.stop', function () {
+            that.show();
         });
     },
     getStatuses: function () {
@@ -88,5 +101,11 @@ var AppSearch = {
     statusDisabled: function () {
         jQuery(this.element.field).removeClass(this.getStatuses().join(' ')).addClass(this.status.disabled);
         jQuery(this.element.field).find('input').prop('disabled', true);
+    },
+    show: function () {
+        jQuery(this.element.search).fadeIn(this.duration.show);
+    },
+    hide: function () {
+        jQuery(this.element.search).fadeOut(this.duration.hide);
     }
 };
