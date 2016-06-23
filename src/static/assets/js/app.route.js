@@ -20,9 +20,14 @@ var AppRoute = {
                 that.setRoute(suggestion.data);
             });
 
-            jQuery('.route-select').on('click', 'button', function () {
+            jQuery('.route').on('click', 'button', function () {
                 alert("sds");
                 jQuery(document).trigger('AppRoute.route.selected');
+            });
+
+            jQuery('.route-select').on('click', 'button', function () {
+                alert("sds");
+                jQuery(document).trigger('AppRoute.route.navigate');
             });
         },
         setRoute: function (destination) {

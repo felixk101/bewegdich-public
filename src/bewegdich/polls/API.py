@@ -31,7 +31,7 @@ def get_xml(url):
     return ET.fromstring(string)
 
 
-def get_walking_Route(origin, destination):
+def get_walking_RouteOld(origin, destination):
     """
     Searches for a route to walk from A to B
     :param origin: startposition [lng,lat]
@@ -99,6 +99,35 @@ def get_walking_Route(origin, destination):
         secondsonly -= 150
     dic = {"walkingtime":secondsonly,"coords":coords}
     return dic
+
+
+def get_walking_Route(origin, destination):
+    """
+    Searches for a route to walk from A to B
+    :param origin: startposition [lng,lat]
+    :param destination: destination [lng,lat]
+    :return: a xml treeobject
+    """
+    if type(origin) != list or type(destination) != list:
+        return -1
+
+    param = {
+        'overview': 'false'
+    }
+    origin = str(origin[0]) + "," + str(origin[1])
+    destination = str(destination[0]) + "," + str(destination[1])
+    url = "http://router.project-osrm.org/route/v1/foot/" + urllib.quote(
+        origin + ";" + destination) + "?" + urllib1.urlencode(param)
+    data = get_json(url)
+
+    # Get the coords out of the xml
+    coords = []
+    for waypoint in data["waypoints"]:
+        coords.append(Coord(waypoint["location"][1], waypoint["location"][0]))
+
+    dic = {"walkingtime": data["routes"]["duration"], "coords": coords}
+    return dic
+
 
 def getNumberUntilChar(text):
     """
