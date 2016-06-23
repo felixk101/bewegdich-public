@@ -107,9 +107,9 @@ var AppMap = {
         jQuery(document).on('AppSearch.destination.selected AppSearch.destination.error', function () {
             that.resetRoute();
         });
-// TODO
-        jQuery(document).on('AppRoute.route.selected', function (event, walkingpath) {
-            that.setRoute(walkingpath);
+
+        jQuery(document).on('AppNavigation.getPath', function (event, path) {
+            that.setRoute(path);
         });
     },
     setPosition: function (position) {

@@ -6,6 +6,7 @@ var AppRoute = {
         element: {
             routes: '#routes',
             route: '.route',
+            routeSelect: '.route-select',
             templateRoute: '#template-route',
             templateRouteDetail: '#template-route-detail',
             modalRouteDetails: '#modal-route-details'
@@ -20,14 +21,16 @@ var AppRoute = {
                 that.setRoute(suggestion.data);
             });
 
-            jQuery('.route').on('click', 'button', function () {
-                alert("sds");
-                jQuery(document).trigger('AppRoute.route.selected');
+            jQuery(document).on('click', that.element.routes + ' ' + that.element.route + ' .panel-title span', function () {
+                var destination = jQuery(this).closest(that.element.route).data('walking-destination');
+
+                jQuery(document).trigger('AppRoute.route.selected', [destination]);
             });
 
-            jQuery('.route-select').on('click', 'button', function () {
-                alert("sds");
-                jQuery(document).trigger('AppRoute.route.navigate');
+            jQuery(document).on('click', that.element.routes + ' ' + that.element.routeSelect, function () {
+                var destination = jQuery(this).closest(that.element.route).data('walking-destination');
+
+                jQuery(document).trigger('AppRoute.route.navigate', [destination]);
             });
         },
         setRoute: function (destination) {

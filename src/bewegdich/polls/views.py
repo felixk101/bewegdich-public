@@ -130,19 +130,19 @@ def walkingpath(request):
     :return: a json
     """
     if request.method == 'GET':
-        if "origin_latitude" not in request.GET:
+        if "originLatitude" not in request.GET:
             return JSONResponse({'error': "origin latitude not found"}, status=400)
-        if "origin_longitude" not in request.GET:
+        if "originLongitude" not in request.GET:
             return JSONResponse({'error': "origin longitude not found"}, status=400)
-        if "destination_latitude" not in request.GET:
+        if "destinationLatitude" not in request.GET:
             return JSONResponse({'error': "destination latitude not found"}, status=400)
-        if "destination_longitude" not in request.GET:
+        if "destinationLongitude" not in request.GET:
             return JSONResponse({'error': "destination longitude not found"}, status=400)
 
-        originlat = codecs.encode(request.GET["origin_latitude"], 'utf-8')
-        originlng = codecs.encode(request.GET["origin_longitude"], 'utf-8')
-        destlat = codecs.encode(request.GET["destination_latitude"], 'utf-8')
-        destlng = codecs.encode(request.GET["destination_longitude"], 'utf-8')
+        originlat = codecs.encode(request.GET["originLatitude"], 'utf-8')
+        originlng = codecs.encode(request.GET["originLongitude"], 'utf-8')
+        destlat = codecs.encode(request.GET["destinationLatitude"], 'utf-8')
+        destlng = codecs.encode(request.GET["destinationLongitude"], 'utf-8')
         c = Controller(request.session)
         walking_route = get_walking_Route([originlng, originlat], [destlng, destlat])
         path = walking_route["coords"]
@@ -153,10 +153,10 @@ def walkingpath(request):
         serializer = Walkingpath_serializer(path)
 
         json = {
-            'origin_latitude': originlat,
-            'origin_longitude': originlng,
-            'destination_latitude': destlat,
-            'destination_longitude': destlng,
+            'originLatitude': originlat,
+            'originLongitude': originlng,
+            'destinationLatitude': destlat,
+            'destinationLongitude': destlng,
             'duration': walking_route['walkingtime'],
             'path': serializer.data
         }

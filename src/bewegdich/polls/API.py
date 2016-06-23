@@ -46,7 +46,7 @@ def get_walking_Route(origin, destination):
     }
     origin = str(origin[0]) + "," + str(origin[1])
     destination = str(destination[0]) + "," + str(destination[1])
-    url = "http://router.project-osrm.org/route/v1/foot/" + urllib.quote(
+    url = "http://router.project-osrm.org/route/v1/walking/" + urllib.quote(
         origin + ";" + destination) + "?" + urllib1.urlencode(param)
     data = get_json(url)
 
