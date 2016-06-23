@@ -71,8 +71,7 @@ var AppNavigation = {
         var that = this;
 
         jQuery(document).trigger('AppNavigation.before.start');
-        alert(data.depaturetime);
-        alert(data.duration);
+
         jQuery(that.element.navigation).loadTemplate(jQuery(that.element.templateNavigation), data, {
             append: true,
             noDivWrapper: true,
