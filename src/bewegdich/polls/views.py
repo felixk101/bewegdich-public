@@ -31,6 +31,7 @@ def index(request):
         }
     })
 
+
 @csrf_exempt
 def stoplist(request):
     """
@@ -57,7 +58,7 @@ def stoplist(request):
             latitude = str(360 + float(latitude))
         c = Controller(request.session)
         # Sets the location of the user for further requests
-        loc.set_location(request,Coord(latitude, longitude))
+        loc.set_location(request, Coord(latitude, longitude))
 
         stoplist = c.get_stoplist(query, [longitude, latitude])
 
@@ -121,6 +122,51 @@ def route(request):
 
 
 @csrf_exempt
+def walkingpath(request):
+    """
+     Returns a List/Path of coordinates from origin to destination
+     e.g. http://127.0.0.1:8000/api/getWalkingPath?originlat=48.1234&originlng=11.2034&destlat=48.4532&destlng=11.4563
+    :param request:
+    :return: a json
+    """
+    if request.method == 'GET':
+        if "origin_latitude" not in request.GET:
+            return JSONResponse({'error': "origin latitude not found"}, status=400)
+        if "origin_longitude" not in request.GET:
+            return JSONResponse({'error': "origin longitude not found"}, status=400)
+        if "destination_latitude" not in request.GET:
+            return JSONResponse({'error': "destination latitude not found"}, status=400)
+        if "destination_longitude" not in request.GET:
+            return JSONResponse({'error': "destination longitude not found"}, status=400)
+
+        originlat = codecs.encode(request.GET["origin_latitude"], 'utf-8')
+        originlng = codecs.encode(request.GET["origin_longitude"], 'utf-8')
+        destlat = codecs.encode(request.GET["destination_latitude"], 'utf-8')
+        destlng = codecs.encode(request.GET["destination_longitude"], 'utf-8')
+        c = Controller(request.session)
+        walking_route = get_walking_Route([originlng, originlat], [destlng, destlat])
+        path = walking_route["coords"]
+
+        if (type(path) == int):
+            return JSONResponse({'error': "There was an error on search: " + str(path)}, status=400)
+
+        serializer = Walkingpath_serializer(path)
+
+        json = {
+            'origin_latitude': originlat,
+            'origin_longitude': originlng,
+            'destination_latitude': destlat,
+            'destination_longitude': destlng,
+            'duration': walking_route['walkingtime'],
+            'path': serializer.data
+        }
+        return JSONResponse(json)
+
+    elif request.method == 'POST':
+        return JSONResponse({'error': "only get request supported"}, status=400)
+
+
+@csrf_exempt
 def settings_speed(request):
     """
     Sets or gets the current walkingspeed of the usersession
@@ -150,46 +196,6 @@ def initSession(request):
     """
     if SPEED not in request.session:
         request.session[SPEED] = 1.0
-
-@csrf_exempt
-def get_walkingpath(request):
-    """
-     Returns a List/Path of coordinates from origin to destination
-     e.g. http://127.0.0.1:8000/api/getWalkingPath?originlat=48.1234&originlng=11.2034&destlat=48.4532&destlng=11.4563
-    :param request:
-    :return: a json
-    """
-    if request.method == 'GET':
-        if "originlat" not in request.GET:
-            return JSONResponse({'error': "origin latitude not found"}, status=400)
-        if "originlng" not in request.GET:
-            return JSONResponse({'error': "origin longitude not found"}, status=400)
-        if "destlat" not in request.GET:
-            return JSONResponse({'error': "destination latitude not found"}, status=400)
-        if "destlng" not in request.GET:
-            return JSONResponse({'error': "destination longitude not found"}, status=400)
-
-        originlat = codecs.encode(request.GET["originlat"], 'utf-8')
-        originlng = codecs.encode(request.GET["originlng"], 'utf-8')
-        destlat = codecs.encode(request.GET["destlat"], 'utf-8')
-        destlng = codecs.encode(request.GET["destlng"], 'utf-8')
-        c = Controller(request.session)
-        walking_route = get_walking_Route([originlng, originlat],[destlng,destlat])
-        path = walking_route["coords"]
-
-        if (type(path) == int):
-            return JSONResponse({'error': "There was an error on search: " + str(path)}, status=400)
-
-        serializer = Walkingpath_serializer(path)
-
-        json = {
-            'originlat': originlat,
-            'originlng': originlng,
-            'destlat': destlat,
-            'destlng': destlng,
-            'path': serializer.data
-        }
-        return JSONResponse(json)
 
 
 class JSONResponse(HttpResponse):

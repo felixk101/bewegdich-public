@@ -8,6 +8,6 @@ urlpatterns = [
                   url(r'^$', views.index, name='index'),
                   url(r'^api/route/$', views.route, name='route'),
                   url(r'^api/stoplist/$', views.stoplist, name='stoplist'),
-                  url(r'^api/getWalkingPath/$', views.get_walkingpath, name='getWalkingPath'),
+                  url(r'^api/walkingpath/$', views.walkingpath, name='walkingpath'),
                   url(r'^api/settings/speed/$', views.settings_speed, name='settings.speed'),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
