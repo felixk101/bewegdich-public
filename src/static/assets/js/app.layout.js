@@ -22,18 +22,10 @@ var AppLayout = {
 
         jQuery(document).on('AppNavigation.start.after AppNavigation.stop.after', function () {
             that.setMap();
-
-            jQuery(that.element.navigation).resize(function () {
-                that.setMap();
-            });
         });
 
         jQuery(document).on('AppRoute.set.after AppRoute.show.after AppRoute.hide.after', function () {
             that.setMap();
-
-            jQuery(that.element.routes).resize(function () {
-                that.setMap();
-            });
         });
     },
     setMap: function () {

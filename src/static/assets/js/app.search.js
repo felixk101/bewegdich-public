@@ -105,15 +105,15 @@ var AppSearch = {
     show: function () {
         jQuery(document).trigger('AppSearch.show.before');
 
-        jQuery(this.element.search).fadeIn(this.duration.show);
-
-        jQuery(document).trigger('AppSearch.show.after');
+        jQuery(this.element.search).fadeIn(this.duration.show, function() {
+            jQuery(document).trigger('AppSearch.show.after');
+        });
     },
     hide: function () {
         jQuery(document).trigger('AppSearch.hide.before');
 
-        jQuery(this.element.search).fadeOut(this.duration.hide);
-
-        jQuery(document).trigger('AppSearch.hide.after');
+        jQuery(this.element.search).fadeOut(this.duration.hide, function() {
+            jQuery(document).trigger('AppSearch.hide.after');
+        });
     }
 };
