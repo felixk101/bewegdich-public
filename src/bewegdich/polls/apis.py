@@ -55,6 +55,10 @@ def get_walking_Route(origin, destination):
     for waypoint in data["waypoints"]:
         coords.append(Coord(waypoint["location"][1], waypoint["location"][0]))
 
+
+    coords.insert(0,Coord(origin[1],origin[0]))
+    coords.append(Coord(destination[1], destination[0]))
+
     dic = {"walkingtime": data["routes"][0]["duration"], "coords": coords}
     return dic
 

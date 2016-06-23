@@ -125,7 +125,7 @@ def route(request):
 def walkingpath(request):
     """
      Returns a List/Path of coordinates from origin to destination
-     e.g. http://127.0.0.1:8000/api/getWalkingPath?originlat=48.1234&originlng=11.2034&destlat=48.4532&destlng=11.4563
+     e.g. http://127.0.0.1:8000/api/walkingpath?originlat=48.1234&originlng=11.2034&destlat=48.4532&destlng=11.4563
     :param request:
     :return: a json
     """

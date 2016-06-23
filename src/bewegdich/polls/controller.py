@@ -121,14 +121,7 @@ class Controller(object):
                     continue
                 if station.walkingtime != -1:
                     route.departure_time = route.departure_time - station.walkingtime
-                if route.origin_stop.stopid in self.walking_routes:  # if the walk was already calculated
-                    stoproute = self.walking_routes[route.origin_stop.stopid]
-                    if "coords" in stoproute:
-                        route.walkingPath = stoproute["coords"]
-                else:  # else the walk has to be calculated
-                    walking_route = get_walking_Route(start, route.origin_stop.get_coords())
 
-                    route.walkingPath = walking_route["coords"]
                 self.insert_start_point(start, station.walkingtime, route)
                 route.duration = route.duration + station.walkingtime
                 route.id = id

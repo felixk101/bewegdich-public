@@ -47,13 +47,13 @@ class TestController(unittest.TestCase):
 
     def test_API_getWalkingPath(self):
         c = Client()
-        response = c.get('/api/getWalkingPath/?originlat=48.1234&originlng=11.2034&destlat=48.4532&destlng=11.4563')
+        response = c.get('/api/walkingpath/?originLatitude=48.1234&originLongitude=11.2034&destinationLatitude=48.4532&destinationLongitude=11.4563')
         self.assertEqual(response.status_code, 200)
         self.assertRaises(Exception, json.loads(response.content))
         data = json.loads(response.content)
         self.assertTrue("path" in data)
         self.assertTrue(len(data), 5)
-        self.assertTrue(len(data["path"]), 886)
+        self.assertTrue(len(data["path"]), 888)
 
     def test_API_getRoute(self):
         c = Client()

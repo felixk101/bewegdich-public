@@ -38,7 +38,6 @@ class TestController(unittest.TestCase):
 
         dtime = dt(2016, 7, 14, 12, 30)
         result = c.find_startstations([10.81516, 48.313476], stops["Brandweg"], dtime)
-        print(result)
 
         self.assertEqual(result[0],
                          Stop(u'Bergheim Baggersee', u'48.32372', u'10.83283', stopid=u'2000005',
@@ -55,7 +54,6 @@ class TestController(unittest.TestCase):
         c = Controller({SPEED: 2.0})
         dtime = dt(2016, 7, 14, 12, 30)
         result = c.find_startstations([10.81516, 48.313476], stops["Brandweg"], dtime)
-        print(result)
 
         self.assertEqual(result[0],
                          Stop(u'Bergheim Baggersee', u'48.32372', u'10.83283', stopid=u'2000005',
