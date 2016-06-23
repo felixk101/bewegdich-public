@@ -2,7 +2,7 @@
 import unittest
 import sys
 
-from polls.API import get_walking_Route
+from polls.api import get_walking_Route
 from polls.variables import SPEED
 from bewegdich import settings
 from polls.controller import Controller

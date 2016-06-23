@@ -27,6 +27,7 @@ class efaStop:
                 and self.value == other.value
                 and self.quality == other.quality)
 
+
 class Coord:
     latitude = 0
     longitude = 0

@@ -3,14 +3,13 @@ This file contains all variables and constants which are the same for every user
 
 """
 
-#Keys for the usersession object
+# Keys for the usersession object
 from polls.models import Coord
 
-SPEED = "speed" #  The wakling speed of the user
-LOCATION = "location" #  The coordinates of the user
+SPEED = "speed"  # The wakling speed of the user
+LOCATION = "location"  # The coordinates of the user
 
-
-#These to coord-arrays are nessassary to replace the long walk from the FH to the FH-Station.
+# These to coord-arrays are nessassary to replace the long walk from the FH to the FH-Station.
 FH_LONGWAY1 = [
     # Coord("48.3583385", "10.9050651"),
     Coord("48.3584093", "10.9050157"),

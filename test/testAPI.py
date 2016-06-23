@@ -3,7 +3,7 @@ import unittest
 import sys
 
 
-from polls.API import *
+from polls.api import *
 from bewegdich import settings
 from polls.variables import SPEED
 from polls.controller import Controller
