@@ -38,8 +38,6 @@ class Controller(object):
         # Stores all calculated walking routes into this dic, so it doesn't need to be calculated again
         self.walking_routes = {}
 
-
-
     def get_optimized_routes(self, start, dest, time=-1):
         """
         The main function of the Controller.
@@ -62,7 +60,7 @@ class Controller(object):
         if time == -1:
             time = datetime.datetime.now()
             self.session[SPEED] = 0.2
-            time = datetime.datetime(2016,06,20,10,2)
+            time = datetime.datetime(2016, 06, 20, 10, 2)
 
         try:  # Check if the dest is really a stopID
             int(dest)
@@ -115,7 +113,7 @@ class Controller(object):
                 duplicate_route = 0
                 if route.isWalkOnly():
                     continue
-                # Search for Routes which are the same line but just a different depaturetime
+                # Search for Routes which are the same line but just a different departuretime
                 for tmp_route in routes:
                     if tmp_route.origin_stop.name == route.origin_stop.name and tmp_route.line == route.line:
                         duplicate_route = 1
@@ -123,7 +121,7 @@ class Controller(object):
                 if duplicate_route == 1:
                     continue
                 if station.walkingtime != -1:
-                    route.depature_time = route.depature_time - station.walkingtime
+                    route.departure_time = route.departure_time - station.walkingtime
                 if route.origin_stop.stopid in self.walking_routes:  # if the walk was already calculated
                     stoproute = self.walking_routes[route.origin_stop.stopid]
                     if "coords" in stoproute:
@@ -138,7 +136,7 @@ class Controller(object):
                 id += 1
                 routes.append(route)
 
-        routes = sorted(routes, key=lambda route: route.depature_time)
+        routes = sorted(routes, key=lambda route: route.departure_time)
         TIMER.printTimer("Whole search")
         return routes
 
@@ -173,7 +171,8 @@ class Controller(object):
 
             # For test only: Reduce walking time to get better results
             # station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
-            if type(station.depaturetime) is datetime.datetime and (time + station.walkingtime) < station.depaturetime:
+            if type(station.departuretime) is datetime.datetime and (
+                time + station.walkingtime) < station.departuretime:
                 if best_station == -1 or best_station.walkingtime < station.walkingtime:
                     best_station = station
             else:  # If this Stop cannot be reached via walking, its not likley the next stop can be reached
@@ -256,14 +255,14 @@ class Controller(object):
         :param dtime:  the destination time
         :return: a list of routes
         """
-        data = get_efa_routes(start,dest,dtime)
+        data = get_efa_routes(start, dest, dtime)
         code = self.checkValidJson(data)
         if code == 0:
             routes = []
             for route in data["trips"]:
                 r = Route(route)
                 if not r.isWalkOnly():
-                    if r.depature_time > dtime:
+                    if r.departure_time > dtime:
                         routes.append(r)
             return routes
         else:
@@ -278,8 +277,6 @@ class Controller(object):
         modified_secondsonly = walking_route["walkingtime"] / float(self.session[SPEED])
 
         return datetime.timedelta(0, int(modified_secondsonly))  # days, seconds, then other fields.
-
-
 
     def get_walking_coords(self, walking_route):
         """
@@ -370,5 +367,3 @@ class Controller(object):
             return json["origin"]["message"][0]["value"]
 
         return 0
-
-

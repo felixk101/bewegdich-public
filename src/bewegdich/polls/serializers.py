@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from route import Stop,Route
+from route import Stop, Route
 from models import efaStop, Coord
 
 
@@ -7,7 +7,7 @@ class StopSerializer(serializers.Serializer):
     name = serializers.CharField(required=True, allow_blank=True, max_length=100)
     lat = serializers.CharField(required=True, allow_blank=False, max_length=10)
     lng = serializers.CharField(required=True, allow_blank=False, max_length=10)
-    depaturetime = serializers.DateTimeField(required=False)
+    departuretime = serializers.DateTimeField(required=False)
     walkingtime = serializers.DurationField(required=False)
     stopid = serializers.CharField(required=True, allow_blank=False, max_length=10)
 
@@ -22,14 +22,15 @@ class StopSerializer(serializers.Serializer):
         Update and return an existing `Snippet` instance, given the validated data.
         """
         instance.name = validated_data.get('name', instance.name)
-        instance.lat  = validated_data.get('lat', instance.lat)
+        instance.lat = validated_data.get('lat', instance.lat)
         instance.lng = validated_data.get('lng', instance.lng)
-        instance.depaturetime = validated_data.get('depaturetime', instance.depaturetime)
+        instance.departuretime = validated_data.get('departuretime', instance.departuretime)
         instance.walkingtime = validated_data.get('walkingtime', instance.walkingtime)
         instance.stopid = validated_data.get('stopid', instance.stopid)
 
         instance.save()
         return instance
+
 
 class CoordSerializer(serializers.Serializer):
     """
@@ -44,11 +45,12 @@ class CoordSerializer(serializers.Serializer):
         """
         return Coord.objects.create(**validated_data)
 
+
 class RouteSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=False)
     origin_stop = StopSerializer()
     destination_stop = StopSerializer()
-    depaturetime = serializers.DateTimeField(required=False)
+    departuretime = serializers.DateTimeField(required=False)
     duration = serializers.DurationField(required=True)
     path = StopSerializer(many=True)
 
@@ -71,15 +73,15 @@ class RouteSerializer(serializers.Serializer):
         instance.id = validated_data.get('id', instance.id)
         instance.origin = validated_data.get('origin', instance.origin)
         instance.destination = validated_data.get('destination', instance.destination)
-        instance.depaturetime = validated_data.get('depaturetime', instance.depaturetime)
+        instance.departuretime = validated_data.get('departuretime', instance.departuretime)
         instance.path = validated_data.get('path', instance.path)
         instance.line = validated_data.get('line', instance.line)
 
-
-        #instance.walkingPath = validated_data.get('walkingPath', instance.walkingPath)
+        # instance.walkingPath = validated_data.get('walkingPath', instance.walkingPath)
 
         instance.save()
         return instance
+
 
 class RouteList:
     """
@@ -89,6 +91,7 @@ class RouteList:
 
     def __init__(self, routes):
         self.routes = routes
+
 
 class RouteListSerializer(serializers.Serializer):
     """
@@ -130,6 +133,7 @@ class Efa_stop_serializer(serializers.Serializer):
         """
         instance.stopid = validated_data.get('stopid', instance.stopid)
         instance.name = validated_data.get('name', instance.name)
+
 
 class Efa_stop_list_serializer(serializers.ListSerializer):
     child = Efa_stop_serializer()

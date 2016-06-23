@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+
 class Route(object):
     """
     Route is the main object which is filled with data by the EFA API. The json files is given in the contructor and
@@ -20,10 +21,10 @@ class Route(object):
 
     # The time the user has to start walking to catch the vehicle(Bus/Train).
     # This time will be calculated later in the process
-    depature_time = 0
+    departure_time = 0
 
     # The duration the hole route including the walk takes. This duration will be calculated later in the process
-    duration = datetime.timedelta(0,0)
+    duration = datetime.timedelta(0, 0)
 
     # the part of the hole route where you ride by bus/train, a list of stops
     path = []
@@ -39,8 +40,8 @@ class Route(object):
         self.path = []
         self.line = []
 
-        #Find out each Stop of the route and the vehiclenames e.g. Bus 102
-        #Filter routes which are only one long footwalk
+        # Find out each Stop of the route and the vehiclenames e.g. Bus 102
+        # Filter routes which are only one long footwalk
         for linestops in self.data["legs"]:
             if "stopSeq" not in linestops or linestops["mode"]["product"] == "Fussweg":
                 pass
@@ -58,9 +59,7 @@ class Route(object):
 
         self.origin_stop = self.path[0]
         self.destination_stop = self.path[-1]
-        self.depature_time = self.origin_stop.depaturetime
-
-
+        self.departure_time = self.origin_stop.departuretime
 
     def __str__(self):
         return self.origin_stop.__str__() + " -> " + self.destination_stop.__str__()
@@ -78,10 +77,8 @@ class Route(object):
                 for stop in linestops["stopSeq"]:
                     linelist.append(Stop.make_from_json(stop))
 
-
-
-        #when No stations inbetween start and destination found
-        if linelist.__len__()<3:
+        # when No stations inbetween start and destination found
+        if linelist.__len__() < 3:
             return []
 
         # Remove first and last item because its the originstop and destination stop
@@ -90,11 +87,12 @@ class Route(object):
         return linelist
 
     def isWalkOnly(self):
-       iswalkonly = 1
-       for linestops in self.data["legs"]:
-           if linestops["mode"]["product"] != "Fussweg":
-               iswalkonly = 0
-       return iswalkonly
+        iswalkonly = 1
+        for linestops in self.data["legs"]:
+            if linestops["mode"]["product"] != "Fussweg":
+                iswalkonly = 0
+        return iswalkonly
+
 
 class Stop(object):
     """
@@ -103,16 +101,16 @@ class Stop(object):
     Its fed with json-data and filters the important informations
 
     """
-    data = "" #The hole raw JSON-String
+    data = ""  # The hole raw JSON-String
     name = ""
     lat = 0
     lng = 0
-    depaturetime = 0 #Defines the time the spesific Vehicle(Bus/Train) leaves this stop; 0 when walk
-    walkingtime = datetime.timedelta(0,0) #Defines the walking time from this Stop to the next one
+    departuretime = 0  # Defines the time the spesific Vehicle(Bus/Train) leaves this stop; 0 when walk
+    walkingtime = datetime.timedelta(0, 0)  # Defines the walking time from this Stop to the next one
     isWalking = 0
     stopid = -1
 
-    def __init__(self, name, lat, lng, stopid=-1, depaturetime=0, walkingtime=datetime.timedelta(0,0),isWalking=0):
+    def __init__(self, name, lat, lng, stopid=-1, departuretime=0, walkingtime=datetime.timedelta(0, 0), isWalking=0):
         """
 
         :param name: the name of the stop
@@ -127,9 +125,7 @@ class Stop(object):
         self.isWalking = isWalking
         self.stopid = stopid
         self.walkingtime = walkingtime
-        self.depaturetime = depaturetime
-
-
+        self.departuretime = departuretime
 
     @staticmethod
     def make_from_json(json):
@@ -150,19 +146,19 @@ class Stop(object):
         stop.stopid = json["ref"]["id"]
 
         if "dateTime" in json:
-            stop.depaturetime = formatDateTime(json["dateTime"])
+            stop.departuretime = formatDateTime(json["dateTime"])
         elif "depDateTime" in json["ref"]:
-            stop.depaturetime = formatDateTime(json["ref"]["depDateTime"])
+            stop.departuretime = formatDateTime(json["ref"]["depDateTime"])
         return stop
 
     def get_coords(self):
-        return [self.lng,self.lat]
+        return [self.lng, self.lat]
 
     def __str__(self):
-        if self.depaturetime == 0: # If its the destination there is no depaturetime
+        if self.departuretime == 0:  # If its the destination there is no departuretime
             return self.name
         else:
-            return self.name + " " + self.depaturetime.time().__str__()
+            return self.name + " " + self.departuretime.time().__str__()
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__) and self.lng == other.lng
