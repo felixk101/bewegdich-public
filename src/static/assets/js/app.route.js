@@ -25,15 +25,26 @@ var AppRoute = {
             });
 
             jQuery(document).on('click', that.element.routes + ' ' + that.element.route + ' .panel-title span', function () {
-                var destination = jQuery(this).closest(that.element.route).data('walking-destination');
+                var originDestination = jQuery(this).closest(that.element.route).data('origin-destination');
 
-                jQuery(document).trigger('AppRoute.route.selected', [destination]);
+                jQuery(document).trigger('AppRoute.route.selected', [originDestination]);
             });
 
             jQuery(document).on('click', that.element.routes + ' ' + that.element.routeSelect, function () {
-                var destination = jQuery(this).closest(that.element.route).data('walking-destination');
+                var originDestination = jQuery(this).closest(that.element.route).data('origin-destination'),
+                    originStop = jQuery(this).closest(that.element.route).data('origin-stop'),
+                    originDepaturetime = jQuery(this).closest(that.element.route).data('origin-depaturetime'),
+                    destinationStop = jQuery(this).closest(that.element.route).data('destination-stop');
 
-                jQuery(document).trigger('AppRoute.route.navigate', [destination]);
+                jQuery(document).trigger('AppRoute.route.navigate', [originDestination, {
+                    origin: {
+                        name: originStop,
+                        depaturetime: originDepaturetime
+                    },
+                    destination: {
+                        name: destinationStop
+                    }
+                }]);
             });
         },
         setRoute: function (destination) {
@@ -76,13 +87,14 @@ var AppRoute = {
                         jQuery(that.element.routes).loadTemplate(jQuery(that.element.templateRoute), {
                             routeId: 'route-' + value.id,
                             originStop: value.origin_stop.name,
-                            destinationStop: value.destination_stop.name,
-                            duration: value.duration,
-                            line: value.line.join(', '),
-                            walkingDestination: JSON.stringify({
+                            originDestination: JSON.stringify({
                                 longitude: value.origin_stop.lng,
                                 latitude: value.origin_stop.lat
-                            })
+                            }),
+                            originDepaturetime: value.origin_stop.depaturetime,
+                            destinationStop: value.destination_stop.name,
+                            duration: value.duration,
+                            line: value.line.join(', ')
                         }, {
                             append: true,
                             noDivWrapper: true,

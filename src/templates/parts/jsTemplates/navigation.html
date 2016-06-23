@@ -1,9 +1,7 @@
 {% load i18n %}
 
-<script type="text/html" id="template-route">
-    <div id="navigation" class="container-fluid" data-template-bind='[
-        {"attribute": "data-destination-latitude", "value": "destinationLatitude"},
-        {"attribute": "data-destination-longitude", "value": "destinationLongitude"}]'>
+<script type="text/html" id="template-navigation">
+    <div id="navigation" class="container-fluid"'>
         <ul class="destination text-center">
             <li><i class="fa fa-male"></i>
                 <span>{% trans "Walking destination:" %}</span> <span
@@ -12,8 +10,8 @@
                 <span>{% trans "Final destination:" %}</span> <span
                         data-content="finalDestination"></span></li>
             <li><i class="fa fa-clock-o"></i>
-                <span>{% trans "Departure:" %}</span> <span
-                        data-content="departure"></span></li>
+                <span>{% trans "Depature time:" %}</span> <span
+                        data-content="depaturetime"></span></li>
         </ul>
         <div class="time text-center">
             <i class="fa fa-2x fa-tachometer"></i> <span data-content="duration"></span>

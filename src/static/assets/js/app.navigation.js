@@ -3,6 +3,10 @@ jQuery(document).ready(function () {
 });
 
 var AppNavigation = {
+    element: {
+        navigation: '#navigation',
+        templateNavigation: '#template-navigation'
+    },
     interval: {
         path: null
     },
@@ -29,13 +33,13 @@ var AppNavigation = {
                     that.ajax.path.abort();
                 }
 
-                var path = that.getPath(destination);
+                that.getPath(destination);
 
                 return interval;
             }(), that.refresh.path);
         });
 
-        jQuery(document).on('AppRoute.route.navigate', function (event, destination) {
+        jQuery(document).on('AppRoute.route.navigate', function (event, destination, data) {
             if (that.interval.path) {
                 clearInterval(that.interval.path);
             }
@@ -45,13 +49,51 @@ var AppNavigation = {
                     that.ajax.path.abort();
                 }
 
-                var path = that.getPath(destination);
+                that.getPath(destination, function (json) {
+                    if (json && json.path.length > 1) {
+                        that.startNavigation({
+                            walkingDestination: data.origin.name,
+                            finalDestination: data.destination.name,
+                            depaturetime: data.origin.depaturetime,
+                            duration: json.duration,
+                            path: json.path
+                        });
+                    } else {
+                        that.stopNavigation();
+                    }
+                });
 
                 return interval;
             }(), that.refresh.navigation);
         });
     },
-    getPath: function (destination) {
+    startNavigation: function (data) {
+        var that = this;
+
+        jQuery(document).trigger('AppNavigation.before.start');
+        alert(data.depaturetime);
+        alert(data.duration);
+        jQuery(that.element.navigation).loadTemplate(jQuery(that.element.templateNavigation), data, {
+            append: true,
+            noDivWrapper: true,
+            success: function () {
+                jQuery(document).trigger('AppNavigation.after.start');
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    },
+    stopNavigation: function () {
+        var that = this;
+
+        jQuery(document).trigger('AppNavigation.before.stop');
+
+        clearInterval(that.interval.path);
+
+        jQuery(document).trigger('AppNavigation.after.stop');
+    },
+    getPath: function (destination, callback) {
         jQuery.ajax({
             url: '/api/walkingpath/',
             xhr: AppAjax.progress,
@@ -76,7 +118,9 @@ var AppNavigation = {
 
                 jQuery(document).trigger('AppNavigation.getPath', [json.path]);
 
-                return json;
+                if (callback && typeof callback == 'function') {
+                    callback(json);
+                }
             },
             error: function (e) {
                 jQuery(document).trigger('AppNavigation.getPath.error');
