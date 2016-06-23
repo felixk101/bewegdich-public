@@ -17,6 +17,10 @@ var AppNavigation = {
     ajax: {
         path: null
     },
+    duration: {
+        show: 500,
+        hide: 250
+    },
     init: function () {
         this.hooks();
     },
@@ -73,13 +77,11 @@ var AppNavigation = {
         jQuery(document).trigger('AppNavigation.before.start');
 
         jQuery(that.element.navigation).loadTemplate(jQuery(that.element.templateNavigation), data, {
-            append: true,
             noDivWrapper: true,
             success: function () {
+                jQuery(that.element.navigation).fadeIn(that.duration.show);
+
                 jQuery(document).trigger('AppNavigation.after.start');
-            },
-            error: function (e) {
-                console.log(e);
             }
         });
     },
@@ -89,6 +91,8 @@ var AppNavigation = {
         jQuery(document).trigger('AppNavigation.before.stop');
 
         clearInterval(that.interval.path);
+
+        jQuery(that.element.navigation).fadeIn(that.duration.hide);
 
         jQuery(document).trigger('AppNavigation.after.stop');
     },
