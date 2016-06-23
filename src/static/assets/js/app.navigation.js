@@ -74,27 +74,27 @@ var AppNavigation = {
     startNavigation: function (data) {
         var that = this;
 
-        jQuery(document).trigger('AppNavigation.before.start');
+        jQuery(document).trigger('AppNavigation.start.before');
 
         jQuery(that.element.navigation).loadTemplate(jQuery(that.element.templateNavigation), data, {
             noDivWrapper: true,
             success: function () {
                 jQuery(that.element.navigation).fadeIn(that.duration.show);
 
-                jQuery(document).trigger('AppNavigation.after.start');
+                jQuery(document).trigger('AppNavigation.start.after');
             }
         });
     },
     stopNavigation: function () {
         var that = this;
 
-        jQuery(document).trigger('AppNavigation.before.stop');
+        jQuery(document).trigger('AppNavigation.stop.before');
 
         clearInterval(that.interval.path);
 
         jQuery(that.element.navigation).fadeIn(that.duration.hide);
 
-        jQuery(document).trigger('AppNavigation.after.stop');
+        jQuery(document).trigger('AppNavigation.stop.after');
     },
     getPath: function (destination, callback) {
         jQuery.ajax({

@@ -12,8 +12,13 @@ var AppMap = {
     bounds: null,
     destination: null,
     default: {
+        focus: 'person',
         zoom: 16,
         minZoom: 10
+    },
+    setting: {
+        focus: 'person',
+        zoom: 16
     },
     init: function () {
         this.initIcons();
@@ -43,7 +48,7 @@ var AppMap = {
 
         that.map = L.map('map', {
             center: L.latLng(AppLocation.position.latitude, AppLocation.position.longitude),
-            zoom: that.default.zoom,
+            zoom: that.setting.zoom,
             minZoom: that.default.minZoom,
             attributionControl: false,
             zoomControl: false
@@ -58,7 +63,7 @@ var AppMap = {
     hooks: function () {
         var that = this;
 
-        jQuery(document).on('AppLayout.after.MapSet', function (event, position) {
+        jQuery(document).on('AppLayout.MapSet.after', function (event, position) {
             that.map.invalidateSize();
 
             if (that.bounds) {
@@ -66,15 +71,19 @@ var AppMap = {
             }
         });
 
-        jQuery(document).on('AppLocation.after.PositionSet', function (event, position) {
+        jQuery(document).on('AppLocation.PositionSet.after', function (event, position) {
             that.setMarker(position, 'person');
 
-            if (that.markers.stops.length == 0) {
+            if ('person' == that.setting.focus) {
                 that.setPosition(position);
             }
         });
 
-        jQuery(document).on('AppRoute.before.routes', function () {
+        jQuery(document).on('AppSearch.destination.selected AppSearch.destination.error', function () {
+            that.resetRoute();
+        });
+
+        jQuery(document).on('AppRoute.set.before', function () {
             jQuery.each(that.markers['stops'], function (index, value) {
                 that.map.removeLayer(value);
             });
@@ -82,8 +91,11 @@ var AppMap = {
             that.markers['stops'] = [];
         });
 
-        jQuery(document).on('AppRoute.after.routes', function () {
+        jQuery(document).on('AppRoute.set.after', function () {
             var positions = [];
+
+            that.setting.focus = 'bounds';
+            that.setting.zoom = that.default.zoom;
 
             positions.push({
                 longitude: that.markers['person'].getLatLng().lng,
@@ -104,12 +116,24 @@ var AppMap = {
             that.setMarker(position, 'stop');
         });
 
-        jQuery(document).on('AppSearch.destination.selected AppSearch.destination.error', function () {
-            that.resetRoute();
+        jQuery(document).on('AppRoute.route.selected', function () {
+            that.setting.focus = 'bounds';
+            that.setting.zoom = that.default.zoom;
         });
 
         jQuery(document).on('AppNavigation.getPath', function (event, path) {
             that.setRoute(path);
+        });
+
+        jQuery(document).on('AppNavigation.start.after', function () {
+            that.bounds = null;
+            that.setting.focus = 'person';
+            that.setting.zoom = 18;
+        });
+
+        jQuery(document).on('AppNavigation.stop.after', function () {
+            that.setting.focus = that.default.focus;
+            that.setting.zoom = that.default.zoom;
         });
     },
     setPosition: function (position) {
@@ -135,12 +159,15 @@ var AppMap = {
             };
 
             that.bounds = bounds;
-            that.map.fitBounds(that.bounds);
+
+            if ('bounds' == that.setting.focus) {
+                that.map.fitBounds(that.bounds);
+            }
         } else {
             position = L.latLng(position.latitude, position.longitude);
 
             that.bounds = null;
-            that.map.setView(position, that.default.zoom);
+            that.map.setView(position, that.setting.zoom);
         }
     },
     setMarker: function (position, type) {
@@ -170,7 +197,10 @@ var AppMap = {
 
         that.polylines = L.polyline(route).addTo(that.map);
         that.bounds = that.polylines.getBounds();
-        that.map.fitBounds(that.bounds);
+
+        if ('bounds' == that.setting.focus) {
+            that.map.fitBounds(that.bounds);
+        }
     },
     resetRoute: function () {
         var that = this;

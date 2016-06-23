@@ -42,7 +42,7 @@ var AppLocation = {
         }
     },
     set: function (position) {
-        jQuery(document).trigger('AppLocation.before.PositionSet', [AppLocation.position]);
+        jQuery(document).trigger('AppLocation.PositionSet.before', [AppLocation.position]);
 
         AppLocation.position.longitude = position.coords.longitude;
         AppLocation.position.latitude = position.coords.latitude;
@@ -50,10 +50,10 @@ var AppLocation = {
         AppError.hide('location-denied');
         AppError.hide('location-unavailable');
 
-        jQuery(document).trigger('AppLocation.after.PositionSet', [AppLocation.position]);
+        jQuery(document).trigger('AppLocation.PositionSet.after', [AppLocation.position]);
     },
     error: function (e) {
-        jQuery(document).trigger('AppLocation.before.error', [e]);
+        jQuery(document).trigger('AppLocation.error.before', [e]);
 
         switch (e.code) {
             case e.PERMISSION_DENIED:
@@ -73,6 +73,6 @@ var AppLocation = {
                 break;
         }
 
-        jQuery(document).trigger('AppLocation.after.error', [e]);
+        jQuery(document).trigger('AppLocation.error.after', [e]);
     }
 };

@@ -28,11 +28,11 @@ var AppRoute = {
             that.set(suggestion.data);
         });
 
-        jQuery(document).on('AppRoute.set.before AppNavigation.after.stop', function () {
+        jQuery(document).on('AppRoute.set.before AppNavigation.stop.after', function () {
             that.empty();
         });
 
-        jQuery(document).on('AppNavigation.after.start', function () {
+        jQuery(document).on('AppNavigation.start.after', function () {
             that.hide();
         });
 

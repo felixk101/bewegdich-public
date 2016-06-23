@@ -20,7 +20,7 @@ var AppLayout = {
             that.setMap();
         });
 
-        jQuery(document).on('AppNavigation.after.start', function () {
+        jQuery(document).on('AppNavigation.start.after AppNavigation.stop.after', function () {
             that.setMap();
 
             jQuery(that.element.navigation).resize(function () {
@@ -28,7 +28,7 @@ var AppLayout = {
             });
         });
 
-        jQuery(document).on('AppRoute.after.routes', function () {
+        jQuery(document).on('AppNavigation.start.after AppRoute.set.after', function () {
             that.setMap();
 
             jQuery(that.element.routes).resize(function () {
@@ -43,20 +43,25 @@ var AppLayout = {
             return;
         }
 
-        jQuery(document).trigger('AppLayout.before.MapSet');
+        jQuery(document).trigger('AppLayout.MapSet.before');
 
-        var newHeight = jQuery(window).height();
+        var newHeight = jQuery(window).height(),
+            newTop = 0;
 
         if (jQuery(that.element.navigation).length && jQuery(that.element.navigation).is(':visible')) {
             newHeight -= jQuery(that.element.navigation).outerHeight();
+            newTop += jQuery(that.element.navigation).outerHeight();
         }
 
         if (jQuery(that.element.routes).length && jQuery(that.element.routes).is(':visible')) {
             newHeight -= jQuery(that.element.routes).outerHeight();
         }
 
-        jQuery(that.element.map).css('height', newHeight);
+        jQuery(that.element.map).css({
+            height: newHeight,
+            top: newTop
+        });
 
-        jQuery(document).trigger('AppLayout.after.MapSet');
+        jQuery(document).trigger('AppLayout.MapSet.after');
     }
 };

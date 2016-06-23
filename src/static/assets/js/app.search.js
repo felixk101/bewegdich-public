@@ -58,12 +58,12 @@ var AppSearch = {
     hooks: function () {
         var that = this;
 
-        jQuery(document).on('AppLocation.after.error', function (event, e) {
+        jQuery(document).on('AppLocation.error.after', function (event, e) {
             that.statusCurrent = 'disabled';
             that.statusDisabled();
         });
 
-        jQuery(document).on('AppLocation.after.PositionSet', function (event, position) {
+        jQuery(document).on('AppLocation.PositionSet.after', function (event, position) {
             if (that.statusCurrent == 'disabled') {
                 that.statusCurrent = null;
                 that.statusDefault();
@@ -74,11 +74,11 @@ var AppSearch = {
             that.statusDefault();
         });
 
-        jQuery(document).on('AppNavigation.after.start', function () {
+        jQuery(document).on('AppNavigation.start.after', function () {
             that.hide();
         });
 
-        jQuery(document).on('AppNavigation.after.stop', function () {
+        jQuery(document).on('AppNavigation.stop.after', function () {
             that.show();
         });
     },
