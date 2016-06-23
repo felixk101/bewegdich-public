@@ -11,6 +11,9 @@ var AppRoute = {
             templateRouteDetail: '#template-route-detail',
             modalRouteDetails: '#modal-route-details'
         },
+        ajax: {
+            routes: null
+        },
         init: function () {
             this.hooks();
         },
@@ -36,7 +39,11 @@ var AppRoute = {
         setRoute: function (destination) {
             var that = this;
 
-            jQuery.ajax({
+            if (that.ajax.routes) {
+                that.ajax.routes.abort();
+            }
+
+            that.ajax.routes = jQuery.ajax({
                 url: '/api/route/',
                 xhr: AppAjax.progress,
                 data: {

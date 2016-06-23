@@ -3,7 +3,16 @@ jQuery(document).ready(function () {
 });
 
 var AppNavigation = {
-    path: null,
+    interval: {
+        path: null
+    },
+    refresh: {
+        path: 10000,
+        navigation: 5000
+    },
+    ajax: {
+        path: null
+    },
     init: function () {
         this.hooks();
     },
@@ -11,11 +20,35 @@ var AppNavigation = {
         var that = this;
 
         jQuery(document).on('AppRoute.route.selected', function (event, destination) {
-            that.path = that.getPath(destination);
+            if (that.interval.path) {
+                clearInterval(that.interval.path);
+            }
+
+            that.interval.path = window.setInterval(function interval() {
+                if (that.ajax.path) {
+                    that.ajax.path.abort();
+                }
+
+                var path = that.getPath(destination);
+
+                return interval;
+            }(), that.refresh.path);
         });
 
         jQuery(document).on('AppRoute.route.navigate', function (event, destination) {
-            that.path = that.getPath(destination);
+            if (that.interval.path) {
+                clearInterval(that.interval.path);
+            }
+
+            that.interval.path = window.setInterval(function interval() {
+                if (that.ajax.path) {
+                    that.ajax.path.abort();
+                }
+
+                var path = that.getPath(destination);
+
+                return interval;
+            }(), that.refresh.navigation);
         });
     },
     getPath: function (destination) {

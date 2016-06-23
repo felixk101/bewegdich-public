@@ -3,6 +3,12 @@ jQuery(document).ready(function () {
 });
 
 var AppLocation = {
+    interval: {
+        location: null
+    },
+    refresh: {
+        location: 5000
+    },
     position: {
         longitude: 0,
         latitude: 0,
@@ -15,10 +21,15 @@ var AppLocation = {
             latitude: jQuery('body').data('latitude')
         };
 
-        that.get();
-        window.setInterval(function () {
+        if (that.interval.location) {
+            clearInterval(that.interval.location);
+        }
+
+        that.interval.location = window.setInterval(function interval() {
             that.get();
-        }, 5000);
+
+            return interval;
+        }(), that.refresh.location);
     },
     get: function (options) {
         if (navigator.geolocation) {
