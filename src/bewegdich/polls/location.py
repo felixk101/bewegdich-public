@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from views import *
 from models import Coord
 from variables import LOCATION
 from polls.apis import get_xml
@@ -16,9 +15,11 @@ def get_location(request):
     # return request.session[LOCATION]
     return Coord(request.session[LOCATION][0], request.session[LOCATION][1])
 
+
 def set_location(request, position):
     #
     request.session[LOCATION] = [position.latitude, position.longitude]
+
 
 def get_ip_location(ip):
     """

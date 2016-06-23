@@ -7,7 +7,6 @@ from xml.etree import ElementTree as ET
 import datetime
 
 from polls.models import Coord
-from polls.variables import FH_LONGWAY1, FH_LONGWAY2
 
 
 def get_json(url):
