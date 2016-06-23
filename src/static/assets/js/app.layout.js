@@ -28,7 +28,7 @@ var AppLayout = {
             });
         });
 
-        jQuery(document).on('AppNavigation.start.after AppRoute.set.after', function () {
+        jQuery(document).on('AppRoute.set.after AppRoute.show.after AppRoute.hide.after', function () {
             that.setMap();
 
             jQuery(that.element.routes).resize(function () {

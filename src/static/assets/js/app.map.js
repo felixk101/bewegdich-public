@@ -66,7 +66,7 @@ var AppMap = {
         jQuery(document).on('AppLayout.MapSet.after', function (event, position) {
             that.map.invalidateSize();
 
-            if (that.bounds) {
+            if (that.bounds && 'bounds' == that.setting.focus) {
                 that.map.fitBounds(that.bounds);
             }
         });

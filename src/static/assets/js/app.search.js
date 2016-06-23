@@ -103,9 +103,17 @@ var AppSearch = {
         jQuery(this.element.field).find('input').prop('disabled', true);
     },
     show: function () {
+        jQuery(document).trigger('AppSearch.show.before');
+
         jQuery(this.element.search).fadeIn(this.duration.show);
+
+        jQuery(document).trigger('AppSearch.show.after');
     },
     hide: function () {
+        jQuery(document).trigger('AppSearch.hide.before');
+
         jQuery(this.element.search).fadeOut(this.duration.hide);
+
+        jQuery(document).trigger('AppSearch.hide.after');
     }
 };

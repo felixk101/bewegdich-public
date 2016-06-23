@@ -140,12 +140,24 @@ var AppRoute = {
         });
     },
     empty: function () {
+        jQuery(document).trigger('AppRoute.empty.before');
+
         jQuery(this.element.routes).empty();
+
+        jQuery(document).trigger('AppRoute.empty.after');
     },
     show: function () {
+        jQuery(document).trigger('AppRoute.show.before');
+
         jQuery(this.element.routes).fadeIn(this.duration.show);
+
+        jQuery(document).trigger('AppRoute.show.after');
     },
     hide: function () {
+        jQuery(document).trigger('AppRoute.hide.before');
+
         jQuery(this.element.routes).fadeOut(this.duration.hide);
+
+        jQuery(document).trigger('AppRoute.hide.after');
     }
 };
