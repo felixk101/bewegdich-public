@@ -45,13 +45,13 @@ var AppRoute = {
         jQuery(document).on('click', that.element.routeSelect, function () {
             var originDestination = jQuery(this).closest(that.element.route).data('origin-destination'),
                 originStop = jQuery(this).closest(that.element.route).data('origin-stop'),
-                originDepaturetime = jQuery(this).closest(that.element.route).data('origin-depaturetime'),
+                originDeparturetime = jQuery(this).closest(that.element.route).data('origin-departuretime'),
                 destinationStop = jQuery(this).closest(that.element.route).data('destination-stop');
 
             jQuery(document).trigger('AppRoute.route.navigate', [originDestination, {
                 origin: {
                     name: originStop,
-                    depaturetime: originDepaturetime
+                    departuretime: originDeparturetime
                 },
                 destination: {
                     name: destinationStop
@@ -102,7 +102,7 @@ var AppRoute = {
                             longitude: value.origin_stop.lng,
                             latitude: value.origin_stop.lat
                         }),
-                        originDepaturetime: value.origin_stop.depaturetime,
+                        originDeparturetime: value.origin_stop.departuretime,
                         destinationStop: value.destination_stop.name,
                         duration: value.duration,
                         line: value.line.join(', ')

@@ -2,17 +2,17 @@
 
 <script type="text/html" id="template-navigation">
     <ul class="destination text-center">
-        <li><i class="fa fa-male"></i>
-            <span>{% trans "Walking destination:" %}</span> <span
-                    data-content="walkingDestination"></span></li>
-        <li><i class="fa fa-subway "></i>
-            <span>{% trans "Final destination:" %}</span> <span
-                    data-content="finalDestination"></span></li>
-        <li><i class="fa fa-clock-o"></i>
-            <span>{% trans "Depature time:" %}</span> <span
-                    data-content="depaturetime"></span></li>
+        <li>
+            <i class="fa fa-subway"></i> <span data-content="walkingDestination"></span>
+        </li>
+        <li>
+            <i class="fa fa-flag-checkered"></i> <span data-content="finalDestination"></span>
+        </li>
+        <li>
+            <i class="fa fa-clock-o"></i> <span data-content="departuretime"></span>
+        </li>
     </ul>
     <div class="time text-center">
-        <i class="fa fa-2x fa-tachometer"></i> <span data-content="duration"></span>
+        <i class="fa fa-2x fa-hourglass-half"></i> <span data-content="duration"></span>
     </div>
 </script>

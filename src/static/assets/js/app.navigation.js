@@ -58,7 +58,7 @@ var AppNavigation = {
                         that.startNavigation({
                             walkingDestination: data.origin.name,
                             finalDestination: data.destination.name,
-                            depaturetime: data.origin.depaturetime,
+                            departuretime: data.origin.departuretime,
                             duration: json.duration,
                             path: json.path
                         });
