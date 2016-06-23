@@ -7,7 +7,7 @@ from controller import Controller
 import location as loc
 from rest_framework.renderers import JSONRenderer
 
-from polls.api import get_walking_Route
+from polls.apis import get_walking_Route
 from serializers import Efa_stop_list_serializer
 from serializers import RouteListSerializer, RouteList, Walkingpath_serializer
 from variables import SPEED

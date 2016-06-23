@@ -67,14 +67,14 @@ def getNumberUntilChar(text):
     :param text: to search through
     :return: the index of the beginning of the number
     """
-    index = len(text)-2
+    index = len(text) - 2
     while True:
         test = text[index]
         if not is_number(test):
             break
         else:
             index -= 1
-    return index+1
+    return index + 1
 
 
 def is_number(s):
@@ -84,6 +84,7 @@ def is_number(s):
     except ValueError:
         pass
     return False
+
 
 def get_matching_stations(place, coords):
     """
@@ -212,7 +213,7 @@ def replace_coordlist(list, sublist, replacelist):
     :param replacelist: the replacement of the sublist
     :return: the new list
     """
-    index = find_sublist(list,sublist)
+    index = find_sublist(list, sublist)
 
     if index >= 0:
         return list[0:index - 1] + replacelist + list[index + len(sublist):]
@@ -220,7 +221,7 @@ def replace_coordlist(list, sublist, replacelist):
         return list
 
 
-def find_sublist(list,sublist):
+def find_sublist(list, sublist):
     """
     Searches for a sublist in a list and resturns the index where sublist starts in the list
 

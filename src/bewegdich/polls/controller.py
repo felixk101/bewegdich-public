@@ -2,7 +2,7 @@
 import Queue as Q
 import datetime
 
-from api import get_walking_Route, get_matching_stations, get_efa_routes, closestCity, replace_coordlist
+from polls.apis import get_walking_Route, get_matching_stations, get_efa_routes, closestCity, replace_coordlist
 from models import Coord
 from models import efaStop
 from route import Route, Stop
