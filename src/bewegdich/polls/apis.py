@@ -7,6 +7,7 @@ from xml.etree import ElementTree as ET
 import datetime
 
 from polls.models import Coord
+from polls.variables import FH_LONGWAY2, FH_LONGWAY1
 
 
 def get_json(url):
@@ -29,8 +30,76 @@ def get_xml(url):
     string = response.read()
     return ET.fromstring(string)
 
-
 def get_walking_Route(origin, destination):
+    """
+    Searches for a route to walk from A to B
+    :param origin: startposition [lng,lat]
+    :param destination: destination [lng,lat]
+    :return: a xml treeobject
+    """
+    if type(origin) != list or type(destination) != list:
+        return -1
+
+    param = {
+        'start': str(origin[0]) + "," + str(origin[1]),
+        'end': str(destination[0]) + "," + str(destination[1]),
+        'via': '',
+        'lang': 'de',
+        'distunit': 'KM',
+        'routepref': 'Pedestrian',
+        'weighting': 'Shortest',
+        'avoidAreas': '',
+        'useTMC': 'false',
+        'noMotorways': 'false',
+        'noTollways': 'false',
+        'noUnpavedroads': 'false',
+        'noSteps': 'false',
+        'noFerries': 'false',
+        'instructions': 'false'
+    }
+    url = "http://www.openrouteservice.org/route?" + urllib1.urlencode(param)
+    data = get_xml(url)
+
+    # Get the coords out of the xml
+    coords = []
+    for waypoint in data[1][0][1][0]:
+        arr = waypoint.text.split(" ")
+        coords.append(Coord(arr[1], arr[0]))
+    shortcut = []
+    coords = replace_coordlist(coords, FH_LONGWAY1, [])
+    coords = replace_coordlist(coords, FH_LONGWAY2, shortcut)
+
+    #Get the time out of the xml
+    duration = data[1][0][0][0].text
+    time = -1
+    secondsonly = 0
+    if "M" not in duration:
+        print("ERROR: Time should not be zer o")
+        secondsonly = datetime.timedelta(0, 0)
+    else:
+        try:
+            #e.g. PT    15M
+            #     PT    37M 49S
+            #     PT 9H 43M 57S
+            dic = {"S":1, "M":60, "H":3600}
+            index = getNumberUntilChar(duration)
+            while duration[-1] is not "T":
+                secondsonly += int(duration[index:-1]) * dic[duration[-1]]
+                duration = duration[:index]
+                index = getNumberUntilChar(duration)
+
+        except:
+            print("Error: time could not be converted: " + duration)
+            secondsonly = datetime.timedelta(0, 0)
+
+    if find_sublist(coords,FH_LONGWAY1)>=0:
+        secondsonly -= 100
+    if find_sublist(coords,FH_LONGWAY2)>=0:
+        secondsonly -= 150
+    dic = {"walkingtime":secondsonly,"coords":coords}
+    return dic
+
+def get_walking_RouteNinos(origin, destination):
     """
     Searches for a route to walk from A to B
     :param origin: startposition [lng,lat]
