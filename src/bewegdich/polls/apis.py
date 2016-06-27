@@ -74,8 +74,8 @@ def get_walking_Route(origin, destination):
     time = -1
     secondsonly = 0
     if "M" not in duration:
-        print("ERROR: Time should not be zer o")
-        secondsonly = datetime.timedelta(0, 0)
+        print("ERROR: Time is not valid: " + duration)
+        secondsonly = 0
     else:
         try:
             #e.g. PT    15M
@@ -90,7 +90,7 @@ def get_walking_Route(origin, destination):
 
         except:
             print("Error: time could not be converted: " + duration)
-            secondsonly = datetime.timedelta(0, 0)
+            secondsonly = 0
 
     if find_sublist(coords,FH_LONGWAY1)>=0:
         secondsonly -= 100
