@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import Queue as Q
 import datetime
-
+import time as t
 from polls.apis import get_walking_Route, get_matching_stations, get_efa_routes, closestCity, replace_coordlist
 from models import Coord
 from models import efaStop
@@ -121,6 +121,8 @@ class Controller(object):
                     continue
                 if station.walkingtime != -1:
                     route.departure_time = route.departure_time - station.walkingtime
+
+                route.serializeTimes()
 
                 self.insert_start_point(start, station.walkingtime, route)
                 route.duration = route.duration + station.walkingtime

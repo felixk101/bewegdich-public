@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime
-
+import datetime, time
 
 class Route(object):
     """
@@ -63,6 +62,14 @@ class Route(object):
 
     def __str__(self):
         return self.origin_stop.__str__() + " -> " + self.destination_stop.__str__()
+
+    def serializeTimes(self):
+
+        for stop in self.path:
+            if(type(stop.departuretime) is datetime.datetime):
+                stop.departuretime = int(time.mktime(stop.departuretime.timetuple()))
+
+
 
     def get_next_stops(self):
         """

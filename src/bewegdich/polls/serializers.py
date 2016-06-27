@@ -7,7 +7,7 @@ class StopSerializer(serializers.Serializer):
     name = serializers.CharField(required=True, allow_blank=True, max_length=100)
     lat = serializers.CharField(required=True, allow_blank=False, max_length=10)
     lng = serializers.CharField(required=True, allow_blank=False, max_length=10)
-    departuretime = serializers.DateTimeField(required=False)
+    departuretime = serializers.IntegerField(required=False)
     walkingtime = serializers.DurationField(required=False)
     stopid = serializers.CharField(required=True, allow_blank=False, max_length=10)
 
