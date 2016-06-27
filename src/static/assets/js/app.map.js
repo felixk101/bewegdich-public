@@ -139,7 +139,7 @@ var AppMap = {
             that.setRoute(path);
         });
 
-        jQuery(document).on('AppNavigation.start.after', function () {
+        jQuery(document).on('AppRoute.route.navigate', function () {
             that.bounds = null;
             that.setting.focus = 'navigation';
             that.setting.zoom = 18;
@@ -150,6 +150,8 @@ var AppMap = {
         jQuery(document).on('AppNavigation.stop.after', function () {
             that.setting.focus = that.default.focus;
             that.setting.zoom = that.default.zoom;
+
+            that.setPosition(AppLocation.position);
         });
     },
     setPosition: function (position) {
@@ -175,10 +177,7 @@ var AppMap = {
             };
 
             that.bounds = bounds;
-
-            if ('bounds' == that.setting.focus) {
-                that.map.fitBounds(that.bounds);
-            }
+            that.map.fitBounds(that.bounds);
         } else {
             position = L.latLng(position.latitude, position.longitude);
 
