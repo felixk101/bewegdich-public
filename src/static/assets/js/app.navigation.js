@@ -55,13 +55,6 @@ var AppNavigation = {
 
                 that.getPath(destination, function (json) {
                     if (json && json.path.length > 1) {
-                        if(json.duration%60 <10){
-                            json.duration = "Restliche Gehzeit: " + ~~(json.duration/60)+":0"+json.duration%60
-                        }
-                        else
-                        {
-                            json.duration = "Restliche Gehzeit: " + ~~(json.duration/60)+":"+json.duration%60
-                        }
                         that.startNavigation({
                             walkingDestination: data.origin.name,
                             finalDestination: data.destination.name,
