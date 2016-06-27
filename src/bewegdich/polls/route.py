@@ -69,6 +69,8 @@ class Route(object):
             if(type(stop.departuretime) is datetime.datetime):
                 stop.departuretime = int(time.mktime(stop.departuretime.timetuple()))
 
+            if(type(stop.walkingtime) is datetime.timedelta):
+                stop.walkingtime = int(stop.walkingtime.total_seconds())
 
 
     def get_next_stops(self):
