@@ -58,7 +58,7 @@ class Controller(object):
         # If no time was set, take the current one
         if time == -1:
             time = datetime.datetime.now()
-            self.session[SPEED] = 0.2
+
            # time = datetime.datetime(2016, 06, 20, 10, 2)
 
         try:  # Check if the dest is really a stopID
@@ -122,12 +122,11 @@ class Controller(object):
                 if station.walkingtime != -1:
                     route.departure_time = route.departure_time - station.walkingtime
 
-                route.serializeTimes()
-
                 self.insert_start_point(start, station.walkingtime, route)
                 route.duration = route.duration + station.walkingtime
                 route.id = id
                 id += 1
+                route.serializeTimes()
                 routes.append(route)
 
         routes = sorted(routes, key=lambda route: route.departure_time)
