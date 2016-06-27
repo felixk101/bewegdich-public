@@ -59,7 +59,7 @@ class Controller(object):
         if time == -1:
             time = datetime.datetime.now()
             self.session[SPEED] = 0.2
-            time = datetime.datetime(2016, 06, 20, 10, 2)
+           # time = datetime.datetime(2016, 06, 20, 10, 2)
 
         try:  # Check if the dest is really a stopID
             int(dest)
