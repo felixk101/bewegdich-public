@@ -124,6 +124,7 @@ class Controller(object):
 
                 self.insert_start_point(start, station.walkingtime, route)
                 route.duration = route.duration + station.walkingtime
+                route.origin_stop.walkingtime = station.walkingtime
                 route.id = id
                 id += 1
                 route.serializeTimes()
