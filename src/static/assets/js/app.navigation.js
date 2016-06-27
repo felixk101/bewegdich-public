@@ -22,7 +22,7 @@ var AppNavigation = {
     },
     refresh: {
         path: 10000,
-        navigation: 50000
+        navigation: 5000
     },
     init: function () {
         this.hooks();
