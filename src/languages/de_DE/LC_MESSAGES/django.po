@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: BewegDich 1.0.x\n"
 "Report-Msgid-Bugs-To: ninos.ego@hs-augsburg.de\n"
 "POT-Creation-Date: 2016-06-17 19:12+0200\n"
-"PO-Revision-Date: 2016-06-22 15:59+0200\n"
+"PO-Revision-Date: 2016-06-27 20:00+0200\n"
 "Last-Translator: Ninos Ego <me@ninosego.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -61,3 +61,12 @@ msgstr "Abfahrt:"
 
 msgid "Navigate"
 msgstr "Navigieren"
+
+msgid "YYYY/MM/DD"
+msgstr "DD.MM.YYYY"
+
+msgid "hh:mm a A"
+msgstr "HH.mm [Uhr]"
+
+msgid "YYYY/MM/DD [at] hh:mm a A"
+msgstr "DD.MM.YYYY [um] HH:mm [Uhr]"
