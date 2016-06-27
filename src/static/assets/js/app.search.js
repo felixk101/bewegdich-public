@@ -37,6 +37,12 @@ var AppSearch = {
                     return AppLocation.position.latitude;
                 }
             },
+            onSearchStart: function (query) {
+                jQuery(document).trigger('AppSearch.destination.start', [query]);
+            },
+            onSearchComplete: function (query, suggestions) {
+                jQuery(document).trigger('AppSearch.destination.complete', [query, suggestions]);
+            },
             onSelect: function (suggestion) {
                 that.statusLoading();
 
@@ -105,14 +111,14 @@ var AppSearch = {
     show: function () {
         jQuery(document).trigger('AppSearch.show.before');
 
-        jQuery(this.element.search).fadeIn(this.duration.show, function() {
+        jQuery(this.element.search).fadeIn(this.duration.show, function () {
             jQuery(document).trigger('AppSearch.show.after');
         });
     },
     hide: function () {
         jQuery(document).trigger('AppSearch.hide.before');
 
-        jQuery(this.element.search).fadeOut(this.duration.hide, function() {
+        jQuery(this.element.search).fadeOut(this.duration.hide, function () {
             jQuery(document).trigger('AppSearch.hide.after');
         });
     }

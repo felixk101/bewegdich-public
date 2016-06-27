@@ -11,21 +11,36 @@ var AppNavigation = {
         show: 500,
         hide: 250
     },
-    interval: {
+    ajax: {
         path: null
+    },
+    interval: {
+        path: null,
+        navigation: null
     },
     refresh: {
         path: 10000,
         navigation: 5000
-    },
-    ajax: {
-        path: null
     },
     init: function () {
         this.hooks();
     },
     hooks: function () {
         var that = this;
+
+        jQuery(document).on('AppNavigation.stop.before AppSearch.destination.start AppRoute.route.selected AppRoute.route.navigate', function () {
+            if (that.ajax.path) {
+                that.ajax.path.abort();
+            }
+
+            if (that.interval.path) {
+                clearInterval(that.interval.path);
+            }
+
+            if (that.interval.navigation) {
+                clearInterval(that.interval.navigation);
+            }
+        });
 
         jQuery(document).on('AppRoute.route.selected', function (event, destination) {
             if (that.interval.path) {
@@ -44,11 +59,11 @@ var AppNavigation = {
         });
 
         jQuery(document).on('AppRoute.route.navigate', function (event, destination, data) {
-            if (that.interval.path) {
-                clearInterval(that.interval.path);
+            if (that.interval.navigation) {
+                clearInterval(that.interval.navigation);
             }
 
-            that.interval.path = window.setInterval(function interval() {
+            that.interval.navigation = window.setInterval(function interval() {
                 if (that.ajax.path) {
                     that.ajax.path.abort();
                 }
@@ -90,14 +105,18 @@ var AppNavigation = {
 
         jQuery(document).trigger('AppNavigation.stop.before');
 
-        clearInterval(that.interval.path);
-
-        jQuery(that.element.navigation).fadeIn(that.duration.hide);
+        jQuery(that.element.navigation).fadeOut(that.duration.hide);
 
         jQuery(document).trigger('AppNavigation.stop.after');
     },
     getPath: function (destination, callback) {
-        jQuery.ajax({
+        var that = this;
+
+        if (that.ajax.path) {
+            that.ajax.path.abort();
+        }
+
+        that.ajax.path = jQuery.ajax({
             url: '/api/walkingpath/',
             xhr: AppAjax.progress,
             data: {
