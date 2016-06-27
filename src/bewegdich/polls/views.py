@@ -7,7 +7,7 @@ from controller import Controller
 import location as loc
 from rest_framework.renderers import JSONRenderer
 
-from polls.apis import get_walking_Route
+from polls.apis import get_walking_Route, fix_wrong_coords
 from serializers import Efa_stop_list_serializer
 from serializers import RouteListSerializer, RouteList, Walkingpath_serializer
 from variables import SPEED
@@ -143,7 +143,12 @@ def walkingpath(request):
         originlng = codecs.encode(request.GET["originLongitude"], 'utf-8')
         destlat = codecs.encode(request.GET["destinationLatitude"], 'utf-8')
         destlng = codecs.encode(request.GET["destinationLongitude"], 'utf-8')
-        c = Controller(request.session)
+
+        originlat = fix_wrong_coords(originlat)
+        originlng = fix_wrong_coords(originlng)
+        destlat = fix_wrong_coords(destlat)
+        destlng = fix_wrong_coords(destlng)
+
         walking_route = get_walking_Route([originlng, originlat], [destlng, destlat])
         path = walking_route["coords"]
 

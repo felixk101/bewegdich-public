@@ -63,7 +63,7 @@ class TestController(unittest.TestCase):
         data = json.loads(response.content)
         self.assertTrue("data" in data)
         self.assertTrue(len(data), 4)
-        self.assertEqual(len(data["data"]["routes"]), 3)
+        self.assertEqual(len(data["data"]["routes"]), 4)
 
 
 if __name__ == '__main__':

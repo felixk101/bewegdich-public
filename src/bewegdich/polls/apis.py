@@ -314,3 +314,9 @@ def find_sublist(list, sublist):
                     found = True
                     return startindex
     return -1
+
+def fix_wrong_coords(coord):
+    if float(coord) < 0:
+        return str(360 + float(coord))
+    else:
+        return coord
