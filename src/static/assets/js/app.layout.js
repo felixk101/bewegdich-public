@@ -24,7 +24,7 @@ var AppLayout = {
             that.setMap();
         });
 
-        jQuery(document).on('AppRoute.set.after AppRoute.show.after AppRoute.hide.after', function () {
+        jQuery(document).on('AppRoute.set.after AppRoute.show.after AppRoute.empty.after AppRoute.hide.after', function () {
             that.setMap();
         });
     },

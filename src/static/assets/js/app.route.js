@@ -29,7 +29,7 @@ var AppRoute = {
             that.set(suggestion.data);
         });
 
-        jQuery(document).on('AppNavigation.stop.before', function () {
+        jQuery(document).on('AppRoute.set.after AppNavigation.stop.before', function () {
             that.show();
         });
 
@@ -37,7 +37,7 @@ var AppRoute = {
             that.empty();
         });
 
-        jQuery(document).on('AppNavigation.start.before', function () {
+        jQuery(document).on('AppSearch.destination.start AppNavigation.start.before', function () {
             that.hide();
         });
 
