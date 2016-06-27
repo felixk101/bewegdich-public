@@ -3,14 +3,6 @@ jQuery(document).ready(function () {
 });
 
 var AppMap = {
-    map: null,
-    icons: [],
-    markers: {
-        "stops": []
-    },
-    polylines: null,
-    bounds: null,
-    destination: null,
     default: {
         focus: 'person',
         zoom: 16,
@@ -20,6 +12,18 @@ var AppMap = {
         focus: 'person',
         zoom: 16
     },
+    element: {
+        mapRelocate: '#map-relocate'
+    },
+    map: null,
+    icons: [],
+    markers: {
+        "stops": []
+    },
+    polylines: null,
+    bounds: null,
+    destination: null,
+    positionInitialized: false,
     init: function () {
         this.initIcons();
         this.initMap();
@@ -63,6 +67,14 @@ var AppMap = {
     hooks: function () {
         var that = this;
 
+        jQuery(that.element.mapRelocate).on('click', function () {
+            if (that.setting.focus == 'bounds') {
+                that.map.fitBounds(that.bounds);
+            } else {
+                that.setPosition(AppLocation.position);
+            }
+        });
+
         jQuery(document).on('AppLayout.MapSet.after', function (event, position) {
             that.map.invalidateSize();
 
@@ -74,8 +86,10 @@ var AppMap = {
         jQuery(document).on('AppLocation.PositionSet.after', function (event, position) {
             that.setMarker(position, 'person');
 
-            if ('person' == that.setting.focus) {
+            if (!that.positionInitialized && 'person' == that.setting.focus) {
                 that.setPosition(position);
+
+                that.positionInitialized = true;
             }
         });
 
@@ -127,7 +141,7 @@ var AppMap = {
 
         jQuery(document).on('AppNavigation.start.after', function () {
             that.bounds = null;
-            that.setting.focus = 'person';
+            that.setting.focus = 'navigation';
             that.setting.zoom = 18;
         });
 
