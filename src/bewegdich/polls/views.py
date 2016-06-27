@@ -3,6 +3,7 @@ import codecs
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import gettext as _
 from controller import Controller
 import location as loc
 from rest_framework.renderers import JSONRenderer
@@ -20,6 +21,11 @@ def index(request):
         'section': {
             'title': 'Beweg Dich',
             'location': loc.get_location(request),
+            'format': {
+                'date': _('YYYY/MM/DD'),
+                'time': _('hh:mm a A'),
+                'dateTime': _('YYYY/MM/DD [at] hh:mm a A')
+            },
             'settings': {
                 'speed': {
                     'min': '0.1',

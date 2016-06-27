@@ -103,8 +103,8 @@ var AppRoute = {
                             latitude: value.origin_stop.lat
                         }),
                         originDeparturetime: value.origin_stop.departuretime,
+                        originWalkingtime: value.origin_stop.walkingtime,
                         destinationStop: value.destination_stop.name,
-                        duration: value.duration,
                         line: value.line.join(', ')
                     }, {
                         append: true,
