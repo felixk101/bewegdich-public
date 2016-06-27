@@ -7,7 +7,8 @@
       data-latitude="{{ section.location.latitude|default:"0" }}"
       data-format-date="{{ section.format.date|default:"YYYY/MM/DD" }}"
       data-format-time="{{ section.format.time|default:"hh:mm a A" }}"
-      data-format-dateTime="{{ section.format.dateTime|default:"YYYY/MM/DD [at] hh:mm a A" }}">
+      data-format-dateTime="{{ section.format.dateTime|default:"YYYY/MM/DD [at] hh:mm a A" }}"
+      data-format-countdown="{{ section.format.countdown|default:"m:ss" }}">
 <div class="snap-drawers">
     <div class="snap-drawer snap-drawer-left">
         {% include "parts/menu-left.html" %}

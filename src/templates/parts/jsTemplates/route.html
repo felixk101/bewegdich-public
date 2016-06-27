@@ -18,18 +18,21 @@
             <ul class="detail">
                 <li>
                     <i class="fa fa-fw fa-street-view"></i>
-                    <span>{% trans "Walking time:" %}</span> <span data-content="originWalkingtime"></span>
+                    <span>{% trans "Walking time:" %}</span> <span data-content="originWalkingtime"
+                                                                   data-format="countdown"></span>
                 </li>
                 <li>
                     <i class="fa fa-fw fa-clock-o"></i>
-                    <span>{% trans "Departure time:" %}</span> <span data-content="originDeparturetime" data-format="dateTime"></span>
+                    <span>{% trans "Departure time:" %}</span> <span data-content="originDeparturetime"
+                                                                     data-format="dateTime"></span>
                 </li>
                 <li>
                     <i class="fa fa-fw fa-subway"></i>
                     <span>{% trans "Final destination:" %}</span> <span data-content="destinationStop"></span>
                 </li>
             </ul>
-            <button class="route-select btn btn-primary"><i class="fa fa-location-arrow"></i> {% trans "Navigate" %}</button>
+            <button class="route-select btn btn-primary"><i class="fa fa-location-arrow"></i> {% trans "Navigate" %}
+            </button>
         </div>
     </div>
 </script>

@@ -18,6 +18,9 @@ var AppTemplate = {
             },
             dateTime: function (value) {
                 return moment(value, 'X').format(jQuery(that.element.format).attr('data-format-dateTime'));
+            },
+            countdown: function (value) {
+                return moment().startOf('day').seconds(value).format(jQuery(that.element.format).attr('data-format-countdown'));
             }
         });
     }

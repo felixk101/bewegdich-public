@@ -24,7 +24,8 @@ def index(request):
             'format': {
                 'date': _('YYYY/MM/DD'),
                 'time': _('hh:mm a A'),
-                'dateTime': _('YYYY/MM/DD [at] hh:mm a A')
+                'dateTime': _('YYYY/MM/DD [at] hh:mm a A'),
+                'countdown': _('m:ss')
             },
             'settings': {
                 'speed': {

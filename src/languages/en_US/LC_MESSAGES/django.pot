@@ -63,10 +63,13 @@ msgid "Navigate"
 msgstr ""
 
 msgid "YYYY/MM/DD"
-msgstr "DD.MM.YYYY"
+msgstr ""
 
 msgid "hh:mm a A"
-msgstr "HH.mm [Uhr]"
+msgstr ""
 
 msgid "YYYY/MM/DD [at] hh:mm a A"
-msgstr "DD.MM.YYYY [um] HH:mm [Uhr]"
+msgstr ""
+
+msgid "m:ss"
+msgstr ""
