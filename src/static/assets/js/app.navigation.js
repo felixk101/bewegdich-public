@@ -59,7 +59,7 @@ var AppNavigation = {
                             walkingDestination: data.origin.name,
                             finalDestination: data.destination.name,
                             departuretime: data.origin.departuretime,
-                            duration:  json.duration,
+                            duration: json.duration,
                             path: json.path
                         });
                     } else {
