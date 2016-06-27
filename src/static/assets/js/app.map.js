@@ -68,7 +68,7 @@ var AppMap = {
         var that = this;
 
         jQuery(that.element.mapRelocate).on('click', function () {
-            if (that.setting.focus == 'bounds') {
+            if ('bounds' == that.setting.focus) {
                 that.map.fitBounds(that.bounds);
             } else {
                 that.setPosition(AppLocation.position);
@@ -143,6 +143,8 @@ var AppMap = {
             that.bounds = null;
             that.setting.focus = 'navigation';
             that.setting.zoom = 18;
+
+            that.setPosition(AppLocation.position);
         });
 
         jQuery(document).on('AppNavigation.stop.after', function () {
