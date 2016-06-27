@@ -80,11 +80,11 @@ var AppSearch = {
             that.statusDefault();
         });
 
-        jQuery(document).on('AppNavigation.start.after', function () {
+        jQuery(document).on('AppNavigation.start.before', function () {
             that.hide();
         });
 
-        jQuery(document).on('AppNavigation.stop.after', function () {
+        jQuery(document).on('AppNavigation.stop.before AppNavigation.finish.before', function () {
             that.show();
         });
     },

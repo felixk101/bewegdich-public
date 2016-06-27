@@ -6,6 +6,7 @@ var AppRoute = {
     element: {
         routes: '#routes',
         route: '#routes .route',
+        routeTitle: '#routes .route .panel-title span',
         routeSelect: '#routes .route .route-select',
         templateRoute: '#template-route',
         templateRouteDetail: '#template-route-detail',
@@ -28,15 +29,19 @@ var AppRoute = {
             that.set(suggestion.data);
         });
 
-        jQuery(document).on('AppRoute.set.before AppNavigation.stop.after', function () {
+        jQuery(document).on('AppNavigation.stop.before', function () {
+            that.show();
+        });
+
+        jQuery(document).on('AppRoute.set.before AppNavigation.finish.before', function () {
             that.empty();
         });
 
-        jQuery(document).on('AppNavigation.start.after', function () {
+        jQuery(document).on('AppNavigation.start.before', function () {
             that.hide();
         });
 
-        jQuery(document).on('click', that.element.route + ' .panel-title span', function () {
+        jQuery(document).on('click', that.element.routeTitle, function () {
             var originDestination = jQuery(this).closest(that.element.route).data('origin-destination');
 
             jQuery(document).trigger('AppRoute.route.selected', [originDestination]);
@@ -149,14 +154,14 @@ var AppRoute = {
     show: function () {
         jQuery(document).trigger('AppRoute.show.before');
 
-        jQuery(this.element.routes).fadeIn(this.duration.show, function() {
+        jQuery(this.element.routes).fadeIn(this.duration.show, function () {
             jQuery(document).trigger('AppRoute.show.after');
         });
     },
     hide: function () {
         jQuery(document).trigger('AppRoute.hide.before');
 
-        jQuery(this.element.routes).fadeOut(this.duration.hide, function() {
+        jQuery(this.element.routes).fadeOut(this.duration.hide, function () {
             jQuery(document).trigger('AppRoute.hide.after');
         });
     }

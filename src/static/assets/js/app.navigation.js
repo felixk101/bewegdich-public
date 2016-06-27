@@ -5,7 +5,9 @@ jQuery(document).ready(function () {
 var AppNavigation = {
     element: {
         navigation: '#navigation',
-        templateNavigation: '#template-navigation'
+        close: '#navigation .close',
+        templateNavigation: '#template-navigation',
+        modalFinished: '#modal-navigation-finished'
     },
     duration: {
         show: 500,
@@ -20,13 +22,21 @@ var AppNavigation = {
     },
     refresh: {
         path: 10000,
-        navigation: 5000
+        navigation: 50000
     },
     init: function () {
         this.hooks();
     },
     hooks: function () {
         var that = this;
+
+        jQuery(document).on('click', that.element.close, function () {
+            jQuery(document).trigger('AppNavigation.close.before');
+
+            that.stopNavigation();
+
+            jQuery(document).trigger('AppNavigation.close.after');
+        });
 
         jQuery(document).on('AppNavigation.stop.before AppSearch.destination.start AppRoute.route.selected AppRoute.route.navigate', function () {
             if (that.ajax.path) {
@@ -40,6 +50,10 @@ var AppNavigation = {
             if (that.interval.navigation) {
                 clearInterval(that.interval.navigation);
             }
+        });
+
+        jQuery(document).on('AppNavigation.finish.after', function () {
+            jQuery(that.element.modalFinished).modal('show')
         });
 
         jQuery(document).on('AppRoute.route.selected', function (event, destination) {
@@ -78,7 +92,7 @@ var AppNavigation = {
                             path: json.path
                         });
                     } else {
-                        that.stopNavigation();
+                        that.finishNavigation();
                     }
                 });
 
@@ -94,9 +108,9 @@ var AppNavigation = {
         jQuery(that.element.navigation).loadTemplate(jQuery(that.element.templateNavigation), data, {
             noDivWrapper: true,
             success: function () {
-                jQuery(that.element.navigation).fadeIn(that.duration.show);
-
-                jQuery(document).trigger('AppNavigation.start.after');
+                jQuery(that.element.navigation).fadeIn(that.duration.show, function () {
+                    jQuery(document).trigger('AppNavigation.start.after');
+                });
             }
         });
     },
@@ -105,9 +119,18 @@ var AppNavigation = {
 
         jQuery(document).trigger('AppNavigation.stop.before');
 
-        jQuery(that.element.navigation).fadeOut(that.duration.hide);
+        jQuery(that.element.navigation).fadeOut(that.duration.hide, function () {
+            jQuery(document).trigger('AppNavigation.stop.after');
+        });
+    },
+    finishNavigation: function () {
+        var that = this;
 
-        jQuery(document).trigger('AppNavigation.stop.after');
+        jQuery(document).trigger('AppNavigation.finish.before');
+
+        jQuery(that.element.navigation).fadeOut(that.duration.hide, function () {
+            jQuery(document).trigger('AppNavigation.finish.after');
+        });
     },
     getPath: function (destination, callback) {
         var that = this;
