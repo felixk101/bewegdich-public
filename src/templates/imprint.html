@@ -1,21 +1,9 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% load static %}
 
 {% block content %}
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="snap-open-left navbar-toggle pull-left">
-                    <i class="fa fa-fw fa-bars"></i>
-                </button>
-                <a class="navbar-brand" href="/">
-                    <img src="{% static "assets/images/app/icon.svg" %}">
-                </a>
-                <button type="button" class="snap-open-right navbar-toggle pull-right">
-                    <i class="fa fa-fw fa-wrench"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
+    {% include "parts/header.html" %}
+
+    <div class="container-fluid">
+        blablabla
+    </div>
 {% endblock %}
