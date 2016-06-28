@@ -50,6 +50,9 @@ msgstr ""
 msgid "Walking time:"
 msgstr ""
 
+msgid "Walking time"
+msgstr ""
+
 msgid "Departure time:"
 msgstr ""
 
