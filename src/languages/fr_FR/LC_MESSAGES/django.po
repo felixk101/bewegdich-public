@@ -35,6 +35,21 @@ msgstr "Ajustage"
 msgid "Walking speed"
 msgstr "Vélocité"
 
+msgid "Boarding station:"
+msgstr "Entrance station:"
+
+msgid "Walking time"
+msgstr "Période des marche"
+
+msgid "Departure time:"
+msgstr "Partance:"
+
+msgid "Congratulations, you reached your destination. Want to walk to next station? Just start a new search!"
+msgstr "Félicitations! Vous avez atteint l'arrêt. Ils veulent continuer la même chose? Lancer une nouvelle recherche!"
+
+msgid "Destination reached"
+msgstr "Objectif accomplie"
+
 msgid "Duration:"
 msgstr "Durée:"
 
