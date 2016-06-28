@@ -30,6 +30,7 @@ def get_xml(url):
     string = response.read()
     return ET.fromstring(string)
 
+
 def get_walking_Route(origin, destination):
     """
     Searches for a route to walk from A to B
@@ -69,7 +70,7 @@ def get_walking_Route(origin, destination):
     coords = replace_coordlist(coords, FH_LONGWAY1, [])
     coords = replace_coordlist(coords, FH_LONGWAY2, shortcut)
 
-    #Get the time out of the xml
+    # Get the time out of the xml
     duration = data[1][0][0][0].text
     time = -1
     secondsonly = 0
@@ -78,10 +79,10 @@ def get_walking_Route(origin, destination):
         secondsonly = 0
     else:
         try:
-            #e.g. PT    15M
+            # e.g. PT    15M
             #     PT    37M 49S
             #     PT 9H 43M 57S
-            dic = {"S":1, "M":60, "H":3600}
+            dic = {"S": 1, "M": 60, "H": 3600}
             index = getNumberUntilChar(duration)
             while duration[-1] is not "T":
                 secondsonly += int(duration[index:-1]) * dic[duration[-1]]
@@ -92,14 +93,15 @@ def get_walking_Route(origin, destination):
             print("Error: time could not be converted: " + duration)
             secondsonly = 0
 
-    if find_sublist(coords,FH_LONGWAY1)>=0:
+    if find_sublist(coords, FH_LONGWAY1) >= 0:
         secondsonly -= 100
-    if find_sublist(coords,FH_LONGWAY2)>=0:
+    if find_sublist(coords, FH_LONGWAY2) >= 0:
         secondsonly -= 150
-    dic = {"walkingtime":secondsonly,"coords":coords}
+    dic = {"walkingtime": secondsonly, "coords": coords}
     return dic
 
-def get_walking_RouteNinos(origin, destination):
+
+def get_walking_Route_osrm(origin, destination):
     """
     Searches for a route to walk from A to B
     :param origin: startposition [lng,lat]
@@ -124,8 +126,7 @@ def get_walking_RouteNinos(origin, destination):
     for waypoint in data["waypoints"]:
         coords.append(Coord(waypoint["location"][1], waypoint["location"][0]))
 
-
-    coords.insert(0,Coord(origin[1],origin[0]))
+    coords.insert(0, Coord(origin[1], origin[0]))
     coords.append(Coord(destination[1], destination[0]))
 
     dic = {"walkingtime": data["routes"][0]["duration"], "coords": coords}
@@ -314,6 +315,7 @@ def find_sublist(list, sublist):
                     found = True
                     return startindex
     return -1
+
 
 def fix_wrong_coords(coord):
     if float(coord) < 0:
