@@ -44,6 +44,21 @@ msgstr "Einstellungen"
 msgid "Walking speed"
 msgstr "Laufgeschwindigkeit"
 
+msgid "Boarding station:"
+msgstr "Einstieg:"
+
+msgid "Walking time"
+msgstr "Laufzeit"
+
+msgid "Departure time:"
+msgstr "Abfahrtszeit:"
+
+msgid "Congratulations, you reached your destination. Want to walk to next station? Just start a new search!"
+msgstr "Glückwunsch! Sie haben die Haltestelle erreicht. Sie wollen gleich weiterlaufen? Starten Sie eine neue Suche!"
+
+msgid "Destination reached"
+msgstr "Ziel erreicht"
+
 msgid "Duration:"
 msgstr "Dauer:"
 
