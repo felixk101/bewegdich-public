@@ -52,7 +52,6 @@ def get_walking_Route_OSRM(origin, destination):
         return -1
 
     city = closestCity(origin[0],origin[1])
-    city = 'Augsburg'
     if city == 'Augsburg':
         url = 'http://localhost:5000'
     elif city == 'Basel':
