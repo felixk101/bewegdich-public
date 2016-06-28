@@ -33,6 +33,54 @@ def get_xml(url):
 
 def get_walking_Route(origin, destination):
     """
+        Searches for a route to walk from A to B
+        :param origin: startposition [lng,lat]
+        :param destination: destination [lng,lat]
+        :return: a xml treeobject
+        """
+    return get_walking_Route_OSRM(origin, destination)
+
+
+def get_walking_Route_OSRM(origin, destination):
+    """
+    Searches for a route to walk from A to B
+    :param origin: startposition [lng,lat]
+    :param destination: destination [lng,lat]
+    :return: a xml treeobject
+    """
+    if type(origin) != list or type(destination) != list:
+        return -1
+
+    city = closestCity(origin[1], origin[0])
+
+    if city == 'Augsburg':
+        url = 'http://localhost:5000'
+    elif city == 'Basel':
+        url = 'http://localhost:5001'
+    else:
+        return -1
+
+    param = {
+        'geometries': 'geojson'
+    }
+    origin = str(origin[0]) + "," + str(origin[1])
+    destination = str(destination[0]) + "," + str(destination[1])
+    url += "/route/v1/walking/" + urllib.quote(
+        origin + ";" + destination) + "?" + urllib1.urlencode(param)
+    data = get_json(url)
+
+    # Get the coords out of the xml
+    coords = []
+
+    for coordinate in data["routes"][0]["geometry"]["coordinates"]:
+        coords.append(Coord(coordinate[1], coordinate[0]))
+
+    dic = {"walkingtime": data["routes"][0]["duration"], "coords": coords}
+    return dic
+
+
+def get_walking_Route_ORS(origin, destination):
+    """
     Searches for a route to walk from A to B
     :param origin: startposition [lng,lat]
     :param destination: destination [lng,lat]
@@ -96,38 +144,6 @@ def get_walking_Route(origin, destination):
     if find_sublist(coords, FH_LONGWAY2) >= 0:
         secondsonly -= 150
     dic = {"walkingtime": secondsonly, "coords": coords}
-    return dic
-
-
-def get_walking_Route_osrm(origin, destination):
-    """
-    Searches for a route to walk from A to B
-    :param origin: startposition [lng,lat]
-    :param destination: destination [lng,lat]
-    :return: a xml treeobject
-    """
-    if type(origin) != list or type(destination) != list:
-        return -1
-
-    param = {
-        'overview': 'false'
-    }
-    origin = str(origin[0]) + "," + str(origin[1])
-    destination = str(destination[0]) + "," + str(destination[1])
-    url = "http://router.project-osrm.org/route/v1/walking/" + urllib.quote(
-        origin + ";" + destination) + "?" + urllib1.urlencode(param)
-    data = get_json(url)
-
-    # Get the coords out of the xml
-    coords = []
-
-    for waypoint in data["waypoints"]:
-        coords.append(Coord(waypoint["location"][1], waypoint["location"][0]))
-
-    coords.insert(0, Coord(origin[1], origin[0]))
-    coords.append(Coord(destination[1], destination[0]))
-
-    dic = {"walkingtime": data["routes"][0]["duration"], "coords": coords}
     return dic
 
 

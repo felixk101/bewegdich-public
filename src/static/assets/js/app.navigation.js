@@ -36,7 +36,7 @@ var AppNavigation = {
             jQuery(document).trigger('AppNavigation.close.after');
         });
 
-        jQuery(document).on('AppNavigation.finish.before AppNavigation.stop.before AppSearch.destination.start AppRoute.route.selected AppRoute.route.navigate', function () {
+        jQuery(document).on('AppNavigation.stop.before AppNavigation.finish.before AppSearch.destination.start AppRoute.route.selected AppRoute.route.navigate', function () {
             that.mode = null;
             that.cache = {
                 destination: null,

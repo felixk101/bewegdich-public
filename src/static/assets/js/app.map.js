@@ -73,13 +73,13 @@ var AppMap = {
         });
 
         jQuery(that.element.mapRelocate).on('click', function () {
+            that.mapInteraction = false;
+
             if ('bounds' == that.setting.focus) {
                 that.map.fitBounds(that.bounds);
             } else {
                 that.setPosition(AppLocation.position);
             }
-
-            that.mapInteraction = false;
         });
 
         jQuery(document).on('AppLayout.MapSet.after', function (event, position) {
@@ -106,7 +106,7 @@ var AppMap = {
             that.positionInitialized = true;
         });
 
-        jQuery(document).on('AppSearch.destination.selected AppSearch.destination.error AppNavigation.finish.before AppNavigation.stop.before', function () {
+        jQuery(document).on('AppSearch.destination.selected AppSearch.destination.error AppNavigation.stop.before AppNavigation.finish.before', function () {
             that.resetRoute();
         });
 
@@ -136,6 +136,8 @@ var AppMap = {
                 });
             });
 
+            that.mapInteraction = false;
+
             that.setPosition(positions);
         });
 
@@ -146,23 +148,26 @@ var AppMap = {
         jQuery(document).on('AppRoute.route.selected', function () {
             that.setting.focus = 'bounds';
             that.setting.zoom = that.default.zoom;
-        });
-
-        jQuery(document).on('AppNavigation.getPath', function (event, path) {
-            that.setRoute(path);
+            that.mapInteraction = false;
         });
 
         jQuery(document).on('AppRoute.route.navigate', function () {
             that.bounds = null;
             that.setting.focus = 'navigation';
             that.setting.zoom = 18;
+            that.mapInteraction = false;
 
             that.setPosition(AppLocation.position);
         });
 
-        jQuery(document).on('AppNavigation.stop.after', function () {
+        jQuery(document).on('AppNavigation.getPath', function (event, path) {
+            that.setRoute(path);
+        });
+
+        jQuery(document).on('AppNavigation.stop.before AppNavigation.finish.before', function () {
             that.setting.focus = that.default.focus;
             that.setting.zoom = that.default.zoom;
+            that.mapInteraction = false;
 
             that.setPosition(AppLocation.position);
         });
@@ -226,7 +231,7 @@ var AppMap = {
         that.polylines = L.polyline(route).addTo(that.map);
         that.bounds = that.polylines.getBounds();
 
-        if ('bounds' == that.setting.focus) {
+        if (!that.mapInteraction && 'bounds' == that.setting.focus) {
             that.map.fitBounds(that.bounds);
         }
     },

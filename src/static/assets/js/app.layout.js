@@ -20,7 +20,7 @@ var AppLayout = {
             that.setMap();
         });
 
-        jQuery(document).on('AppNavigation.start.after AppNavigation.stop.after', function () {
+        jQuery(document).on('AppNavigation.start.after AppNavigation.stop.after  AppNavigation.finish.after', function () {
             that.setMap();
         });
 
