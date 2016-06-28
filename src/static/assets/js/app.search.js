@@ -5,7 +5,8 @@ jQuery(document).ready(function () {
 var AppSearch = {
     element: {
         search: '#search',
-        field: '#search .search-field'
+        field: '#search .search-field',
+        input: '#search #s'
     },
     duration: {
         show: 500,
@@ -19,7 +20,7 @@ var AppSearch = {
     init: function () {
         var that = this;
 
-        jQuery('#search #s').autocomplete({
+        jQuery(that.element.input).autocomplete({
             serviceUrl: '/api/stoplist/',
             dataType: 'json',
             paramName: 'query',
@@ -63,6 +64,10 @@ var AppSearch = {
     },
     hooks: function () {
         var that = this;
+
+        jQuery(that.element.input).on('focus', function () {
+            $(this).select();
+        });
 
         jQuery(document).on('AppLocation.error.after', function (event, e) {
             that.statusCurrent = 'disabled';
