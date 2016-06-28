@@ -9,6 +9,7 @@ import location as loc
 from rest_framework.renderers import JSONRenderer
 
 from polls.apis import get_walking_Route, fix_wrong_coords
+from polls.route import Stop
 from serializers import Efa_stop_list_serializer
 from serializers import RouteListSerializer, RouteList, Walkingpath_serializer
 from variables import SPEED
@@ -180,7 +181,7 @@ def route(request):
 def walkingpath(request):
     """
      Returns a List/Path of coordinates from origin to destination
-     e.g. http://127.0.0.1:8000/api/walkingpath?originlat=48.1234&originlng=11.2034&destlat=48.4532&destlng=11.4563
+     e.g. http://127.0.0.1:8000/api/walkingpath?originLatitude=48.1234&originLongitude=11.2034&destinationLatitude=48.4532&destinationLongitude=11.4563
     :param request:
     :return: a json
     """
@@ -203,9 +204,17 @@ def walkingpath(request):
         originlng = fix_wrong_coords(originlng)
         destlat = fix_wrong_coords(destlat)
         destlng = fix_wrong_coords(destlng)
-
+        c = Controller(request.session)
         walking_route = get_walking_Route([originlng, originlat], [destlng, destlat])
+
+
+        start = Coord(originlat, originlng)
+        dest = Coord(destlat, destlng)
+        walking_route['walkingtime'] = c.get_walking_time(walking_route)
+
         path = walking_route["coords"]
+        path.insert(0, start)
+        path.append(dest)
 
         if (type(path) == int):
             return JSONResponse({'error': "There was an error on search: " + str(path)}, status=400)

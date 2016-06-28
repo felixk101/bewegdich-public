@@ -33,7 +33,8 @@ class Controller(object):
     def __init__(self, session):
         # Saves the session object of one user
         self.session = session
-
+        if SPEED not in self.session:
+            self.session[SPEED] = 1.0
         # Stores all calculated walking routes into this dic, so it doesn't need to be calculated again
         self.walking_routes = {}
 
