@@ -58,7 +58,7 @@ def get_walking_Route_OSRM(origin, destination):
     elif city == 'Basel':
         url = 'http://localhost:5001'
     else:
-        return -1
+        return {"walkingtime": 0, "coords": []}
 
     param = {
         'geometries': 'geojson'
