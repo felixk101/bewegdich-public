@@ -16,13 +16,11 @@ var AppNavigation = {
     ajax: {
         path: null
     },
-    interval: {
-        path: null,
-        navigation: null
-    },
-    refresh: {
-        path: 10000,
-        navigation: 5000
+    mode: null,
+    finishDuration: 5,
+    cache: {
+        destination: null,
+        data: null
     },
     init: function () {
         this.hooks();
@@ -38,56 +36,49 @@ var AppNavigation = {
             jQuery(document).trigger('AppNavigation.close.after');
         });
 
-        jQuery(document).on('AppNavigation.stop.before AppSearch.destination.start AppRoute.route.selected AppRoute.route.navigate', function () {
+        jQuery(document).on('AppNavigation.finish.before AppNavigation.stop.before AppSearch.destination.start AppRoute.route.selected AppRoute.route.navigate', function () {
+            that.mode = null;
+            that.cache = {
+                destination: null,
+                data: null
+            };
+
             if (that.ajax.path) {
                 that.ajax.path.abort();
             }
-
-            if (that.interval.path) {
-                clearInterval(that.interval.path);
-            }
-
-            if (that.interval.navigation) {
-                clearInterval(that.interval.navigation);
-            }
         });
 
-        jQuery(document).on('AppNavigation.finish.after', function () {
-            jQuery(that.element.modalFinished).modal('show')
+        jQuery(document).on('AppNavigation.finish.before', function () {
+            jQuery(that.element.modalFinished).modal('show');
         });
 
         jQuery(document).on('AppRoute.route.selected', function (event, destination) {
-            if (that.interval.path) {
-                clearInterval(that.interval.path);
-            }
-
-            that.interval.path = window.setInterval(function interval() {
-                if (that.ajax.path) {
-                    that.ajax.path.abort();
-                }
-
-                that.getPath(destination);
-
-                return interval;
-            }(), that.refresh.path);
+            that.mode = 'path';
+            that.cache.destination = destination;
         });
 
         jQuery(document).on('AppRoute.route.navigate', function (event, destination, data) {
-            if (that.interval.navigation) {
-                clearInterval(that.interval.navigation);
+            that.mode = 'navigation';
+            that.cache = {
+                destination: destination,
+                data: data
+            };
+        });
+
+        jQuery(document).on('AppRoute.route.selected AppRoute.route.navigate AppLocation.PositionSet.after', function (event, position) {
+            if (!that.mode) {
+                return;
             }
 
-            that.interval.navigation = window.setInterval(function interval() {
-                if (that.ajax.path) {
-                    that.ajax.path.abort();
-                }
-
-                that.getPath(destination, function (json) {
-                    if (json && json.duration > 5) {
+            if ('path' == that.mode) {
+                that.getPath(that.cache.destination);
+            } else if ('navigation' == that.mode) {
+                that.getPath(that.cache.destination, function (json) {
+                    if (json && json.duration > that.finishDuration) {
                         that.startNavigation({
-                            walkingDestination: data.origin.name,
-                            finalDestination: data.destination.name,
-                            departuretime: data.origin.departuretime,
+                            walkingDestination: that.cache.data.origin.name,
+                            finalDestination: that.cache.data.destination.name,
+                            departuretime: that.cache.data.origin.departuretime,
                             duration: json.duration,
                             path: json.path
                         });
@@ -95,9 +86,7 @@ var AppNavigation = {
                         that.finishNavigation();
                     }
                 });
-
-                return interval;
-            }(), that.refresh.navigation);
+            }
         });
     },
     startNavigation: function (data) {

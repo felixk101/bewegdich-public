@@ -19,6 +19,9 @@ var AppRoute = {
     ajax: {
         routes: null
     },
+    cache: {
+        suggestion: null
+    },
     init: function () {
         this.hooks();
     },
@@ -27,6 +30,8 @@ var AppRoute = {
 
         jQuery(document).on('AppSearch.destination.selected', function (event, suggestion) {
             that.set(suggestion.data);
+
+            that.cache.suggestion = suggestion.data;
         });
 
         jQuery(document).on('AppRoute.set.after AppNavigation.stop.before', function () {
@@ -39,6 +44,10 @@ var AppRoute = {
 
         jQuery(document).on('AppSearch.destination.start AppNavigation.start.before', function () {
             that.hide();
+        });
+
+        jQuery(document).on('AppNavigation.stop.before', function () {
+            that.set(that.cache.suggestion);
         });
 
         jQuery(document).on('click', that.element.routeTitle, function () {
@@ -155,8 +164,12 @@ var AppRoute = {
         jQuery(document).trigger('AppRoute.show.before');
 
         jQuery(this.element.routes).fadeIn(this.duration.show, function () {
+
+
             jQuery(document).trigger('AppRoute.show.after');
         });
+
+        jQuery(this.element.routes).scrollTop(0);
     },
     hide: function () {
         jQuery(document).trigger('AppRoute.hide.before');

@@ -106,7 +106,7 @@ var AppMap = {
             that.positionInitialized = true;
         });
 
-        jQuery(document).on('AppSearch.destination.selected AppSearch.destination.error', function () {
+        jQuery(document).on('AppSearch.destination.selected AppSearch.destination.error AppNavigation.finish.before AppNavigation.stop.before', function () {
             that.resetRoute();
         });
 
