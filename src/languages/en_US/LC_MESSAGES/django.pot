@@ -29,6 +29,15 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
+msgid "Home"
+msgstr ""
+
+msgid "Privacy"
+msgstr ""
+
+msgid "Imprint"
+msgstr ""
+
 msgid "Settings"
 msgstr ""
 

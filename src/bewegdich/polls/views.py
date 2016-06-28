@@ -19,7 +19,55 @@ from models import Coord
 def index(request):
     return render(request, 'index.html', {
         'section': {
-            'title': 'Beweg Dich',
+            'title': 'Beweg Dich | ' + _('Home'),
+            'location': loc.get_location(request),
+            'format': {
+                'date': _('YYYY/MM/DD'),
+                'time': _('hh:mm a A'),
+                'dateTime': _('YYYY/MM/DD [at] hh:mm a A'),
+                'countdown': _('m:ss')
+            },
+            'settings': {
+                'speed': {
+                    'min': '0.1',
+                    'max': '2',
+                    'step': '0.1',
+                    'value': '1'
+                }
+            }
+        }
+    })
+
+
+@csrf_exempt
+def privacy(request):
+    return render(request, 'privacy.html', {
+        'section': {
+            'title': 'Beweg Dich | ' + _('Privacy'),
+            'location': loc.get_location(request),
+            'format': {
+                'date': _('YYYY/MM/DD'),
+                'time': _('hh:mm a A'),
+                'dateTime': _('YYYY/MM/DD [at] hh:mm a A'),
+                'countdown': _('m:ss')
+            },
+            'settings': {
+                'speed': {
+                    'min': '0.1',
+                    'max': '2',
+                    'step': '0.1',
+                    'value': '1'
+                }
+            }
+        }
+    })
+
+
+@csrf_exempt
+def imprint(request):
+    return render(request, 'imprint.html', {
+        'section': {
+            'title': 'Beweg Dich | ' + _('Imprint'),
             'location': loc.get_location(request),
             'format': {
                 'date': _('YYYY/MM/DD'),

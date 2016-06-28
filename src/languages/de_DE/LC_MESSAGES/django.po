@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: BewegDich 1.0.x\n"
 "Report-Msgid-Bugs-To: ninos.ego@hs-augsburg.de\n"
 "POT-Creation-Date: 2016-06-17 19:12+0200\n"
-"PO-Revision-Date: 2016-06-27 20:56+0200\n"
+"PO-Revision-Date: 2016-06-28 04:02+0200\n"
 "Last-Translator: Ninos Ego <me@ninosego.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -28,6 +28,15 @@ msgstr "Verbindungsfehler"
 
 msgid "Menu"
 msgstr "Menü"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Privacy"
+msgstr "Datenschutz"
+
+msgid "Imprint"
+msgstr "Impressum"
 
 msgid "Settings"
 msgstr "Einstellungen"

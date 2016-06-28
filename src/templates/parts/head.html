@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-touch-fullscreen" content="yes">
-<title>{% block title %}{{ section.title|default:"Beweg Dich" }}{% endblock %}</title>
+<title>{{ section.title|default:"Beweg Dich" }}</title>
 <link href="{% static "assets/less/style.less"|compile %}" rel="stylesheet"/>
 <script type="text/javascript" src="{% static "assets/js/jquery.min.js" %}"></script>
 <script type="text/javascript" src="{% static "assets/js/jquery.resize.min.js" %}"></script>
