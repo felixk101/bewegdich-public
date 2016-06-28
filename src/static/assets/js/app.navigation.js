@@ -83,7 +83,7 @@ var AppNavigation = {
                 }
 
                 that.getPath(destination, function (json) {
-                    if (json && json.path.length > 1) {
+                    if (json && json.duration > 0) {
                         that.startNavigation({
                             walkingDestination: data.origin.name,
                             finalDestination: data.destination.name,
