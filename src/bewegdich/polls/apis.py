@@ -51,7 +51,7 @@ def get_walking_Route_OSRM(origin, destination):
     if type(origin) != list or type(destination) != list:
         return -1
 
-    city = closestCity(origin[1], origin[0])
+    city = closestCity(origin[0],origin[1])
     city = 'Augsburg'
     if city == 'Augsburg':
         url = 'http://localhost:5000'
@@ -229,7 +229,7 @@ def closestCity(longitude, latitude):
         City('Basel', 7.58769, 47.55814)
     ]
 
-    min_radius = 15000  # 15 km
+    min_radius = 200000  # 15 km
     for city in cities:
         dist = distance(city.long, city.lat, float(longitude), float(latitude))
         if dist < min_radius:
