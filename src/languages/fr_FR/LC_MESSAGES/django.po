@@ -38,7 +38,7 @@ msgstr "Vélocité"
 msgid "Boarding station:"
 msgstr "Entrance station:"
 
-msgid "Walking time"
+msgid "Walking time:"
 msgstr "Période des marche"
 
 msgid "Departure time:"

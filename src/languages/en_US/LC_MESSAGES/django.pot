@@ -47,7 +47,7 @@ msgstr ""
 msgid "Boarding station:"
 msgstr ""
 
-msgid "Walking time"
+msgid "Walking time:"
 msgstr ""
 
 msgid "Departure time:"
