@@ -24,6 +24,7 @@ var AppMap = {
     bounds: null,
     destination: null,
     positionInitialized: false,
+    mapInteraction: false,
     init: function () {
         this.initIcons();
         this.initMap();
@@ -67,12 +68,18 @@ var AppMap = {
     hooks: function () {
         var that = this;
 
+        jQuery(that.map).on('dragstart zoomstart', function () {
+            that.mapInteraction = true;
+        });
+
         jQuery(that.element.mapRelocate).on('click', function () {
             if ('bounds' == that.setting.focus) {
                 that.map.fitBounds(that.bounds);
             } else {
                 that.setPosition(AppLocation.position);
             }
+
+            that.mapInteraction = false;
         });
 
         jQuery(document).on('AppLayout.MapSet.after', function (event, position) {
@@ -86,11 +93,17 @@ var AppMap = {
         jQuery(document).on('AppLocation.PositionSet.after', function (event, position) {
             that.setMarker(position, 'person');
 
-            if (!that.positionInitialized && 'person' == that.setting.focus) {
-                that.setPosition(position);
-
-                that.positionInitialized = true;
+            if (that.mapInteraction && that.positionInitialized) {
+                return;
             }
+
+            if ('bounds' == that.setting.focus) {
+                that.map.fitBounds(that.bounds);
+            } else {
+                that.setPosition(position);
+            }
+
+            that.positionInitialized = true;
         });
 
         jQuery(document).on('AppSearch.destination.selected AppSearch.destination.error', function () {
