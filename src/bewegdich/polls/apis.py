@@ -74,25 +74,23 @@ def get_walking_Route(origin, destination):
     duration = data[1][0][0][0].text
     time = -1
     secondsonly = 0
-    if "M" not in duration:
-        print("ERROR: Time is not valid: " + duration)
-        secondsonly = 0
-    else:
-        try:
-            # e.g. PT    15M
-            #     PT    37M 49S
-            #     PT 9H 43M 57S
-            dic = {"S": 1, "M": 60, "H": 3600}
+
+    try:
+        # e.g. PT    15M
+        #     PT    37M 49S
+        #     PT 9H 43M 57S
+        dic = {"S": 1, "M": 60, "H": 3600}
+        index = getNumberUntilChar(duration)
+        while duration[-1] is not "T":
+            secondsonly += int(duration[index:-1]) * dic[duration[-1]]
+            duration = duration[:index]
             index = getNumberUntilChar(duration)
-            while duration[-1] is not "T":
-                secondsonly += int(duration[index:-1]) * dic[duration[-1]]
-                duration = duration[:index]
-                index = getNumberUntilChar(duration)
 
-        except:
-            print("Error: time could not be converted: " + duration)
-            secondsonly = 0
+    except:
+        print("Error: time could not be converted: " + duration)
+        secondsonly = 0
 
+    #This is a manual fix because the orignal route was way to long and took to much time
     if find_sublist(coords, FH_LONGWAY1) >= 0:
         secondsonly -= 100
     if find_sublist(coords, FH_LONGWAY2) >= 0:
