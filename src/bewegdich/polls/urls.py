@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
                   url(r'^$', views.index, name='index'),
+                  url(r'^press/$', views.press, name='press'),
                   url(r'^privacy/$', views.privacy, name='privacy'),
                   url(r'^imprint/$', views.imprint, name='imprint'),
                   url(r'^api/route/$', views.route, name='route'),

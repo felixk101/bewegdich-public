@@ -41,6 +41,30 @@ def index(request):
 
 
 @csrf_exempt
+def press(request):
+    return render(request, 'press.html', {
+        'section': {
+            'title': 'Beweg Dich | ' + _('Press'),
+            'location': loc.get_location(request),
+            'format': {
+                'date': _('YYYY/MM/DD'),
+                'time': _('hh:mm a A'),
+                'dateTime': _('YYYY/MM/DD [at] hh:mm a A'),
+                'countdown': _('m:ss')
+            },
+            'settings': {
+                'speed': {
+                    'min': '0.1',
+                    'max': '2',
+                    'step': '0.1',
+                    'value': '1'
+                }
+            }
+        }
+    })
+
+
+@csrf_exempt
 def privacy(request):
     return render(request, 'privacy.html', {
         'section': {
@@ -206,7 +230,6 @@ def walkingpath(request):
         destlng = fix_wrong_coords(destlng)
         c = Controller(request.session)
         walking_route = get_walking_Route([originlng, originlat], [destlng, destlat])
-
 
         start = Coord(originlat, originlng)
         dest = Coord(destlat, destlng)

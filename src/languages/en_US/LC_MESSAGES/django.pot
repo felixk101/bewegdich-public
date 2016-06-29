@@ -32,6 +32,9 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
+msgid "Press"
+msgstr ""
+
 msgid "Privacy"
 msgstr ""
 

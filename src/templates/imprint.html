@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
     {% include "parts/header.html" %}
 
     <div class="container-fluid">
+        <h1>{% trans "Imprint" %}</h1>
         <p>BewegDich ist ein Projekt der Hochschule Augsburg, Fakultät für Informatik in Zusammenarbeit mit der
             Hochschule Basel, Department für Sport, Bewegung und Gesundheit.</p>
         <h3>Projektteam</h3>
@@ -18,9 +20,9 @@
         </ul>
         <p>Betreuung durch Prof. Dr.-Ing. Alexandra Teynor</p>
         <h3>Kontakt</h3>
-        <p>Hochschule für angewandte Wissenschaften Augsburg</p>
-        <p>Projekt: BewegDich</p>
-        <p>An der Hochschule 1<br>
+        <p>Hochschule für angewandte Wissenschaften Augsburg<br>
+            Projekt: BewegDich<br>
+            An der Hochschule 1<br>
             86161 Augsburg<br>
             Deutschland</p>
         <p>Telefon: +49 821 55860<br>
