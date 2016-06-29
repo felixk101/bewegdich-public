@@ -24,8 +24,8 @@ def index(request):
             'location': loc.get_location(request),
             'format': {
                 'date': _('YYYY/MM/DD'),
-                'time': _('hh:mm a A'),
-                'dateTime': _('YYYY/MM/DD [at] hh:mm a A'),
+                'time': _('hh:mm A'),
+                'dateTime': _('YYYY/MM/DD [at] hh:mm A'),
                 'countdown': _('m:ss')
             },
             'settings': {
@@ -48,8 +48,8 @@ def press(request):
             'location': loc.get_location(request),
             'format': {
                 'date': _('YYYY/MM/DD'),
-                'time': _('hh:mm a A'),
-                'dateTime': _('YYYY/MM/DD [at] hh:mm a A'),
+                'time': _('hh:mm A'),
+                'dateTime': _('YYYY/MM/DD [at] hh:mm A'),
                 'countdown': _('m:ss')
             },
             'settings': {
@@ -72,8 +72,8 @@ def privacy(request):
             'location': loc.get_location(request),
             'format': {
                 'date': _('YYYY/MM/DD'),
-                'time': _('hh:mm a A'),
-                'dateTime': _('YYYY/MM/DD [at] hh:mm a A'),
+                'time': _('hh:mm A'),
+                'dateTime': _('YYYY/MM/DD [at] hh:mm A'),
                 'countdown': _('m:ss')
             },
             'settings': {
@@ -96,8 +96,8 @@ def imprint(request):
             'location': loc.get_location(request),
             'format': {
                 'date': _('YYYY/MM/DD'),
-                'time': _('hh:mm a A'),
-                'dateTime': _('YYYY/MM/DD [at] hh:mm a A'),
+                'time': _('hh:mm A'),
+                'dateTime': _('YYYY/MM/DD [at] hh:mm A'),
                 'countdown': _('m:ss')
             },
             'settings': {

@@ -95,10 +95,10 @@ msgstr ""
 msgid "YYYY/MM/DD"
 msgstr ""
 
-msgid "hh:mm a A"
+msgid "hh:mm A"
 msgstr ""
 
-msgid "YYYY/MM/DD [at] hh:mm a A"
+msgid "YYYY/MM/DD [at] hh:mm A"
 msgstr ""
 
 msgid "m:ss"
