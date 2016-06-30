@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: BewegDich 1.0.x\n"
 "Report-Msgid-Bugs-To: ninos.ego@hs-augsburg.de\n"
 "POT-Creation-Date: 2016-06-17 19:12+0200\n"
-"PO-Revision-Date: 2016-06-30 00:03+0200\n"
+"PO-Revision-Date: 2016-06-30 16:31+0200\n"
 "Last-Translator: Ninos Ego <me@ninosego.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -103,3 +103,9 @@ msgstr "DD.MM.YYYY [um] HH:mm [Uhr]"
 
 msgid "m:ss"
 msgstr "m:ss"
+
+msgid "Ok!"
+msgstr "Einverstanden!"
+
+msgid "Our site uses cookies for a better user experience and statistical purposes. By browsing our website you grant us permission to store cookies on your device."
+msgstr "Für eine bessere Nutzererfahrung und Statistikerfassung verwenden wir Cookies. Beim Verwenden unserer Webseite wird dem Verwenden von Cookies zugestimmt."
