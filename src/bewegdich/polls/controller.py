@@ -60,7 +60,7 @@ class Controller(object):
         if time == -1:
             time = datetime.datetime.now()
 
-           # time = datetime.datetime(2016, 06, 20, 10, 2)
+            # time = datetime.datetime(2016, 06, 20, 10, 2)
 
         try:  # Check if the dest is really a stopID
             int(dest)
@@ -167,7 +167,7 @@ class Controller(object):
             # For test only: Reduce walking time to get better results
             # station.walkingtime = datetime.timedelta(0,station.walkingtime.seconds*0.25)
             if type(station.departuretime) is datetime.datetime and (
-                time + station.walkingtime) < station.departuretime:
+                        time + station.walkingtime) < station.departuretime:
                 if best_station == -1 or best_station.walkingtime < station.walkingtime:
                     best_station = station
             else:  # If this Stop cannot be reached via walking, its not likley the next stop can be reached

@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 from django.utils.encoding import python_2_unicode_compatible
 
 
-
 @python_2_unicode_compatible  # only if you need to support Python 2
 class efaStop:
     data = ""
@@ -37,10 +36,9 @@ class Coord:
         self.longitude = lng
 
     def __str__(self):
-        return str(self.latitude) + ","+ str(self.longitude)
+        return str(self.latitude) + "," + str(self.longitude)
 
     def __repr__(self):
-
         return "Coord: " + str(self.latitude) + ", " + str(self.longitude)
 
     def __eq__(self, other):
