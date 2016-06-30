@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '1)3!xjb#k(v1_s-s8yh2_a!28^%d17o3c#73!@ck5u0zit4j48'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'static_precompiler',
+    'compressor',
     'cookielaw',
 ]
 
@@ -163,6 +164,46 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.abspath(os.path.join(os.path.split(__file__)[0], '..', '..', 'static'))
 ]
+STATICFILES_FINDERS = [
+    'compressor.finders.CompressorFinder',
+]
+
+# JS /CSS Compresser
+
+COMPRESS_ROOT = os.path.abspath(os.path.join(os.path.split(__file__)[0], '..', '..', 'static'))
+COMPRESS_ENABLED = True
+COMPRESS_JS_COMPRESSOR = 'compressor.js.JsCompressor'
+COMPRESS_VERBOSE = False
+COMPRESS_DEBUG_TOGGLE = 'None'
+COMPRESS_PARSER = 'compressor.parser.AutoSelectParser'
+COMPRESS_OUTPUT_DIR = 'CACHE'
+COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
+COMPRESS_CSS_COMPRESSOR = 'compressor.css.CssCompressor'
+COMPRESS_URL = STATIC_URL
+COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter']
+COMPRESS_CSS_HASHING_METHOD = 'mtime'
+COMPRESS_JS_FILTERS = ['compressor.filters.jsmin.JSMinFilter']
+COMPRESS_PRECOMPILERS = (
+    ('text/stylus', 'stylus < {infile} > {outfile}'),
+)
+COMPRESS_CLOSURE_COMPILER_BINARY = 'java -jar compiler.jar'
+COMPRESS_CLOSURE_COMPILER_ARGUMENTS = ''
+COMPRESS_CSSTIDY_BINARY = 'csstidy'
+COMPRESS_CSSTIDY_ARGUMENTS = '--template=highest'
+COMPRESS_YUI_BINARY = 'java -jar yuicompressor.jar'
+COMPRESS_YUI_CSS_ARGUMENTS = ''
+COMPRESS_YUI_JS_ARGUMENTS = ''
+COMPRESS_DATA_URI_MAX_SIZE = 1024
+COMPRESS_CACHE_BACKEND = 'default'
+COMPRESS_CACHE_KEY_FUNCTION = 'compressor.cache.simple_cachekey'
+COMPRESS_REBUILD_TIMEOUT = 60 * 60 * 24 * 30  # 30 days
+COMPRESS_MINT_DELAY = 30  # seconds
+COMPRESS_MTIME_DELAY = 10  # seconds
+COMPRESS_OFFLINE = False
+COMPRESS_OFFLINE_TIMEOUT = 60 * 60 * 24 * 365  # 1 year
+COMPRESS_OFFLINE_CONTEXT = {}
+COMPRESS_OFFLINE_MANIFEST = 'manifest.json'
+COMPRESS_TEMPLATE_FILTER_CONTEXT = {}
 
 # Less Compiler
 # Deposit css files more structured and change styles easier

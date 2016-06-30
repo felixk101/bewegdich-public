@@ -4,4 +4,5 @@ djangorestframework
 markdown
 django-filter
 django-static-precompiler
+django_compressor
 django-cookie-law

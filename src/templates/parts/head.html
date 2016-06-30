@@ -1,4 +1,5 @@
 {% load compile_static %}
+{% load compress %}
 {% load static %}
 
 <meta charset="utf-8">
@@ -8,28 +9,30 @@
 <meta name="apple-touch-fullscreen" content="yes">
 <title>{{ section.title|default:"Beweg Dich" }}</title>
 <link href="{% static "assets/less/style.less"|compile %}" rel="stylesheet"/>
-<script type="text/javascript" src="{% static "assets/js/jquery.min.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/jquery.resize.min.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/jquery.loadTemplate.min.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/jquery.autocomplete.min.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/bootstrap.min.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/bootstrap-slider.min.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/snap.min.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/leaflet.min.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/leaflet-providers.min.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/moment.min.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/cookielaw.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.ajax.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.error.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.template.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.layout.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.slideMenu.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.settings.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.location.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.map.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.route.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.navigation.js" %}"></script>
-<script type="text/javascript" src="{% static "assets/js/app.search.js" %}"></script>
+{% compress js %}
+    <script type="text/javascript" src="{% static "assets/js/jquery.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/jquery.resize.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/jquery.loadTemplate.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/jquery.autocomplete.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/bootstrap.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/bootstrap-slider.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/snap.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/leaflet.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/leaflet-providers.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/moment.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/cookielaw.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.ajax.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.error.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.template.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.layout.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.slideMenu.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.settings.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.location.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.map.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.route.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.navigation.js" %}"></script>
+    <script type="text/javascript" src="{% static "assets/js/app.search.js" %}"></script>
+{% endcompress %}
 <link rel="icon" href="{% static "assets/images/app/icon-32x32.png" %}" sizes="32x32"/>
 <link rel="icon" href="{% static "assets/images/app/icon-revert-192x192.png" %}" sizes="192x192"/>
 <link rel="apple-touch-icon-precomposed" href="{% static "assets/images/app/icon-revert-180x180.png" %}"/>
