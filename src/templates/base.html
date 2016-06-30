@@ -11,6 +11,7 @@
       data-format-time="{{ section.format.time|default:"hh:mm a A" }}"
       data-format-dateTime="{{ section.format.dateTime|default:"YYYY/MM/DD [at] hh:mm a A" }}"
       data-format-countdown="{{ section.format.countdown|default:"m:ss" }}">
+<progress id="ajax-progress" value="0"></progress>
 <div class="snap-drawers">
     <div class="snap-drawer snap-drawer-left">
         {% include "parts/menu-left.html" %}
@@ -20,7 +21,6 @@
     </div>
 </div>
 <div id="content" class="snap-content">
-    <progress id="ajax-progress" value="0"></progress>
     {% block content %}{% endblock %}
     {% include "parts/errors.html" %}
     {% include "parts/jsTemplates.html" %}
