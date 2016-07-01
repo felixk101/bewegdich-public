@@ -44,6 +44,12 @@ msgstr ""
 msgid "Walking speed"
 msgstr ""
 
+msgid "slow"
+msgstr ""
+
+msgid "fast"
+msgstr ""
+
 msgid "Boarding station:"
 msgstr ""
 
