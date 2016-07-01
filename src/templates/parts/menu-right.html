@@ -9,7 +9,9 @@
                data-slider-max="{{ section.settings.speed.max|default:"2" }}"
                data-slider-step="{{ section.settings.speed.step|default:"0.1" }}"
                data-slider-value="{{ section.settings.speed.value|default:"1" }}"/>
-        <span class="pull-left">{% trans "slow" %}</span>
-        <span class="pull-right">{% trans "fast" %}</span>
+        <div class="labels">
+            <span class="label-slow pull-left">{% trans "slow" %}</span>
+            <span class="label-fast pull-right">{% trans "fast" %}</span>
+        </div>
     </div>
 </div>
