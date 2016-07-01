@@ -4,23 +4,23 @@ jQuery(document).ready(function () {
 
 var AppTemplate = {
     element: {
-        format: 'body'
+        data: 'body'
     },
     init: function () {
         var that = this;
 
         jQuery.addTemplateFormatter({
             date: function (value) {
-                return moment(value, 'X').format(jQuery(that.element.format).attr('data-format-date'));
+                return moment(value, 'X').format(jQuery(that.element.data).attr('data-format-date'));
             },
             time: function (value) {
-                return moment(value, 'X').format(jQuery(that.element.format).attr('data-format-time'));
+                return moment(value, 'X').format(jQuery(that.element.data).attr('data-format-time'));
             },
             dateTime: function (value) {
-                return moment(value, 'X').format(jQuery(that.element.format).attr('data-format-dateTime'));
+                return moment(value, 'X').format(jQuery(that.element.data).attr('data-format-dateTime'));
             },
             countdown: function (value) {
-                return moment().startOf('day').seconds(value).format(jQuery(that.element.format).attr('data-format-countdown'));
+                return moment().startOf('day').seconds(value).format(jQuery(that.element.data).attr('data-format-countdown'));
             }
         });
     }

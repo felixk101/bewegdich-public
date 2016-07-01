@@ -5,7 +5,8 @@
 <head>
     {% include "parts/head.html" %}
 </head>
-<body data-longitude="{{ section.location.longitude|default:"0" }}"
+<body data-introduction="{{ section.introduction|default:"false" }}"
+      data-longitude="{{ section.location.longitude|default:"0" }}"
       data-latitude="{{ section.location.latitude|default:"0" }}"
       data-format-date="{{ section.format.date|default:"YYYY/MM/DD" }}"
       data-format-time="{{ section.format.time|default:"hh:mm a A" }}"

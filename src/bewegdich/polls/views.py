@@ -21,6 +21,7 @@ def index(request):
     return render(request, 'index.html', {
         'section': {
             'title': 'Beweg Dich | ' + _('Home'),
+            'introduction': False,  # not request.COOKIES.get('introduction'),
             'location': loc.get_location(request),
             'format': {
                 'date': _('YYYY/MM/DD'),
