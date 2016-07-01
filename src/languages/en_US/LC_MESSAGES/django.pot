@@ -32,9 +32,6 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-msgid "Press"
-msgstr ""
-
 msgid "Privacy"
 msgstr ""
 
@@ -108,4 +105,38 @@ msgid "Ok!"
 msgstr ""
 
 msgid "Our site uses cookies for a better user experience and statistical purposes. By browsing our website you grant us permission to store cookies on your device."
+msgstr ""
+
+msgid "Welcome to BewegDich!"
+msgstr ""
+
+msgid "With our application you can avoid waiting times at a station and take care of your body in addition! Enter your destination and walk to the shown stop without missing the ride or even get there earlier!"
+msgstr ""
+
+msgid "Just follow these instructions:"
+msgstr ""
+
+msgid "Enter your destination"
+msgstr ""
+
+msgid "Choose the favored access station"
+msgstr ""
+
+msgid "Push the appropriate 'Navigate' button"
+msgstr ""
+
+
+msgid "Follow the shown route"
+msgstr ""
+
+msgid "Get to your destination on time and healthy"
+msgstr ""
+
+msgid "Thank you for trying BewegDich and have fun doing so!"
+msgstr ""
+
+msgid "Show later"
+msgstr ""
+
+msgid "Ok"
 msgstr ""

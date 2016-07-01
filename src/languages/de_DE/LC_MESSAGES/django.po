@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: BewegDich 1.0.x\n"
 "Report-Msgid-Bugs-To: ninos.ego@hs-augsburg.de\n"
 "POT-Creation-Date: 2016-06-17 19:12+0200\n"
-"PO-Revision-Date: 2016-06-30 16:31+0200\n"
+"PO-Revision-Date: 2016-07-01 23:32+0200\n"
 "Last-Translator: Ninos Ego <me@ninosego.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -34,9 +34,6 @@ msgstr "Home"
 
 msgid "Privacy"
 msgstr "Datenschutz"
-
-msgid "Press"
-msgstr "Presse"
 
 msgid "Imprint"
 msgstr "Impressum"
@@ -109,3 +106,36 @@ msgstr "Einverstanden!"
 
 msgid "Our site uses cookies for a better user experience and statistical purposes. By browsing our website you grant us permission to store cookies on your device."
 msgstr "Für eine bessere Nutzererfahrung und Statistikerfassung verwenden wir Cookies. Beim Verwenden unserer Webseite wird dem Verwenden von Cookies zugestimmt."
+
+msgid "Welcome to BewegDich!"
+msgstr "Willkommen bei BewegDich!"
+
+msgid "With our application you can avoid waiting times at a station and take care of your body in addition! Enter your destination and walk to the shown stop without missing the ride or even get there earlier!"
+msgstr "Mit unserer App kann man Wartezeiten an Haltestellen verhindern und mit ein wenig zusätzlicher Bewegung auch noch etwas Gutes für den Körper tun! Gebe Dein Ziel ein und laufe zu einer der angegebenen Haltestellen ohne die Fahrt zu verpassen oder vielleicht sogar schneller zu sein."
+
+msgid "Just follow these instructions:"
+msgstr "Folge hierfür einfach folgenden Schritten:"
+
+msgid "Enter your destination"
+msgstr "Zielhaltestelle eingeben"
+
+msgid "Choose the favored access station"
+msgstr "Gewünschte Einstiegshaltestelle aus der Liste wählen"
+
+msgid "Push the appropriate 'Navigate' button"
+msgstr "Entsprechenden 'Navigieren'-Button drücken"
+
+msgid "Follow the shown route"
+msgstr "Der angezeigten Route folgen"
+
+msgid "Get to your destination on time and healthy"
+msgstr "Pünktlich und fit am Ziel ankommen"
+
+msgid "Thank you for trying BewegDich and have fun doing so!"
+msgstr "Danke, dass Du BewegDich ausprobierst, und viel Spaß!"
+
+msgid "Show later"
+msgstr "Später anzeigen"
+
+msgid "Ok"
+msgstr "Ok"

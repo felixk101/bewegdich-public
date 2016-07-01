@@ -6,10 +6,19 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="{% trans "Close" %}"><span
                         aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{% trans "Introduction" %}</h4>
+                <h4 class="modal-title">{% trans "Welcome to BewegDich!" %}</h4>
             </div>
             <div class="modal-body">
-                {% trans "A small introduction..." %}
+                <p>{% trans "With our application you can avoid waiting times at a station and take care of your body in addition! Enter your destination and walk to the shown stop without missing the ride or even get there earlier!" %}</p>
+                <p>{% trans "Just follow these instructions:" %}</p>
+                <ol>
+                    <li>{% trans "Enter your destination" %}</li>
+                    <li>{% trans "Choose the favored access station" %}</li>
+                    <li>{% trans "Push the appropriate 'Navigate' button" %}</li>
+                    <li>{% trans "Follow the shown route" %}</li>
+                    <li>{% trans "Get to your destination on time and healthy" %}</li>
+                </ol>
+                <p>{% trans "Thank you for trying BewegDich and have fun doing so!" %}</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Show later" %}</button>

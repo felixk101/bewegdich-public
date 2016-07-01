@@ -21,31 +21,7 @@ def index(request):
     return render(request, 'index.html', {
         'section': {
             'title': 'Beweg Dich | ' + _('Home'),
-            'introduction': False,  # not request.COOKIES.get('introduction'),
-            'location': loc.get_location(request),
-            'format': {
-                'date': _('YYYY/MM/DD'),
-                'time': _('hh:mm A'),
-                'dateTime': _('YYYY/MM/DD [at] hh:mm A'),
-                'countdown': _('m:ss')
-            },
-            'settings': {
-                'speed': {
-                    'min': '0.1',
-                    'max': '2',
-                    'step': '0.1',
-                    'value': '1'
-                }
-            }
-        }
-    })
-
-
-@csrf_exempt
-def press(request):
-    return render(request, 'press.html', {
-        'section': {
-            'title': 'Beweg Dich | ' + _('Press'),
+            'introduction': not request.COOKIES.get('introduction'),
             'location': loc.get_location(request),
             'format': {
                 'date': _('YYYY/MM/DD'),
