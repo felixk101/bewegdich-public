@@ -14,6 +14,10 @@ root_path = os.path.abspath(os.path.split(__file__)[0])
 sys.path.insert(0, root_path)
 sys.path.insert(0, os.path.join(root_path, 'bewegdich'))
 
+# Monitoring file changes
+import bewegdich.monitor
+bewegdich.monitor.start(interval=1.0)
+
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bewegdich.settings")
