@@ -34,6 +34,26 @@
     <script type="text/javascript" src="{% static "assets/js/app.navigation.js" %}"></script>
     <script type="text/javascript" src="{% static "assets/js/app.search.js" %}"></script>
 {% endcompress %}
+<!-- Piwik -->
+<script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+        var u = "//bewegdich.informatik.hs-augsburg.de:4445/";
+        _paq.push(['setTrackerUrl', u + 'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+        g.type = 'text/javascript';
+        g.async = true;
+        g.defer = true;
+        g.src = u + 'piwik.js';
+        s.parentNode.insertBefore(g, s);
+    })();
+</script>
+<noscript><p><img src="//bewegdich.informatik.hs-augsburg.de:4445/piwik.php?idsite=1" style="border:0;" alt=""/></p>
+</noscript>
+<!-- End Piwik Code -->
 <link rel="icon" href="{% static "assets/images/app/icon-32x32.png" %}" sizes="32x32"/>
 <link rel="icon" href="{% static "assets/images/app/icon-revert-192x192.png" %}" sizes="192x192"/>
 <link rel="apple-touch-icon-precomposed" href="{% static "assets/images/app/icon-revert-180x180.png" %}"/>
