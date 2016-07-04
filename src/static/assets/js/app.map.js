@@ -22,6 +22,9 @@ var AppMap = {
     },
     polylines: null,
     bounds: null,
+    boundsOptions: {
+        padding: [50, 0]
+    },
     destination: null,
     positionInitialized: false,
     mapInteraction: false,
@@ -76,7 +79,7 @@ var AppMap = {
             that.mapInteraction = false;
 
             if ('bounds' == that.setting.focus) {
-                that.map.fitBounds(that.bounds);
+                that.map.fitBounds(that.bounds, that.boundsOptions);
             } else {
                 that.setPosition(AppLocation.position);
             }
@@ -86,7 +89,7 @@ var AppMap = {
             that.map.invalidateSize();
 
             if (that.bounds && 'bounds' == that.setting.focus) {
-                that.map.fitBounds(that.bounds);
+                that.map.fitBounds(that.bounds, that.boundsOptions);
             }
         });
 
@@ -195,7 +198,7 @@ var AppMap = {
             };
 
             that.bounds = bounds;
-            that.map.fitBounds(that.bounds);
+            that.map.fitBounds(that.bounds, that.boundsOptions);
         } else {
             position = L.latLng(position.latitude, position.longitude);
 
@@ -232,7 +235,7 @@ var AppMap = {
         that.bounds = that.polylines.getBounds();
 
         if (!that.mapInteraction && 'bounds' == that.setting.focus) {
-            that.map.fitBounds(that.bounds);
+            that.map.fitBounds(that.bounds, that.boundsOptions);
         }
     },
     resetRoute: function () {
