@@ -328,13 +328,13 @@ class Controller(object):
                 for point in data["stopFinder"]["points"]:
                     stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
         elif city == 'Basel':
-            if 'message' in data and data['message'][1]["value"] == "stop invalid":
+            if 'message' in data["stopFinder"] and data["stopFinder"]['message'][1]["value"] == "stop invalid":
                 print("No stop suggestions found ")
-            elif len(data["stopFinder"]) == 1:
-                point = data["stopFinder"]["point"]
+            elif len(data["stopFinder"]["points"]) == 1:
+                point = data["stopFinder"]["points"]["point"]
                 stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
             else:
-                for point in data["stopFinder"]:
+                for point in data["stopFinder"]["points"]:
                     stops.append(efaStop(point["ref"]["id"], point["name"], point["ref"]["omc"]))
 
         stops = sorted(stops, reverse=True, key=lambda efaStop: efaStop.quality)
