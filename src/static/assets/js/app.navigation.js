@@ -17,7 +17,7 @@ var AppNavigation = {
         path: null
     },
     mode: null,
-    finishDuration: 5,
+    finishDuration: 10,
     cache: {
         destination: null,
         data: null
