@@ -3,7 +3,7 @@ A Django-based web application that lets see if you can get to the next bus or t
 
 # Galaxiesimulation
 
-![BewegDich Seite](https://keep.google.com/media/v2/1u_fITpR71MMoePP188wODBYdkws9fsJTfSrAd4fbXWNyOJANtiGSC2XOmUnZcscK/19eC6Xjazc6jseQgsed-qHDFVjfS_QewMhm3miup5PRYUTOSvnc4ByyVfxglCgWE?accept=image/gif,image/jpeg,image/jpg,image/png,image/webp,audio/aac&sz=647 "Beispielbild")
-So könnte Ihre Busroute aussehen!
+![BewegDich Seite](https://lh3.googleusercontent.com/TyOslJP0VbUYYb--rkgwVuwnZTZHvKHbW1GPQD4SXPY0bgjlgqCAVLwlS0zB8EQ4lrUiLvOZH2dcadEYzPoO=w1600-h719 "Beispielbild")
+Kommen Sie zu Fuß schneller zur nächsten Haltestelle als mit dem Bus? BewegDich hilft Ihnen, diese Frage zu beantworten.
 
 Erstellt mithilfe von Django, Bootstrap, der EFA des Augsburger Verkehrs- und Tarifverbunds und www.openrouteservice.org
